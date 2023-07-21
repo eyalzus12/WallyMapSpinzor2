@@ -1,24 +1,19 @@
-using System.Xml.Serialization;
+using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
 
-public class Background
+public class Background : IDeserializable
 {
-    [XmlAttribute("W")]
-    public string? _W{get; set;} //Doesn't matter for anything since it's parallax
+    public double W{get; set;}
+    public double H{get; set;}
+    public string AssetName{get; set;} = "";
+    public bool HasSkulls{get; set;}
 
-    [XmlAttribute("H")]
-    public string? _H{get; set;}
-
-    [XmlAttribute]
-    public string? AssetName{get; set;}
-
-    [XmlIgnore]
-    public bool HasSkulls{get; set;} = false;
-    [XmlAttribute(nameof(HasSkulls))]
-    public string? _HasSkulls
+    public void Deserialize(XElement element)
     {
-        get => HasSkulls.ToString();
-        set => HasSkulls = Utils.ParseBoolOrNull(value) ?? false;
+        W = element.GetFloatAttribute("W");
+        H = element.GetFloatAttribute("H");
+        AssetName = element.GetAttribute("AssetName");
+        HasSkulls = element.GetBoolAttribute("HasSkulls", false);
     }
 }

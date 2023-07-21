@@ -1,19 +1,22 @@
-using System.Xml.Serialization;
+using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
 
-public class ItemSpawnBase : HasRectBase
+public abstract class ItemSpawnBase: IDeserializable
 {
+    public double X{get; set;}
+    public double Y{get; set;}
+    public double W{get; set;}
+    public double H{get; set;}
 
-    [XmlType(IncludeInSchema=false)]
-    public enum ItemSpawnType
+    public void Deserialize(XElement element)
     {
-        None,
-        ItemSpawn,
-        ItemInitSpawn,
-        ItemSet,
-        TeamItemInitSpawn
+        X = element.GetFloatAttribute("X", 1.79769313486231e+308);
+        Y = element.GetFloatAttribute("Y", 1.79769313486231e+308);
+        W = element.GetFloatAttribute("W", DefaultW);
+        H = element.GetFloatAttribute("H", DefaultH);
     }
 
-    public virtual ItemSpawnType Type => ItemSpawnType.None;
+    public virtual double DefaultW => 1.79769313486231e+308;
+    public virtual double DefaultH => 10;
 }

@@ -1,33 +1,19 @@
-using System.Xml.Serialization;
+using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
 
-public class DynamicCollision : HasPositionBase
+public class DynamicCollision : IDeserializable
 {
-    [XmlIgnore]
-    public int? PlatID{get; set;}
-    [XmlAttribute(nameof(PlatID))]
-    public string? _PlatID
+    public double X{get; set;}
+    public double Y{get; set;}
+    public string PlatID{get; set;} = "";
+    public List<CollisionBase> Collisions{get; set;} = new();
+
+    public virtual void Deserialize(XElement element)
     {
-        get => PlatID.ToString();
-        set => PlatID = Utils.ParseIntOrNull(value);
+        X = element.GetFloatAttribute("X", 0);
+        Y = element.GetFloatAttribute("Y", 0);
+        PlatID = element.GetAttribute("PlatID");
+        Collisions = element.DeserializeCollisionChildren();
     }
-
-    [XmlChoiceIdentifier(nameof(CollisionTypeList))]
-    [XmlElement(typeof(HardCollision))]
-    [XmlElement(typeof(SoftCollision))]
-    [XmlElement(typeof(NoSlideCollision))]
-    [XmlElement(typeof(BouncyHardCollision))]
-    [XmlElement(typeof(BouncySoftCollision))]
-    [XmlElement(typeof(BouncyNoSlideCollision))]
-    [XmlElement(typeof(GamemodeHardCollision))]
-    [XmlElement(typeof(ItemIgnoreCollision))]
-    [XmlElement(typeof(StickyCollision))]
-    [XmlElement(typeof(TriggerCollision))]
-    [XmlElement(typeof(PressurePlateCollision))]
-    [XmlElement(typeof(SoftPressurePlateCollision))]
-    public CollisionBase[]? CollisionList{get; set;}
-
-    [XmlIgnore]
-    public CollisionBase.CollisionType[]? CollisionTypeList{get; set;}
 }

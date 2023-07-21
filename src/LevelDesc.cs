@@ -1,94 +1,44 @@
-using System.Xml.Serialization;
+using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
 
-public class LevelDesc
+public class LevelDesc : IDeserializable
 {
-    [XmlAttribute]
-    public string? AssetDir{get; set;}
-
-    [XmlAttribute]
-    public string? LevelName{get; set;}
-
-    [XmlIgnore]
-    public int? NumFrames{get; set;}
-    [XmlAttribute(nameof(NumFrames))]
-    public string? _NumFrames
-    {
-        get => NumFrames.ToString();
-        set => NumFrames = Utils.ParseIntOrNull(value);
-    }
-
-    [XmlIgnore]
-    public float? SlowMult{get; set;}
-    [XmlAttribute(nameof(SlowMult))]
-    public string? _SlowMult
-    {
-        get => SlowMult.ToString();
-        set => SlowMult = Utils.ParseFloatOrNull(value);
-    }
-
-
-    [XmlElement]
+    public string AssetDir{get; set;} = "";
+    public string LevelName{get; set;} = "";
+    public int NumFrames{get; set;}
+    public double SlowMult{get; set;}
     public CameraBounds? CameraBounds{get; set;}
-
-    [XmlElement]
     public SpawnBotBounds? SpawnBotBounds{get; set;}
+    public List<CollisionBase> Collisions{get; set;} = new();
+    public List<Respawn> Respawns{get; set;} = new();
+    public List<ItemSpawnBase> ItemSpawns{get; set;} = new();
+    public List<NavNode> NavNodes{get; set;} = new();
+    public List<DynamicCollision> DynamicCollisions{get; set;} = new();
+    public List<DynamicItemSpawn> DynamicItemSpawns{get; set;} = new();
+    public List<DynamicRespawn> DynamicRespawns{get; set;} = new();
+    public List<DynamicNavNode> DynamicNavNodes{get; set;} = new();
+    public List<Background> Backgrounds{get; set;} = new();
+    public List<Platform> Platforms{get; set;} = new();
 
-    [XmlChoiceIdentifier(nameof(CollisionTypeList))]
-    [XmlElement(typeof(HardCollision))]
-    [XmlElement(typeof(SoftCollision))]
-    [XmlElement(typeof(NoSlideCollision))]
-    [XmlElement(typeof(BouncyHardCollision))]
-    [XmlElement(typeof(BouncySoftCollision))]
-    [XmlElement(typeof(BouncyNoSlideCollision))]
-    [XmlElement(typeof(GamemodeHardCollision))]
-    [XmlElement(typeof(ItemIgnoreCollision))]
-    [XmlElement(typeof(StickyCollision))]
-    [XmlElement(typeof(TriggerCollision))]
-    [XmlElement(typeof(PressurePlateCollision))]
-    [XmlElement(typeof(SoftPressurePlateCollision))]
-    public CollisionBase[]? CollisionList{get; set;}
+    public virtual void Deserialize(XElement element)
+    {
+        AssetDir = element.GetAttribute("AssetDir");
+        LevelName = element.GetAttribute("LevelName");
+        NumFrames = element.GetIntAttribute("NumFrames", 0);
+        SlowMult = element.GetFloatAttribute("SlowMult", 1);
+        CameraBounds = element.DeserializeChildOfType<CameraBounds>();
+        SpawnBotBounds = element.DeserializeChildOfType<SpawnBotBounds>();
+        Collisions = element.DeserializeCollisionChildren();
+        Respawns = element.DeserializeChildrenOfType<Respawn>();
+        ItemSpawns = element.DeserializeItemSpawnChildren();
+        NavNodes = element.DeserializeChildrenOfType<NavNode>();
+        DynamicCollisions = element.DeserializeChildrenOfType<DynamicCollision>();
+        DynamicItemSpawns = element.DeserializeChildrenOfType<DynamicItemSpawn>();
+        DynamicRespawns = element.DeserializeChildrenOfType<DynamicRespawn>();
+        DynamicNavNodes = element.DeserializeChildrenOfType<DynamicNavNode>();
+        Backgrounds = element.DeserializeChildrenOfType<Background>();
+        Platforms = element.DeserializeChildrenOfType<Platform>();
 
-    [XmlIgnore]
-    public CollisionBase.CollisionType[]? CollisionTypeList{get; set;}
-
-
-    [XmlElement(nameof(Respawn))]
-    public Respawn[]? RespawnList{get; set;}
-
-
-    [XmlChoiceIdentifier(nameof(ItemSpawnTypeList))]
-    [XmlElement(typeof(ItemSpawn))]
-    [XmlElement(typeof(ItemInitSpawn))]
-    [XmlElement(typeof(ItemSet))]
-    [XmlElement(typeof(TeamItemInitSpawn))]
-    public ItemSpawnBase[]? ItemSpawnList{get; set;}
-
-    [XmlIgnore]
-    public ItemSpawnBase.ItemSpawnType[]? ItemSpawnTypeList{get; set;}
-
-    [XmlElement(nameof(NavNode))]
-    public NavNode[]? NavNodeList{get; set;}
-
-    [XmlElement(nameof(DynamicCollision))]
-    public DynamicCollision[]? DynamicCollisionList{get; set;}
-
-    [XmlElement(nameof(DynamicItemSpawn))]
-    public DynamicItemSpawn[]? DynamicItemSpawnList{get; set;}
-
-    [XmlElement(nameof(DynamicRespawn))]
-    public DynamicRespawn[]? DynamicRespawnList{get; set;}
-
-    [XmlElement(nameof(DynamicNavNode))]
-    public DynamicNavNode[]? DynamicNavNodeList{get; set;}
-
-    [XmlElement(nameof(Background))]
-    public Background[]? BackgroundList{get; set;}
-
-    [XmlElement(nameof(Platform))]
-    public Platform[]? PlatformList{get; set;}
-
-    [XmlElement(nameof(MovingPlatform))]
-    public MovingPlatform[]? MovingPlatformList{get; set;}
+    }
 }

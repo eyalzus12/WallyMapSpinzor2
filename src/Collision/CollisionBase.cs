@@ -1,72 +1,51 @@
-using System.Xml.Serialization;
+using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
 
-public class CollisionBase : HasLineBase
+public abstract class CollisionBase : IDeserializable
 {
-
-    [XmlAttribute]
+    public double X1{get; set;}
+    public double X2{get; set;}
+    public double Y1{get; set;}
+    public double Y2{get; set;}
     public string? TauntEvent{get; set;}
-
-    [XmlAttribute]
     public string? Flag{get; set;}
-
-    [XmlAttribute]
     public string? ColorFlag{get; set;}
-
-    [XmlIgnore]
-    public Position? Anchor{get; set;}
-    [XmlAttribute("AnchorX")]
-    public string? _AnchorX
+    public double? AnchorX{get; set;}
+    public double? AnchorY{get; set;}
+    public double NormalX{get; set;}
+    public double NormalY{get; set;}
+    public int Team{get; set;}
+    public virtual void Deserialize(XElement element)
     {
-        get => Anchor?.X.ToString();
-        set => Anchor = new Position(Utils.ParseFloatOrNull(value) ?? 0, Anchor?.Y ?? 0);
-    }
-    [XmlAttribute("AnchorY")]
-    public string? _AnchorY
-    {
-        get => Anchor?.Y.ToString();
-        set => Anchor = new Position(Anchor?.X ?? 0, Utils.ParseFloatOrNull(value) ?? 0);
-    }
+        double X = element.GetFloatAttribute("X", 0);
+        X1 = element.GetFloatAttribute("X1", X);
+        X2 = element.GetFloatAttribute("X2", X);
+        double Y = element.GetFloatAttribute("Y", 0);
+        Y1 = element.GetFloatAttribute("Y1", Y);
+        Y2 = element.GetFloatAttribute("Y2", Y);
 
-    [XmlIgnore]
-    public Position? Normal{get; set;}
-    [XmlAttribute("NormalX")]
-    public string? _NormalX
-    {
-        get => Normal?.X.ToString();
-        set => Normal = new Position(Utils.ParseFloatOrNull(value) ?? 0, Normal?.Y ?? 0);
+        //im not 100% sure why brawlhalla does this
+        if(X1 > X2)
+        {
+            var temp = X1;
+            X1 = X2;
+            X2 = temp;
+        }
+
+        TauntEvent = element.GetNullableAttribute("TauntEvent");
+        Flag = element.GetNullableAttribute("Flag");
+        ColorFlag = element.GetNullableAttribute("ColorFlag");
+        //brawlhalla requires both attributes to exist for an anchor
+        //NOTE: a collision with an anchor can't be a pressure plate or have a normal
+        //NOTE: we don't make note of that here
+        if(element.HasAttribute("AnchorX") && element.HasAttribute("AnchorY"))
+        {
+            AnchorX = element.GetNullableFloatAttribute("AnchorX");
+            AnchorY = element.GetNullableFloatAttribute("AnchorY");
+        }
+        NormalX = element.GetFloatAttribute("NormalX", 0);
+        NormalY = element.GetFloatAttribute("NormalY", 0);
+        Team = element.GetIntAttribute("Team", 0);
     }
-    [XmlAttribute("NormalY")]
-    public string? _NormalY
-    {
-        get => Normal?.Y.ToString();
-        set => Normal = new Position(Normal?.X ?? 0, Utils.ParseFloatOrNull(value) ?? 0);
-    }
-
-    [XmlIgnore]
-    public int? Team{get; set;}
-    [XmlAttribute(nameof(Team))]
-    public string? _Team{get => Team?.ToString(); set => Team = Utils.ParseIntOrNull(value);}
-
-
-    [XmlType(IncludeInSchema=false)]
-    public enum CollisionType
-    {
-        None,
-        HardCollision,
-        SoftCollision,
-        NoSlideCollision,
-        BouncyHardCollision,
-        BouncySoftCollision,
-        BouncyNoSlideCollision,
-        GamemodeHardCollision,
-        ItemIgnoreCollision,
-        StickyCollision,
-        TriggerCollision,
-        PressurePlateCollision,
-        SoftPressurePlateCollision
-    }
-
-    public virtual CollisionType Type => CollisionType.None;
 }

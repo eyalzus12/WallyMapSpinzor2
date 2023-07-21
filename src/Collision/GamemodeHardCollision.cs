@@ -1,6 +1,6 @@
 namespace WallyMapSpinzor2;
 
-public class GamemodeHardCollision : CollisionBase
+public class GameModeHardCollision : CollisionBase
 {
-    public override CollisionType Type => CollisionType.GamemodeHardCollision;
+
 }

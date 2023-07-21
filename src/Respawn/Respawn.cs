@@ -1,24 +1,18 @@
-using System.Xml.Serialization;
+using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
 
-public class Respawn : HasPositionBase
+public class Respawn : IDeserializable
 {
-    [XmlIgnore]
-    public bool Initial{get; set;} = false;
-    [XmlAttribute(nameof(Initial))]
-    public string? _Initial
+    public double X{get; set;}
+    public double Y{get; set;}
+    public bool Initial{get; set;}
+    public bool ExpandedInit{get; set;}
+    public virtual void Deserialize(XElement element)
     {
-        get => Initial.ToString();
-        set => Initial = Utils.ParseBoolOrNull(value)??false;
-    }
-
-    [XmlIgnore]
-    public bool ExpandedInit{get; set;} = false;
-    [XmlAttribute(nameof(ExpandedInit))]
-    public string? _ExpandedInit
-    {
-        get => ExpandedInit.ToString();
-        set => ExpandedInit = Utils.ParseBoolOrNull(value)??false;
+        X = element.GetFloatAttribute("X", 0);
+        Y = element.GetFloatAttribute("Y", 0);
+        Initial = element.GetBoolAttribute("Initial", false);
+        ExpandedInit = element.GetBoolAttribute("ExpandedInit", false);
     }
 }

@@ -2,10 +2,10 @@ namespace WallyMapSpinzor2;
 
 public static class Utils
 {
-    public static float? ParseFloatOrNull(string? s)
+    public static double? ParseFloatOrNull(string? s)
     {
         if(s is null) return null;
-        return float.Parse(s);
+        return double.Parse(s);
     }
 
     public static bool? ParseBoolOrNull(string? s)
@@ -20,28 +20,5 @@ public static class Utils
         return int.Parse(s);
     }
 
-    public static NavNodeData ParseNavNodeData(string s)
-    {
-        int id;
-        if(!int.TryParse(s, out id))
-        {
-            id = int.Parse(s[1..]);
-            NavNodeData.NavNodeType type = 
-                Enum.Parse<NavNodeData.NavNodeType>(s[0..1]);
-            return new(id, type);
-        }
-        else
-            return new NavNodeData(id, NavNodeData.NavNodeType.None);
-    }
-
-    public static string NavNodeTypeToString(this NavNodeData.NavNodeType type) => type switch
-    {
-        NavNodeData.NavNodeType.None => "",
-        NavNodeData.NavNodeType.A => "A",
-        NavNodeData.NavNodeType.D => "D",
-        NavNodeData.NavNodeType.G => "G",
-        NavNodeData.NavNodeType.L => "L",
-        NavNodeData.NavNodeType.W => "W",
-        _ => throw new ArgumentException($"Unknown navnode type {type} encountered")
-    };
+    public static double DegToRad(double r) => r*Math.PI/180;
 }

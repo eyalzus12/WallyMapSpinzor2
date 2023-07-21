@@ -1,25 +1,19 @@
-using System.Xml.Serialization;
+using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
 
-public class DynamicItemSpawn : HasPositionBase
+public class DynamicItemSpawn : IDeserializable
 {
-    [XmlIgnore]
-    public int? PlatID{get; set;}
-    [XmlAttribute(nameof(PlatID))]
-    public string? _PlatID
+    public double X{get; set;}
+    public double Y{get; set;}
+    public string PlatID{get; set;} = "";
+    public List<ItemSpawnBase> ItemSpawns{get; set;} = new();
+
+    public virtual void Deserialize(XElement element)
     {
-        get => PlatID.ToString();
-        set => PlatID = Utils.ParseIntOrNull(value);
+        X = element.GetFloatAttribute("X", 0);
+        Y = element.GetFloatAttribute("Y", 0);
+        PlatID = element.GetAttribute("PlatID");
+        ItemSpawns = element.DeserializeItemSpawnChildren();
     }
-
-    [XmlChoiceIdentifier(nameof(ItemSpawnTypeList))]
-    [XmlElement(typeof(ItemSpawn))]
-    [XmlElement(typeof(ItemInitSpawn))]
-    [XmlElement(typeof(ItemSet))]
-    [XmlElement(typeof(TeamItemInitSpawn))]
-    public ItemSpawnBase[]? ItemSpawnList{get; set;}
-
-    [XmlIgnore]
-    public ItemSpawnBase.ItemSpawnType[]? ItemSpawnTypeList{get; set;}
 }

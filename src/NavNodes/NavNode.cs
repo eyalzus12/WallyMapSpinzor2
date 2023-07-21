@@ -1,26 +1,19 @@
-using System.Xml.Serialization;
+using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
 
-public class NavNode : HasPositionBase
+public class NavNode : IDeserializable
 {
-    [XmlIgnore]
-    public NavNodeData Data{get; set;}
+    public double X{get; set;}
+    public double Y{get; set;}
+    public string NavID{get; set;} = "";
+    public string[] Path{get; set;} = {};
 
-    [XmlAttribute]
-    public string? NavID
+    public virtual void Deserialize(XElement element)
     {
-        get => Data.NavID.ToString();
-        set => Data = (value is null)?new():Utils.ParseNavNodeData(value);
-    }
-
-    [XmlIgnore]
-    public NavNodeData[] Path{get; set;} = {};
-
-    [XmlAttribute(nameof(Path))]
-    public string? _Path
-    {
-        get => string.Join(',', Path);
-        set => Path = value?.Split(',').Select(s => Utils.ParseNavNodeData(s)).ToArray() ?? new NavNodeData[]{};
+        X = element.GetFloatAttribute("X");
+        Y = element.GetFloatAttribute("Y");
+        NavID = element.GetAttribute("NavID");
+        Path = element.GetAttribute("Path").Split(',');
     }
 }
