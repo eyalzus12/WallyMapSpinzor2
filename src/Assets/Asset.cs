@@ -9,10 +9,6 @@ public class Asset : IDeserializable
     public double Y{get; set;}
     public double W{get; set;}
     public double H{get; set;}
-    public double ScaleX{get; set;}
-    public double ScaleY{get; set;}
-    public double Rotation{get; set;}
-
     public virtual void Deserialize(XElement element)
     {
         AssetName = element.GetAttribute("AssetName");
@@ -20,9 +16,5 @@ public class Asset : IDeserializable
         Y = element.GetFloatAttribute("Y", 0);
         H = element.GetFloatAttribute("H", 0);
         W = element.GetFloatAttribute("W", 0);
-        double Scale = element.GetFloatAttribute("Scale", 1);
-        ScaleX = element.GetFloatAttribute("ScaleX", Scale);
-        ScaleY = element.GetFloatAttribute("ScaleY", Scale);
-        Rotation = Utils.DegToRad(element.GetFloatAttribute("Rotation", 0));
     }
 }

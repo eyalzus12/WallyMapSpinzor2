@@ -48,4 +48,8 @@ public static class Utils
     public static bool IsSharedPath(Path p) => (p < (Path)1048575);
 
     public static double DegToRad(double r) => r*Math.PI/180;
+
+    public static string FixBmg(string s) => s
+        .Replace("PlatID=\"3\"X", "PlatID=\"3\" X")
+        .Replace("Path=\"CLOSE\"/>`", "Path=\"CLOSE\"/>");
 }
