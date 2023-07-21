@@ -10,9 +10,9 @@ public class LevelDesc : IDeserializable
     public double SlowMult{get; set;}
     public CameraBounds? CameraBounds{get; set;}
     public SpawnBotBounds? SpawnBotBounds{get; set;}
-    public List<CollisionBase> Collisions{get; set;} = new();
+    public List<AbstractCollision> Collisions{get; set;} = new();
     public List<Respawn> Respawns{get; set;} = new();
-    public List<ItemSpawnBase> ItemSpawns{get; set;} = new();
+    public List<AbstractItemSpawn> ItemSpawns{get; set;} = new();
     public List<NavNode> NavNodes{get; set;} = new();
     public List<DynamicCollision> DynamicCollisions{get; set;} = new();
     public List<DynamicItemSpawn> DynamicItemSpawns{get; set;} = new();
@@ -20,6 +20,7 @@ public class LevelDesc : IDeserializable
     public List<DynamicNavNode> DynamicNavNodes{get; set;} = new();
     public List<Background> Backgrounds{get; set;} = new();
     public List<Platform> Platforms{get; set;} = new();
+    public List<WaveData> WaveDatas{get; set;} = new();
 
     public virtual void Deserialize(XElement element)
     {
@@ -39,6 +40,6 @@ public class LevelDesc : IDeserializable
         DynamicNavNodes = element.DeserializeChildrenOfType<DynamicNavNode>();
         Backgrounds = element.DeserializeChildrenOfType<Background>();
         Platforms = element.DeserializeChildrenOfType<Platform>();
-
+        WaveDatas = element.DeserializeChildrenOfType<WaveData>();
     }
 }

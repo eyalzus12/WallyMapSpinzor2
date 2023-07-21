@@ -7,7 +7,7 @@ public class DynamicCollision : IDeserializable
     public double X{get; set;}
     public double Y{get; set;}
     public string PlatID{get; set;} = "";
-    public List<CollisionBase> Collisions{get; set;} = new();
+    public List<AbstractCollision> Collisions{get; set;} = new();
 
     public virtual void Deserialize(XElement element)
     {

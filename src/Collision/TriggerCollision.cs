@@ -1,6 +1,6 @@
 namespace WallyMapSpinzor2;
 
-public class TriggerCollision : CollisionBase
+public class TriggerCollision : AbstractCollision
 {
 
 }

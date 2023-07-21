@@ -21,10 +21,10 @@ public static class XmlExtensions
         => element.Elements(typeof(T).Name).Select(DeserializeTo<T>).ToList();
     public static T? DeserializeChildOfType<T>(this XElement element) where T : IDeserializable, new()
         => element.Elements(typeof(T).Name).Select(DeserializeTo<T>).FirstOrDefault();
-    public static List<CollisionBase> DeserializeCollisionChildren(this XElement element) =>
+    public static List<AbstractCollision> DeserializeCollisionChildren(this XElement element) =>
         element.Elements().Select(DeserializeCollision).Where(c => c is not null)
         .ToList()!;
-    public static CollisionBase? DeserializeCollision(this XElement element) => element.Name.LocalName switch
+    public static AbstractCollision? DeserializeCollision(this XElement element) => element.Name.LocalName switch
     {
         nameof(HardCollision) => element.DeserializeTo<HardCollision>(),
         nameof(SoftCollision) => element.DeserializeTo<SoftCollision>(),
@@ -41,11 +41,11 @@ public static class XmlExtensions
         _ => null
     };
 
-    public static List<ItemSpawnBase> DeserializeItemSpawnChildren(this XElement element) =>
+    public static List<AbstractItemSpawn> DeserializeItemSpawnChildren(this XElement element) =>
         element.Elements().Select(DeserializeItemSpawn).Where(c => c is not null)
         .ToList()!;
 
-    public static ItemSpawnBase? DeserializeItemSpawn(this XElement element) => element.Name.LocalName switch
+    public static AbstractItemSpawn? DeserializeItemSpawn(this XElement element) => element.Name.LocalName switch
     {
         nameof(ItemSpawn) => element.DeserializeTo<ItemSpawn>(),
         nameof(ItemInitSpawn) => element.DeserializeTo<ItemInitSpawn>(),

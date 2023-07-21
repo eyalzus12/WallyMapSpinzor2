@@ -1,6 +1,6 @@
 namespace WallyMapSpinzor2;
 
-public class BouncyNoSlideCollision : CollisionBase
+public class BouncyNoSlideCollision : AbstractCollision
 {
 
 }

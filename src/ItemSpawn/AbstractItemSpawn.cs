@@ -2,7 +2,7 @@ using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
 
-public abstract class ItemSpawnBase: IDeserializable
+public abstract class AbstractItemSpawn: IDeserializable
 {
     public double X{get; set;}
     public double Y{get; set;}

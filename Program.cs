@@ -12,7 +12,7 @@ using(StreamReader sr = new(file))
     if(element is not null)
     {
         LevelDesc levelDesc = element.DeserializeTo<LevelDesc>();
-        Console.WriteLine(levelDesc.DynamicCollisions[0].Collisions[0].X1);
+        
     }
 }
 

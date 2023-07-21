@@ -2,7 +2,7 @@ using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
 
-public abstract class PressurePlateCollisionBase : CollisionBase
+public abstract class AbstractPressurePlateCollision : AbstractCollision
 {
     public List<string> TrapPowers{get; set;} = new();
     public List<double> FireOffsetX{get; set;} = new();

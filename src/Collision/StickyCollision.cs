@@ -1,6 +1,6 @@
 namespace WallyMapSpinzor2;
 
-public class StickyCollision : CollisionBase
+public class StickyCollision : AbstractCollision
 {
 
 }
