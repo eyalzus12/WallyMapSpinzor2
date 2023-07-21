@@ -82,4 +82,13 @@ public class LevelDesc
 
     [XmlElement(nameof(DynamicNavNode))]
     public DynamicNavNode[]? DynamicNavNodeList{get; set;}
+
+    [XmlElement(nameof(Background))]
+    public Background[]? BackgroundList{get; set;}
+
+    [XmlElement(nameof(Platform))]
+    public Platform[]? PlatformList{get; set;}
+
+    [XmlElement(nameof(MovingPlatform))]
+    public MovingPlatform[]? MovingPlatformList{get; set;}
 }

@@ -1,6 +1,6 @@
 namespace WallyMapSpinzor2;
 
-public record struct Position(float X, float Y)
+public readonly record struct Position(float X, float Y)
 {
     public static readonly Position ZERO = new(0,0);
 

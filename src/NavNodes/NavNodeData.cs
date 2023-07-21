@@ -1,6 +1,6 @@
 namespace WallyMapSpinzor2;
 
-public record struct NavNodeData(int NavID, NavNodeData.NavNodeType Type)
+public readonly record struct NavNodeData(int NavID, NavNodeData.NavNodeType Type)
 {
     public override string ToString() => Type.NavNodeTypeToString() + NavID;
 

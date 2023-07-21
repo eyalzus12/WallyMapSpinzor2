@@ -1,6 +1,6 @@
 namespace WallyMapSpinzor2;
 
-public record struct Line(float X1, float Y1, float X2, float Y2)
+public readonly record struct Line(float X1, float Y1, float X2, float Y2)
 {
     public static readonly Line ZERO = new Line(0,0,0,0);
     public Position From => new(X1,Y1);
