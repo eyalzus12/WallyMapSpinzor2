@@ -4,6 +4,8 @@ namespace WallyMapSpinzor2;
 
 public class Asset : IDeserializable
 {
+    //Assets seem to be capable of defining scale and rotation
+    //but this is never used
     public string AssetName{get; set;} = "";
     public double X{get; set;}
     public double Y{get; set;}

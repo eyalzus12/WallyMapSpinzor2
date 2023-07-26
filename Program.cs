@@ -1,5 +1,4 @@
-﻿using System.Xml;
-using System.Xml.Linq;
+﻿using System.Xml.Linq;
 using WallyMapSpinzor2;
 
 string path = args[0];
@@ -12,7 +11,7 @@ using(StreamReader sr = new(file))
     if(element is not null)
     {
         LevelDesc levelDesc = element.DeserializeTo<LevelDesc>();
-
+        
     }
 }
 

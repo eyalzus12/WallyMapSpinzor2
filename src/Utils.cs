@@ -2,23 +2,10 @@ namespace WallyMapSpinzor2;
 
 public static class Utils
 {
-    public static double? ParseFloatOrNull(string? s)
-    {
-        if(s is null) return null;
-        return double.Parse(s);
-    }
-
-    public static bool? ParseBoolOrNull(string? s)
-    {
-        if(s is null) return null;
-        return s.ToUpper() == "TRUE";
-    }
-
-    public static int? ParseIntOrNull(string? s)
-    {
-        if(s is null) return null;
-        return int.Parse(s);
-    }
+    public static double? ParseFloatOrNull(string? s) => (s is null)?null:double.Parse(s);
+    public static bool? ParseBoolOrNull(string? s) => (s is null)?null:(s.ToUpper() == "TRUE");
+    public static int? ParseIntOrNull(string? s) => (s is null)?null:int.Parse(s);
+    public static uint? ParseUIntOrNull(string? s) => (s is null)?null:uint.Parse(s);
 
     public static Dir ParseDir(string? s)
     {
@@ -48,6 +35,11 @@ public static class Utils
     public static bool IsSharedPath(Path p) => (p < (Path)1048575);
 
     public static double DegToRad(double r) => r*Math.PI/180;
+
+    public static void ForEach<T>(this IEnumerable<T> e, Action<T> a)
+    {
+        foreach(var ee in e)a(ee);
+    }
 
     public static string FixBmg(string s) => s
         .Replace("PlatID=\"3\"X", "PlatID=\"3\" X")

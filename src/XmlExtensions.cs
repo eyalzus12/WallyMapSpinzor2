@@ -6,7 +6,7 @@ public static class XmlExtensions
 {
     public static bool HasAttribute(this XElement element, string attribute) => element.Attributes(attribute).Any();
     public static string GetAttribute(this XElement element, string attribute, string @default = "") => element.Attributes(attribute).FirstOrDefault()?.Value ?? @default;
-    public static bool GetBoolAttribute(this XElement element, string attribute, bool @default = false) => bool.Parse(GetAttribute(element, attribute, @default.ToString()));
+    public static bool GetBoolAttribute(this XElement element, string attribute, bool @default = false) => GetAttribute(element, attribute, @default.ToString()).ToUpper() == "TRUE";
     public static int GetIntAttribute(this XElement element, string attribute, int @default = 0) => int.Parse(GetAttribute(element, attribute, @default.ToString()));
     public static double GetFloatAttribute(this XElement element, string attribute, double @default = 0.0f) => double.Parse(GetAttribute(element, attribute, @default.ToString()));
     public static string? GetNullableAttribute(this XElement element, string attribute) => element.Attributes(attribute).FirstOrDefault()?.Value;
@@ -51,6 +51,29 @@ public static class XmlExtensions
         nameof(ItemInitSpawn) => element.DeserializeTo<ItemInitSpawn>(),
         nameof(ItemSet) => element.DeserializeTo<ItemSet>(),
         nameof(TeamItemInitSpawn) => element.DeserializeTo<TeamItemInitSpawn>(),
+        _ => null
+    };
+
+    public static List<AbstractVolume> DeserializeVolumeChildren(this XElement element) =>
+        element.Elements().Select(DeserializeVolume).Where(c => c is not null)
+        .ToList()!;
+
+    public static AbstractVolume? DeserializeVolume(this XElement element) => element.Name.LocalName switch
+    {
+        nameof(Volume) => element.DeserializeTo<Volume>(),
+        nameof(Goal) => element.DeserializeTo<Goal>(),
+        nameof(NoDodgeZone) => element.DeserializeTo<NoDodgeZone>(),
+        _ => null
+    };
+
+    public static List<IKeyFrame> DeserializeKeyFrameChildren(this XElement element) =>
+        element.Elements().Select(DeserializeKeyFrame).Where(c => c is not null)
+        .ToList()!;
+
+    public static IKeyFrame? DeserializeKeyFrame(this XElement element) => element.Name.LocalName switch
+    {
+        nameof(KeyFrame) => element.DeserializeTo<KeyFrame>(),
+        nameof(Phase) => element.DeserializeTo<Phase>(),
         _ => null
     };
 }

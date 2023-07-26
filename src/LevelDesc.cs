@@ -21,6 +21,11 @@ public class LevelDesc : IDeserializable
     public List<Background> Backgrounds{get; set;} = new();
     public List<Platform> Platforms{get; set;} = new();
     public List<WaveData> WaveDatas{get; set;} = new();
+    public List<AbstractVolume> Volumes{get; set;} = new();
+    public TeamScoreboard? TeamScoreboard{get; set;}
+    public List<LevelAnim> LevelAnims{get; set;} = new();
+    public List<MovingPlatform> MovingPlatforms{get; set;} = new();
+    public List<AnimatedBackground> AnimatedBackgrounds{get; set;} = new();
 
     public virtual void Deserialize(XElement element)
     {
@@ -41,5 +46,10 @@ public class LevelDesc : IDeserializable
         Backgrounds = element.DeserializeChildrenOfType<Background>();
         Platforms = element.DeserializeChildrenOfType<Platform>();
         WaveDatas = element.DeserializeChildrenOfType<WaveData>();
+        Volumes = element.DeserializeVolumeChildren();
+        TeamScoreboard = element.DeserializeChildOfType<TeamScoreboard>();
+        LevelAnims = element.DeserializeChildrenOfType<LevelAnim>();
+        MovingPlatforms = element.DeserializeChildrenOfType<MovingPlatform>();
+        AnimatedBackgrounds = element.DeserializeChildrenOfType<AnimatedBackground>();
     }
 }
