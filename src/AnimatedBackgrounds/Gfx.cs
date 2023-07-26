@@ -4,7 +4,7 @@ namespace WallyMapSpinzor2;
 
 public class Gfx : IDeserializable
 {
-    public enum AsymmetrySwapFlag
+    public enum AsymmetrySwapFlagEnum
     {
         HAND = 1,
         FOREARM = 2,
@@ -57,8 +57,8 @@ public class Gfx : IDeserializable
         string[]? flags = element.Element("AsymmetrySwapFlags")?.Value.Split(',');
         if(flags is not null) foreach(string flag in flags)
         {
-            AsymmetrySwapFlag Flag;
-            if(!Enum.TryParse<AsymmetrySwapFlag>(flag, out Flag))
+            AsymmetrySwapFlagEnum Flag;
+            if(!Enum.TryParse<AsymmetrySwapFlagEnum>(flag, out Flag))
             {
                 //TODO: log
             }

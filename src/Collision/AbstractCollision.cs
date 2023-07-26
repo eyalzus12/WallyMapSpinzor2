@@ -4,13 +4,31 @@ namespace WallyMapSpinzor2;
 
 public abstract class AbstractCollision : IDeserializable
 {
+    public enum FlagEnum
+    {
+        DEFAULT = 0,
+        WATER = 1,
+        WATERBLUE = 2,
+        ICE = 3,
+        METAL = 4,
+        WOOD = 5,
+        PUDDLE = 6,
+        ROPEBRIDGE = 7,
+        SAND = 8
+    }
+
+    public enum ColorFlagEnum
+    {
+        DEFAULT = 0
+    }
+
     public double X1{get; set;}
     public double X2{get; set;}
     public double Y1{get; set;}
     public double Y2{get; set;}
     public string? TauntEvent{get; set;}
-    public string? Flag{get; set;}
-    public string? ColorFlag{get; set;}
+    public FlagEnum Flag{get; set;}
+    public ColorFlagEnum ColorFlag{get; set;}
     public double? AnchorX{get; set;}
     public double? AnchorY{get; set;}
     public double NormalX{get; set;}
@@ -34,8 +52,19 @@ public abstract class AbstractCollision : IDeserializable
         }
 
         TauntEvent = element.GetNullableAttribute("TauntEvent");
-        Flag = element.GetNullableAttribute("Flag");
-        ColorFlag = element.GetNullableAttribute("ColorFlag");
+
+        FlagEnum _Flag;
+        if(!Enum.TryParse<FlagEnum>(element.GetNullableAttribute("Flag")?.ToUpper(), out _Flag))
+            Flag = 0;
+        else 
+            Flag = _Flag;
+        
+        ColorFlagEnum _ColorFlag;
+        if(!Enum.TryParse<ColorFlagEnum>(element.GetNullableAttribute("ColorFlag")?.ToUpper(), out _ColorFlag))
+            ColorFlag = 0;
+        else 
+            ColorFlag = _ColorFlag;
+        
         //brawlhalla requires both attributes to exist for an anchor
         //NOTE: a collision with an anchor can't be a pressure plate or have a normal
         //NOTE: we don't make note of that here
