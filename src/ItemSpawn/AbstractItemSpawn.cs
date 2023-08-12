@@ -11,12 +11,14 @@ public abstract class AbstractItemSpawn: IDeserializable
 
     public void Deserialize(XElement element)
     {
-        X = element.GetFloatAttribute("X", 1.79769313486231e+308);
-        Y = element.GetFloatAttribute("Y", 1.79769313486231e+308);
+        X = element.GetFloatAttribute("X", DefaultX);
+        Y = element.GetFloatAttribute("Y", DefaultY);
         W = element.GetFloatAttribute("W", DefaultW);
         H = element.GetFloatAttribute("H", DefaultH);
     }
 
-    public virtual double DefaultW => 1.79769313486231e+308;
-    public virtual double DefaultH => 10;
+    public abstract double DefaultX{get;}
+    public abstract double DefaultY{get;}
+    public abstract double DefaultW{get;}
+    public abstract double DefaultH{get;}
 }

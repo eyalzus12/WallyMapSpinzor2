@@ -24,6 +24,7 @@ public class LevelDesc : IDeserializable
     public List<AbstractVolume> Volumes{get; set;} = new();
     public TeamScoreboard? TeamScoreboard{get; set;}
     public List<LevelAnim> LevelAnims{get; set;} = new();
+    public List<LevelSound> LevelSounds{get; set;} = new();
     public List<MovingPlatform> MovingPlatforms{get; set;} = new();
     public List<AnimatedBackground> AnimatedBackgrounds{get; set;} = new();
 
@@ -49,6 +50,7 @@ public class LevelDesc : IDeserializable
         Volumes = element.DeserializeVolumeChildren();
         TeamScoreboard = element.DeserializeChildOfType<TeamScoreboard>();
         LevelAnims = element.DeserializeChildrenOfType<LevelAnim>();
+        LevelSounds = element.DeserializeChildrenOfType<LevelSound>();
         MovingPlatforms = element.DeserializeChildrenOfType<MovingPlatform>();
         AnimatedBackgrounds = element.DeserializeChildrenOfType<AnimatedBackground>();
     }

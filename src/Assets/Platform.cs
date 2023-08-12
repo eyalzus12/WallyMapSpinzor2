@@ -16,6 +16,11 @@ public class Platform : IDeserializable
 
     public List<Platform> Platforms{get; set;} = new();
     public List<Asset> Assets{get; set;} = new();
+    
+    public bool NoSkulls{get; set;}
+    public string? Hotkey{get; set;}
+    public int? Blue{get; set;}
+    public int? Red{get; set;}
 
     public void Deserialize(XElement element)
     {
@@ -31,5 +36,10 @@ public class Platform : IDeserializable
         InstanceName = element.GetAttribute("InstanceName");
         Platforms = element.DeserializeChildrenOfType<Platform>();
         Assets = element.DeserializeChildrenOfType<Asset>();
+
+        NoSkulls = InstanceName == "am_NoSkulls";
+        Hotkey = InstanceName.StartsWith("am_Hotkey")?InstanceName.Substring(InstanceName.LastIndexOf('_')+1):null;
+        Blue = InstanceName.StartsWith("am_Blue")?int.Parse(InstanceName.Substring("am_Blue".Length)):null;
+        Red = InstanceName.StartsWith("am_Red")?int.Parse(InstanceName.Substring("am_Red".Length)):null;
     }
 }

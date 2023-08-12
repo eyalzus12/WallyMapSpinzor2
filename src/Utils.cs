@@ -31,10 +31,11 @@ public static class Utils
         return b;
     }
 
-    public static bool IsSharedDir(Dir d) => (d <= (Dir)3)||(d == Dir.SIDE);
-    public static bool IsSharedPath(Path p) => (p < (Path)1048575);
+    public static readonly HashSet<Dir> DEFAULT_SHARED_DIR = new(){Dir.LEFT, Dir.RIGHT, Dir.TOP, Dir.BOTTOM, Dir.SIDE};
+    public static bool IsSharedDir(Dir d) => DEFAULT_SHARED_DIR.Contains(d);
+    public static bool IsSharedPath(Path p) => (p < (Path)1048575); //numeric path
 
-    public static double DegToRad(double r) => r*Math.PI/180;
+    public static double DegToRad(double r) => r*BrawlhallaMath.PI/180;
 
     public static void ForEach<T>(this IEnumerable<T> e, Action<T> a)
     {
@@ -42,6 +43,7 @@ public static class Utils
     }
 
     public static string FixBmg(string s) => s
-        .Replace("PlatID=\"3\"X", "PlatID=\"3\" X")
-        .Replace("Path=\"CLOSE\"/>`", "Path=\"CLOSE\"/>");
+        .Replace("PlatID=\"3\"X", "PlatID=\"3\" X") //OneUpOneDownFFA3
+        .Replace("Path=\"CLOSE\"/>`", "Path=\"CLOSE\"/>") //HordeTwo
+        .Replace("</FrameOffset>25", "</FrameOffset>"); //BP8ThreePlatformFFABig
 }

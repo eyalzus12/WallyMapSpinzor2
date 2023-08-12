@@ -21,7 +21,7 @@ public abstract class AbstractPressurePlateCollision : AbstractCollision
         TrapPowers = element.GetAttribute("TrapPowers").Split(',').ToList();
         FireOffsetX = element.GetAttribute("FireOffsetX").Split(',').Select(double.Parse).ToList();
         FireOffsetY = element.GetAttribute("FireOffsetY").Split(',').Select(double.Parse).ToList();
-        if(FireOffsetY.Count == 0) FireOffsetY = new(){-10};
+        if(FireOffsetY.Count == 0) FireOffsetY = new(){-10}; //wtf bmg
         AssetName = element.GetAttribute("AssetName");
         Cooldown = element.GetIntAttribute("Cooldown", 3000);
         FaceLeft = element.GetBoolAttribute("FaceLeft", false);

@@ -1,6 +1,6 @@
 namespace WallyMapSpinzor2;
 
-public readonly record struct AssetTransform(float X, float Y, float ScaleX, float ScaleY, float Rotation)
+public readonly record struct AssetTransform(double X, double Y, double ScaleX, double ScaleY, double Rotation)
 {
     public static readonly AssetTransform IDENTITY = new AssetTransform(0,0,1,1,0);
 

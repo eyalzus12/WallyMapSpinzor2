@@ -11,8 +11,8 @@ public class DynamicRespawn : IDeserializable
 
     public virtual void Deserialize(XElement element)
     {
-        X = element.GetFloatAttribute("X", 0);
-        Y = element.GetFloatAttribute("Y", 0);
+        X = element.GetFloatAttribute("X");
+        Y = element.GetFloatAttribute("Y");
         PlatID = element.GetAttribute("PlatID");
         Respawns = element.DeserializeChildrenOfType<Respawn>();
     }

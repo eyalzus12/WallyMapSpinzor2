@@ -17,6 +17,7 @@ public abstract class AbstractCollision : IDeserializable
         SAND = 8
     }
 
+    //brawlhalla doesn't define anything for this lol
     public enum ColorFlagEnum
     {
         DEFAULT = 0
@@ -27,21 +28,37 @@ public abstract class AbstractCollision : IDeserializable
     public double Y1{get; set;}
     public double Y2{get; set;}
     public string? TauntEvent{get; set;}
-    public FlagEnum Flag{get; set;}
-    public ColorFlagEnum ColorFlag{get; set;}
+    public FlagEnum? Flag{get; set;}
+    public ColorFlagEnum? ColorFlag{get; set;}
     public double? AnchorX{get; set;}
     public double? AnchorY{get; set;}
     public double NormalX{get; set;}
     public double NormalY{get; set;}
     public int Team{get; set;}
+    
     public virtual void Deserialize(XElement element)
     {
-        double X = element.GetFloatAttribute("X", 0);
-        X1 = element.GetFloatAttribute("X1", X);
-        X2 = element.GetFloatAttribute("X2", X);
-        double Y = element.GetFloatAttribute("Y", 0);
-        Y1 = element.GetFloatAttribute("Y1", Y);
-        Y2 = element.GetFloatAttribute("Y2", Y);
+        X2 = X1 = 0;
+        if(element.HasAttribute("X"))
+        {
+            X2 = X1 = element.GetFloatAttribute("X");
+        }
+        else if(element.HasAttribute("X1") && element.HasAttribute("X2"))
+        {
+            X1 = element.GetFloatAttribute("X1");
+            X2 = element.GetFloatAttribute("X2");
+        }
+        
+        Y2 = Y1 = 0;
+        if(element.HasAttribute("Y"))
+        {
+            Y2 = Y1 = element.GetFloatAttribute("Y");
+        }
+        else if(element.HasAttribute("Y1") && element.HasAttribute("Y2"))
+        {
+            Y1 = element.GetFloatAttribute("Y1");
+            Y2 = element.GetFloatAttribute("Y2");
+        }
 
         //im not 100% sure why brawlhalla does this
         if(X1 > X2)
@@ -53,28 +70,39 @@ public abstract class AbstractCollision : IDeserializable
 
         TauntEvent = element.GetNullableAttribute("TauntEvent");
 
-        FlagEnum _Flag;
-        if(!Enum.TryParse<FlagEnum>(element.GetNullableAttribute("Flag")?.ToUpper(), out _Flag))
-            Flag = 0;
-        else 
-            Flag = _Flag;
+        Flag = null;
+        if(element.HasAttribute("Flag"))
+        {
+            FlagEnum _Flag;
+            if(!Enum.TryParse<FlagEnum>(element.GetAttribute("Flag").ToUpper(), out _Flag))
+                Flag = 0;
+            else
+                Flag = _Flag;
+        }
         
-        ColorFlagEnum _ColorFlag;
-        if(!Enum.TryParse<ColorFlagEnum>(element.GetNullableAttribute("ColorFlag")?.ToUpper(), out _ColorFlag))
-            ColorFlag = 0;
-        else 
-            ColorFlag = _ColorFlag;
+        ColorFlag = null;
+        if(element.HasAttribute("ColorFlag"))
+        {
+            ColorFlagEnum _ColorFlag;
+            if(!Enum.TryParse<ColorFlagEnum>(element.GetNullableAttribute("ColorFlag")?.ToUpper(), out _ColorFlag))
+                ColorFlag = 0;
+            else
+                ColorFlag = _ColorFlag;
+        }
         
         //brawlhalla requires both attributes to exist for an anchor
-        //NOTE: a collision with an anchor can't be a pressure plate or have a normal
-        //NOTE: we don't make note of that here
+        AnchorX = AnchorY = null;
         if(element.HasAttribute("AnchorX") && element.HasAttribute("AnchorY"))
         {
-            AnchorX = element.GetNullableFloatAttribute("AnchorX");
-            AnchorY = element.GetNullableFloatAttribute("AnchorY");
+            AnchorX = element.GetFloatAttribute("AnchorX");
+            AnchorY = element.GetFloatAttribute("AnchorY");
         }
+
+        //a collision with an anchor can't be a pressure plate or have a normal
+        //but we don't bother implementing that
         NormalX = element.GetFloatAttribute("NormalX", 0);
         NormalY = element.GetFloatAttribute("NormalY", 0);
+
         Team = element.GetIntAttribute("Team", 0);
     }
 }

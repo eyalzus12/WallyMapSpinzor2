@@ -7,16 +7,16 @@ RotateSkew1 ScaleY      TranslateY
 0           0           1
 */
 
-public readonly record struct Transform(float ScaleX, float RotateSkew0, float RotateSkew1, float ScaleY, float TranslateX, float TranslateY)
+public readonly record struct Transform(double ScaleX, double RotateSkew0, double RotateSkew1, double ScaleY, double TranslateX, double TranslateY)
 {
     public static readonly Transform IDENTITY = new(1,0,0,1,0,0);
     public static readonly Transform ZERO = new(0,0,0,0,0,0);
     public static readonly Transform FLIP_X = new(-1,0,0,1,0,0);
     public static readonly Transform FLIP_Y = new(1,0,0,-1,0,0);
 
-    public static Transform CreateTranslate(float x, float y) => IDENTITY with {TranslateX = x, TranslateY = y};
-    public static Transform CreateScale(float scaleX, float scaleY) => IDENTITY with {ScaleX = scaleX, ScaleY = scaleY};
-    public static Transform CreateRotate(float rot) => IDENTITY with {ScaleX = MathF.Cos(rot), RotateSkew0 = MathF.Sin(rot), RotateSkew1 = MathF.Sin(rot), ScaleY = MathF.Cos(rot)};
+    public static Transform CreateTranslate(double x, double y) => IDENTITY with {TranslateX = x, TranslateY = y};
+    public static Transform CreateScale(double scaleX, double scaleY) => IDENTITY with {ScaleX = scaleX, ScaleY = scaleY};
+    public static Transform CreateRotate(double rot) => IDENTITY with {ScaleX = Math.Cos(rot), RotateSkew0 = Math.Sin(rot), RotateSkew1 = Math.Sin(rot), ScaleY = Math.Cos(rot)};
     
     //I hope this is correct
     public static Transform operator *(Transform t1, Transform t2) => new(
@@ -33,7 +33,7 @@ public readonly record struct Transform(float ScaleX, float RotateSkew0, float R
         t.RotateSkew1 * p.X + t.ScaleY * p.Y + t.TranslateY
     );
 
-    public static Transform operator *(Transform t, float f) => new
+    public static Transform operator *(Transform t, double f) => new
     (
         t.ScaleX*f, t.RotateSkew0*f,
         t.RotateSkew1*f, t.ScaleY*f,

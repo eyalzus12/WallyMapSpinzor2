@@ -1,6 +1,6 @@
 namespace WallyMapSpinzor2;
 
-public readonly record struct Rect(float X, float Y, float W, float H)
+public readonly record struct Rect(double X, double Y, double W, double H)
 {
     public static readonly Rect ZERO = new(0,0,0,0);
 
