@@ -5,6 +5,8 @@ namespace WallyMapSpinzor2;
 public class AnimatedBackground : IDeserializable
 {
     public int FrameOffset{get; set;}
+    
+    public bool Midground{get; set;}
 
     public double Position_X{get; set;}
     public double Position_Y{get; set;}
@@ -22,6 +24,7 @@ public class AnimatedBackground : IDeserializable
 
     public void Deserialize(XElement element)
     {
+        Midground = element.GetBoolAttribute("Midground", false);
         FrameOffset = Utils.ParseIntOrNull(element.Element("FrameOffset")?.Value) ?? 0;
         string[]? Position = element.Element("Position")?.Value.Split(',', 2);
         Position_X = Utils.ParseFloatOrNull(Position?[0]) ?? 0;

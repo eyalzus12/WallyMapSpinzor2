@@ -4,8 +4,8 @@ namespace WallyMapSpinzor2;
 
 public class LevelAnim : IDeserializable
 {
-    public string InstanceName{get; set;} = "";
-    public string AssetName{get; set;} = "";
+    public string InstanceName{get; set;} = null!;
+    public string AssetName{get; set;} = null!;
     public double X{get; set;}
     public double Y{get; set;}
     

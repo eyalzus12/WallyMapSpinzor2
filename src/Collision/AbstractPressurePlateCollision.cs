@@ -4,15 +4,15 @@ namespace WallyMapSpinzor2;
 
 public abstract class AbstractPressurePlateCollision : AbstractCollision
 {
-    public List<string> TrapPowers{get; set;} = new();
-    public List<double> FireOffsetX{get; set;} = new();
-    public List<double> FireOffsetY{get; set;} = new();
-    public string AssetName{get; set;} = "";
+    public List<string> TrapPowers{get; set;} = null!;
+    public List<double> FireOffsetX{get; set;} = null!;
+    public List<double> FireOffsetY{get; set;} = null!;
+    public string AssetName{get; set;} = null!;
     public int Cooldown{get; set;}
     public bool FaceLeft{get; set;}
     public double AnimOffsetX{get; set;}
     public double AnimOffsetY{get; set;}
-    public string PlatID{get; set;} = "";
+    public string? PlatID{get; set;}
     public double AnimRotation{get; set;}
 
     public override void Deserialize(XElement element)
@@ -27,7 +27,7 @@ public abstract class AbstractPressurePlateCollision : AbstractCollision
         FaceLeft = element.GetBoolAttribute("FaceLeft", false);
         AnimOffsetX = element.GetFloatAttribute("AnimOffsetX", 0);
         AnimOffsetY = element.GetFloatAttribute("AnimOffsetY", 0);
-        PlatID = element.GetAttribute("PlatID");
+        PlatID = element.GetNullableAttribute("PlatID");
         AnimRotation = Utils.DegToRad(element.GetFloatAttribute("AnimRotation"));
     }
 }

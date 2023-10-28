@@ -6,7 +6,7 @@ public class Asset : IDeserializable
 {
     //Assets seem to be capable of defining scale and rotation
     //but this is never used
-    public string AssetName{get; set;} = "";
+    public string AssetName{get; set;} = null!;
     public double X{get; set;}
     public double Y{get; set;}
     public double W{get; set;}

@@ -4,29 +4,29 @@ namespace WallyMapSpinzor2;
 
 public class LevelDesc : IDeserializable
 {
-    public string AssetDir{get; set;} = "";
-    public string LevelName{get; set;} = "";
+    public string AssetDir{get; set;} = null!;
+    public string LevelName{get; set;} = null!;
     public int NumFrames{get; set;}
     public double SlowMult{get; set;}
     public CameraBounds? CameraBounds{get; set;}
     public SpawnBotBounds? SpawnBotBounds{get; set;}
-    public List<AbstractCollision> Collisions{get; set;} = new();
-    public List<Respawn> Respawns{get; set;} = new();
-    public List<AbstractItemSpawn> ItemSpawns{get; set;} = new();
-    public List<NavNode> NavNodes{get; set;} = new();
-    public List<DynamicCollision> DynamicCollisions{get; set;} = new();
-    public List<DynamicItemSpawn> DynamicItemSpawns{get; set;} = new();
-    public List<DynamicRespawn> DynamicRespawns{get; set;} = new();
-    public List<DynamicNavNode> DynamicNavNodes{get; set;} = new();
-    public List<Background> Backgrounds{get; set;} = new();
-    public List<Platform> Platforms{get; set;} = new();
-    public List<WaveData> WaveDatas{get; set;} = new();
-    public List<AbstractVolume> Volumes{get; set;} = new();
+    public List<AbstractCollision> Collisions{get; set;} = null!;
+    public List<Respawn> Respawns{get; set;} = null!;
+    public List<AbstractItemSpawn> ItemSpawns{get; set;} = null!;
+    public List<NavNode> NavNodes{get; set;} = null!;
+    public List<DynamicCollision> DynamicCollisions{get; set;} = null!;
+    public List<DynamicItemSpawn> DynamicItemSpawns{get; set;} = null!;
+    public List<DynamicRespawn> DynamicRespawns{get; set;} = null!;
+    public List<DynamicNavNode> DynamicNavNodes{get; set;} = null!;
+    public List<Background> Backgrounds{get; set;} = null!;
+    public List<Platform> Platforms{get; set;} = null!;
+    public List<WaveData> WaveDatas{get; set;} = null!;
+    public List<AbstractVolume> Volumes{get; set;} = null!;
     public TeamScoreboard? TeamScoreboard{get; set;}
-    public List<LevelAnim> LevelAnims{get; set;} = new();
-    public List<LevelSound> LevelSounds{get; set;} = new();
-    public List<MovingPlatform> MovingPlatforms{get; set;} = new();
-    public List<AnimatedBackground> AnimatedBackgrounds{get; set;} = new();
+    public List<LevelAnim> LevelAnims{get; set;} = null!;
+    public List<LevelSound> LevelSounds{get; set;} = null!;
+    public List<MovingPlatform> MovingPlatforms{get; set;} = null!;
+    public List<AnimatedBackground> AnimatedBackgrounds{get; set;} = null!;
 
     public virtual void Deserialize(XElement element)
     {

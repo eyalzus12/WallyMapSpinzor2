@@ -22,12 +22,12 @@ public class Gfx : IDeserializable
         EYES = 14
     }
 
-    public string AnimFile{get; set;} = "";
-    public string AnimClass{get; set;} = "";
+    public string AnimFile{get; set;} = null!;
+    public string AnimClass{get; set;} = null!;
     public double AnimScale{get; set;}
     public double MoveAnimSpeed{get; set;}
-    public string BaseAnim{get; set;} = "";
-    public string RunAnim{get; set;} = "";
+    public string BaseAnim{get; set;} = null!;
+    public string RunAnim{get; set;} = null!;
     public bool FlipAnim{get; set;}
     public bool FireAndForget{get; set;}
     public bool RandomFrameStart{get; set;}
@@ -35,8 +35,8 @@ public class Gfx : IDeserializable
     public bool IgnoreCachedWeapon{get; set;}
     public uint Tint{get; set;} //packed
     public uint AsymmetrySwapFlags{get; set;} //packed
-    public List<CustomArt> CustomArts{get; set;} = new();
-    public List<ColorSwap> ColorSwaps{get; set;} = new();
+    public List<CustomArt> CustomArts{get; set;} = null!;
+    public List<ColorSwap> ColorSwaps{get; set;} = null!;
 
     public void Deserialize(XElement element)
     {
@@ -60,7 +60,7 @@ public class Gfx : IDeserializable
             AsymmetrySwapFlagEnum Flag;
             if(!Enum.TryParse<AsymmetrySwapFlagEnum>(flag, out Flag))
             {
-                //TODO: log
+                //TODO: log error
             }
             else
             {

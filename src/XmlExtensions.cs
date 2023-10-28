@@ -13,17 +13,23 @@ public static class XmlExtensions
     public static bool? GetNullableBoolAttribute(this XElement element, string attribute) => Utils.ParseBoolOrNull(GetNullableAttribute(element, attribute));
     public static int? GetNullableIntAttribute(this XElement element, string attribute) => Utils.ParseIntOrNull(GetNullableAttribute(element, attribute));
     public static double? GetNullableFloatAttribute(this XElement element, string attribute) => Utils.ParseFloatOrNull(GetNullableAttribute(element, attribute));
+    
     public static T DeserializeTo<T>(this XElement element) where T : IDeserializable, new()
     {
         T t = new(); t.Deserialize(element); return t;
     }
+    
     public static List<T> DeserializeChildrenOfType<T>(this XElement element) where T : IDeserializable, new()
         => element.Elements(typeof(T).Name).Select(DeserializeTo<T>).ToList();
+    
+    //thanks to lazy evaluation, this won't go over everything
     public static T? DeserializeChildOfType<T>(this XElement element) where T : IDeserializable, new()
         => element.Elements(typeof(T).Name).Select(DeserializeTo<T>).FirstOrDefault();
+    
     public static List<AbstractCollision> DeserializeCollisionChildren(this XElement element) =>
         element.Elements().Select(DeserializeCollision).Where(c => c is not null)
         .ToList()!;
+    
     public static AbstractCollision? DeserializeCollision(this XElement element) => element.Name.LocalName switch
     {
         nameof(HardCollision) => element.DeserializeTo<HardCollision>(),

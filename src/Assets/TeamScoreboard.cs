@@ -12,8 +12,8 @@ public class TeamScoreboard : IDeserializable
     public int DoubleDigitsTensX{get; set;}
     public double DoubleDigitsScale{get; set;}
     public double DoubleDigitsY{get; set;}
-    public string RedDigitFont{get; set;} = "";
-    public string BlueDigitFont{get; set;} = "";
+    public string RedDigitFont{get; set;} = null!;
+    public string BlueDigitFont{get; set;} = null!;
 
     public void Deserialize(XElement element)
     {

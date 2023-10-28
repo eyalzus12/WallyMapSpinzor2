@@ -6,7 +6,7 @@ public class Phase : IDeserializable, IKeyFrame
 {
     public int StartFrame{get; set;}
 
-    public List<IKeyFrame> KeyFrames{get; set;} = new();
+    public List<IKeyFrame> KeyFrames{get; set;} = null!;
 
     public void Deserialize(XElement element)
     {

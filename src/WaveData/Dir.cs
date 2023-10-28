@@ -1,5 +1,6 @@
 namespace WallyMapSpinzor2;
 
+//values are specific, to match Brawlhalla's
 public enum Dir
 {
     ANY = 6,

@@ -4,7 +4,7 @@ namespace WallyMapSpinzor2;
 
 public class LevelSound : IDeserializable
 {
-    public string SoundEventName{get; set;} = "";
+    public string SoundEventName{get; set;} = null!;
     public int Delay{get; set;}
     public int Interval{get; set;}
     

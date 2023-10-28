@@ -9,8 +9,8 @@ public class WaveData : IDeserializable
     public double? Speed3{get; set;}
     public double? Speed4{get; set;}
     public int LoopIdx{get; set;}
-    public List<CustomPath> CustomPaths{get; set;} = new();
-    public List<Group> Groups{get; set;} = new();
+    public List<CustomPath> CustomPaths{get; set;} = null!;
+    public List<Group> Groups{get; set;} = null!;
 
     public void Deserialize(XElement element)
     {

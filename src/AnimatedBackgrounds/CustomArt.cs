@@ -6,8 +6,8 @@ public class CustomArt : IDeserializable
 {
     public bool Right{get; set;}
     public int Type{get; set;}
-    public string FileName{get; set;} = "";
-    public string Name{get; set;} = "";
+    public string FileName{get; set;} = null!;
+    public string Name{get; set;} = null!;
 
     //idfk what's going on here
 

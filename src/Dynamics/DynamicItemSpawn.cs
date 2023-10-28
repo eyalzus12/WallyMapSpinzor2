@@ -6,8 +6,8 @@ public class DynamicItemSpawn : IDeserializable
 {
     public double X{get; set;}
     public double Y{get; set;}
-    public string PlatID{get; set;} = "";
-    public List<AbstractItemSpawn> ItemSpawns{get; set;} = new();
+    public string PlatID{get; set;} = null!;
+    public List<AbstractItemSpawn> ItemSpawns{get; set;} = null!;
 
     public virtual void Deserialize(XElement element)
     {

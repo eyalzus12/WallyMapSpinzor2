@@ -6,9 +6,9 @@ public class MovingPlatform : IDeserializable
 {
     public double X{get; set;}
     public double Y{get; set;}
-    public string PlatID{get; set;} = "";
+    public string PlatID{get; set;} = null!;
     public Animation? Animation{get; set;}
-    public List<Platform> Platforms{get; set;} = new();
+    public List<Platform> Platforms{get; set;} = null!;
 
     public void Deserialize(XElement element)
     {

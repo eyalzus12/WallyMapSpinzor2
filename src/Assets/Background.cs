@@ -6,7 +6,7 @@ public class Background : IDeserializable
 {
     public double W{get; set;}
     public double H{get; set;}
-    public string AssetName{get; set;} = "";
+    public string AssetName{get; set;} = null!;
     public bool HasSkulls{get; set;}
     public string[]? Theme{get; set;}
 

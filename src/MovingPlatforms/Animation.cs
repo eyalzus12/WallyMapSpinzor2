@@ -14,7 +14,7 @@ public class Animation : IDeserializable
     public bool EaseIn{get; set;}
     public bool EaseOut{get; set;}
     public int EasePower{get; set;}
-    public List<IKeyFrame> KeyFrames{get; set;} = new();
+    public List<IKeyFrame> KeyFrames{get; set;} = null!;
 
     public void Deserialize(XElement element)
     {

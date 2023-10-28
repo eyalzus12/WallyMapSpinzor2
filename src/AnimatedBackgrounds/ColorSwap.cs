@@ -13,7 +13,7 @@ public class ColorSwap : IDeserializable
         string[] parts = str.Split(',');
         if(parts.Length != 2)
         {
-            //TODO: log
+            //TODO: log error
         }
 
         string oldColor = parts[0];

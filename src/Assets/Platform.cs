@@ -11,11 +11,12 @@ public class Platform : IDeserializable
     public double Rotation{get; set;}
     public string? AssetName{get; set;}
     public string? ScoringType{get; set;}
+    public string? PlatformAssetSwap{get; set;}
     public string[]? Theme{get; set;}
-    public string InstanceName{get; set;} = "";
+    public string InstanceName{get; set;} = null!;
 
-    public List<Platform> Platforms{get; set;} = new();
-    public List<Asset> Assets{get; set;} = new();
+    public List<Platform> Platforms{get; set;} = null!;
+    public List<Asset> Assets{get; set;} = null!;
     
     public bool NoSkulls{get; set;}
     public string? Hotkey{get; set;}
@@ -32,6 +33,7 @@ public class Platform : IDeserializable
         Rotation = Utils.DegToRad(element.GetFloatAttribute("Rotation", 0));
         AssetName = element.GetNullableAttribute("AssetName");
         ScoringType = element.GetNullableAttribute("ScoringType");
+        PlatformAssetSwap = element.GetNullableAttribute("PlatformAssetSwap");
         Theme = element.GetNullableAttribute("Theme")?.Split(',');
         InstanceName = element.GetAttribute("InstanceName");
         Platforms = element.DeserializeChildrenOfType<Platform>();

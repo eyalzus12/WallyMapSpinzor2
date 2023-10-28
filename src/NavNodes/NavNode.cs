@@ -6,8 +6,8 @@ public class NavNode : IDeserializable
 {
     public double X{get; set;}
     public double Y{get; set;}
-    public string NavID{get; set;} = "";
-    public string[] Path{get; set;} = {};
+    public string NavID{get; set;} = null!;
+    public string[] Path{get; set;} = null!;
 
     public virtual void Deserialize(XElement element)
     {
