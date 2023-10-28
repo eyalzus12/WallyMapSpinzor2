@@ -1,7 +1,7 @@
 namespace WallyMapSpinzor2;
 
 //values are specific, to match Brawlhalla's
-//this enum will also often be a simple numerical value
+//note that this enum could also be just a numerical value (between 0 and 19)
 public enum Path
 {
     ANY = 1048575,
