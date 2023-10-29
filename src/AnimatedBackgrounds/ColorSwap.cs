@@ -10,7 +10,7 @@ public class ColorSwap : IDeserializable
     public void Deserialize(XElement element)
     {
         string str = element.Value;
-        string[] parts = str.Split(',');
+        string[] parts = str.Split('=');
         if(parts.Length != 2)
         {
             //TODO: log error

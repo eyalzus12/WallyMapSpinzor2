@@ -42,7 +42,7 @@ public class Gfx : IDeserializable
     {
         AnimFile = element.Element("AnimFile")?.Value ?? "";
         AnimClass = element.Element("AnimClass")?.Value ?? "a__Animation";
-        AnimScale = Math.Abs(Utils.ParseFloatOrNull(element.Element("AnimScale")?.Value) ?? 1);
+        AnimScale = Utils.ParseFloatOrNull(element.Element("AnimScale")?.Value) ?? 1;
         MoveAnimSpeed = Utils.ParseFloatOrNull(element.Element("MoveAnimSpeed")?.Value) ?? 1;
         BaseAnim = element.Element("BaseAnim")?.Value ?? "Ready";
         RunAnim = element.Element("RunAnim")?.Value ?? "Run";
@@ -57,14 +57,11 @@ public class Gfx : IDeserializable
         string[]? flags = element.Element("AsymmetrySwapFlags")?.Value.Split(',');
         if(flags is not null) foreach(string flag in flags)
         {
-            AsymmetrySwapFlagEnum Flag;
-            if(!Enum.TryParse<AsymmetrySwapFlagEnum>(flag, out Flag))
-            {
-                //TODO: log error
-            }
+            if(Enum.TryParse<AsymmetrySwapFlagEnum>(flag, out AsymmetrySwapFlagEnum Flag))
+                AsymmetrySwapFlags |= (1u << (int)Flag);
             else
             {
-                AsymmetrySwapFlags |= (1u << (int)Flag);
+                //TODO: log error
             }
         }
 
