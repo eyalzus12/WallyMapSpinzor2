@@ -11,8 +11,7 @@ public class BrawlhallaRandom
     public void Init(uint seed)
     {
         StateIndex = 0;
-        State = new(16);
-        State.Add(seed);
+        State = new(16){seed};
         for(int i=1;i<16;++i) State.Add((uint)(1812433253u*(State[i-1]^(State[i-1]>>30))+i));
     }
     

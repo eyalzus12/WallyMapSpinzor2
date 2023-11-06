@@ -26,8 +26,8 @@ public readonly record struct Position(double X, double Y)
         new(p.X / f, p.Y / f);
     
     public Position DirTo(Position p) => p - this;
-    public Line LineTo(Position p) => new Line(X,Y,p.X,p.Y);
-    public Rect RectTo(Position p) => new Rect(X,Y,p.X-X,p.Y-Y);
+    public Line LineTo(Position p) => new(X,Y,p.X,p.Y);
+    public Rect RectTo(Position p) => new(X,Y,p.X-X,p.Y-Y);
 
     public Position Lerp(Position p, double f) => this*(1-f) + p*f;
 
@@ -42,7 +42,7 @@ public readonly record struct Position(double X, double Y)
     {get
     {
         double len = Length;
-        if(len == 0) return Position.ZERO;
+        if(len == 0) return ZERO;
         return this / len;
     }}
 
