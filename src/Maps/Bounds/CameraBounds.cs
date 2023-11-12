@@ -2,7 +2,7 @@ using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
 
-public class CameraBounds : IDeserializable, ISerializable
+public class CameraBounds : IDeserializable, ISerializable, IDrawable
 {
     public double X{get; set;}
     public double Y{get; set;}
@@ -26,5 +26,18 @@ public class CameraBounds : IDeserializable, ISerializable
         e.SetAttributeValue("H", H.ToString());
 
         return e;
+    }
+
+    public void DrawOn<TTexture>
+    (ICanvas<TTexture> canvas, GlobalRenderData rd, RenderSettings rs, Transform t, double time)
+        where TTexture : ITexture
+    {
+        rd.BackgroundRect_X = X;
+        rd.BackgroundRect_Y = Y;
+        rd.BackgroundRect_W = W;
+        rd.BackgroundRect_H = H;
+
+        if(!rs.ShowCameraBounds) return;
+        canvas.DrawRect(X, Y, W, H, false, rs.ColorCameraBounds, t, DrawPriorityEnum.DATA);
     }
 }

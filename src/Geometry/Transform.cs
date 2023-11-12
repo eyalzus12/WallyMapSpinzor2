@@ -18,6 +18,11 @@ public readonly record struct Transform(double ScaleX, double SkewX, double Skew
     public static Transform CreateScale(double scaleX, double scaleY) => IDENTITY with {ScaleX = scaleX, ScaleY = scaleY};
     public static Transform CreateSkew(double skewX, double skewY) => IDENTITY with {ScaleX = Math.Cos(skewY), SkewX = -Math.Sin(skewX), SkewY = Math.Sin(skewY), ScaleY = Math.Cos(skewX)};
     public static Transform CreateRotate(double rot) => CreateSkew(rot, rot);
+    public static Transform CreateFrom(double x, double y, double rot, double skewX, double skewY, double scaleX, double scaleY) =>
+        CreateTranslate(x, y) *
+        CreateRotate(rot) *
+        CreateSkew(skewX, skewY) *
+        CreateScale(scaleX, scaleY);
     
     //I hope this is correct
     public static Transform operator *(Transform t1, Transform t2) => new(

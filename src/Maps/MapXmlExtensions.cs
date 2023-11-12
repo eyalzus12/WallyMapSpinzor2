@@ -38,7 +38,7 @@ public static class MapXmlExtensions
     };
 
     public static List<AbstractItemSpawn> DeserializeItemSpawnChildren(this XElement element) =>
-        element.Elements().Select(DeserializeItemSpawn).Where(c => c is not null)
+        element.Elements().Select(DeserializeItemSpawn).Where(i => i is not null)
         .ToList()!;
 
     public static AbstractItemSpawn? DeserializeItemSpawn(this XElement element) => element.Name.LocalName switch
@@ -51,7 +51,7 @@ public static class MapXmlExtensions
     };
 
     public static List<AbstractVolume> DeserializeVolumeChildren(this XElement element) =>
-        element.Elements().Select(DeserializeVolume).Where(c => c is not null)
+        element.Elements().Select(DeserializeVolume).Where(v => v is not null)
         .ToList()!;
 
     public static AbstractVolume? DeserializeVolume(this XElement element) => element.Name.LocalName switch
@@ -63,13 +63,24 @@ public static class MapXmlExtensions
     };
 
     public static List<AbstractKeyFrame> DeserializeKeyFrameChildren(this XElement element) =>
-        element.Elements().Select(DeserializeKeyFrame).Where(c => c is not null)
+        element.Elements().Select(DeserializeKeyFrame).Where(k => k is not null)
         .ToList()!;
 
     public static AbstractKeyFrame? DeserializeKeyFrame(this XElement element) => element.Name.LocalName switch
     {
         nameof(KeyFrame) => element.DeserializeTo<KeyFrame>(),
         nameof(Phase) => element.DeserializeTo<Phase>(),
+        _ => null
+    };
+
+    public static List<AbstractAsset> DeserializeAssetChildren(this XElement element) =>
+        element.Elements().Select(DeserializeAsset).Where(a => a is not null)
+        .ToList()!;
+
+    public static AbstractAsset? DeserializeAsset(this XElement element) => element.Name.LocalName switch
+    {
+        nameof(Platform) => element.DeserializeTo<Platform>(),
+        nameof(Asset) => element.DeserializeTo<Asset>(),
         _ => null
     };
 }

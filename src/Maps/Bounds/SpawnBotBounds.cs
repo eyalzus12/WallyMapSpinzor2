@@ -2,7 +2,7 @@ using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
 
-public class SpawnBotBounds : IDeserializable, ISerializable
+public class SpawnBotBounds : IDeserializable, ISerializable, IDrawable
 {
     public double X{get; set;}
     public double Y{get; set;}
@@ -26,5 +26,14 @@ public class SpawnBotBounds : IDeserializable, ISerializable
         e.SetAttributeValue("H", H.ToString());
 
         return e;
+    }
+
+
+    public void DrawOn<TTexture>
+    (ICanvas<TTexture> canvas, GlobalRenderData rd, RenderSettings rs, Transform t, double time)
+        where TTexture : ITexture
+    {
+        if(!rs.ShowSpawnBotBounds) return;
+        canvas.DrawRect(X, Y, W, H, false, rs.ColorSpawnBotBounds, t, DrawPriorityEnum.DATA);
     }
 }

@@ -2,7 +2,7 @@ using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
 
-public abstract class AbstractVolume : IDeserializable, ISerializable
+public abstract class AbstractVolume : IDeserializable, ISerializable, IDrawable
 {
     //yes, brawlhalla defines those as ints.
     public int X{get; set;}
@@ -36,4 +36,18 @@ public abstract class AbstractVolume : IDeserializable, ISerializable
 
         return e;
     }
+
+    public virtual void DrawOn<TTexture>
+    (ICanvas<TTexture> canvas, GlobalRenderData rd, RenderSettings rs, Transform t, double time)
+        where TTexture : ITexture
+    {
+        if(!ShouldShow(rs)) return;
+
+        if(Team >= rs.ColorVolumeTeam.Length)
+            throw new ArgumentOutOfRangeException($"Volume has team {Team}, which is larger than max available volume team color {rs.ColorVolumeTeam.Length-1}");
+
+        canvas.DrawRect(X, Y, W, H, true, rs.ColorVolumeTeam[Team], t, DrawPriorityEnum.VOLUMES);
+    }
+
+    public abstract bool ShouldShow(RenderSettings rs);
 }

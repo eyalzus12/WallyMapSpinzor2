@@ -43,6 +43,7 @@ public static class BrawlhallaMath
     }
     
     //create a list of points used for collision anchors
+    //does not include the starting point
     //when rendering pairs of points as a line, make sure to flip them so the first has a lower X
     //to get the correct collision normal
     public static IEnumerable<(double, double)> CollisionQuad(double fromX, double fromY, double toX, double toY, double anchorX, double anchorY)
@@ -50,7 +51,7 @@ public static class BrawlhallaMath
         int segments = (int)Math.Round((Math.Abs(toX-anchorX) + Math.Abs(fromX-anchorX) + Math.Abs(toY-anchorY) + Math.Abs(fromY-anchorY))/125);
         if(segments < 4) segments = 4;
         if(segments > 10) segments = 10;
-        for(int i = 0; i <= segments; ++i)
+        for(int i = 1; i <= segments; ++i)
         {
             double fraction = i / (double)segments;
             double offsetX0 = (anchorX - fromX) * fraction;

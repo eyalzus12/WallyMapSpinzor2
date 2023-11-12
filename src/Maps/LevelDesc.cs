@@ -2,7 +2,7 @@ using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
 
-public class LevelDesc : IDeserializable, ISerializable
+public class LevelDesc : IDeserializable, ISerializable, IDrawable
 {
     public string AssetDir{get; set;} = null!;
     public string LevelName{get; set;} = null!;
@@ -103,5 +103,40 @@ public class LevelDesc : IDeserializable, ISerializable
             e.Add(ab.Serialize());
 
         return e;
+    }
+
+    
+    public void DrawOn<TTexture>
+    (ICanvas<TTexture> canvas, GlobalRenderData rd, RenderSettings rs, Transform t, double time)
+        where TTexture : ITexture
+    {
+        rd.AssetDir = AssetDir;
+        rd.DefaultNumFrames = NumFrames;
+        rd.DefaultSlowMult = SlowMult;
+
+        CameraBounds.DrawOn(canvas, rd, rs, t, time);
+        SpawnBotBounds.DrawOn(canvas, rd, rs, t, time);
+        //foreach(Background b in Backgrounds)
+        //foreach(LevelSound ls in LevelSounds)
+        TeamScoreboard?.DrawOn(canvas, rd, rs, t, time);
+        //foreach(MovingPlatform mp in MovingPlatforms)
+        foreach(Platform p in Platforms)
+            p.DrawOn(canvas, rd, rs, t, time);
+        //foreach(LevelAnim la in LevelAnims)
+        foreach(AbstractVolume v in Volumes)
+            v.DrawOn(canvas, rd, rs, t, time);
+        foreach(AbstractCollision c in Collisions)
+            c.DrawOn(canvas, rd, rs, t, time);
+        //foreach(DynamicCollision dc in DynamicCollisions)
+        foreach(Respawn r in Respawns)
+            r.DrawOn(canvas, rd, rs, t, time);
+        //foreach(DynamicRespawn dr in DynamicRespawns)
+        foreach(AbstractItemSpawn i in ItemSpawns)
+            i.DrawOn(canvas, rd, rs, t, time);
+        //foreach(DynamicItemSpawn di in DynamicItemSpawns)
+        //foreach(NavNode n in NavNodes)
+        //foreach(DynamicNavNode dn in DynamicNavNodes)
+        //foreach(WaveData wd in WaveDatas)
+        //foreach(AnimatedBackground ab in AnimatedBackgrounds)
     }
 }

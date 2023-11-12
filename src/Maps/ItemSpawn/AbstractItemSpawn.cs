@@ -36,9 +36,11 @@ public abstract class AbstractItemSpawn: IDeserializable, ISerializable, IDrawab
     public abstract double DefaultW{get;}
     public abstract double DefaultH{get;}
 
-    public virtual void DrawOn<TTexture>(ICanvas<TTexture> canvas, RenderSettings rs, Transform t) where TTexture : ITexture
+    public virtual void DrawOn<TTexture>
+    (ICanvas<TTexture> canvas, GlobalRenderData rd, RenderSettings rs, Transform t, double time)
+        where TTexture : ITexture
     {
-        if(!rs.ItemSpawnShow) return;
+        if(!rs.ShowItemSpawn) return;
         canvas.DrawRect(X, Y, W, H, true, Color(rs), t, DrawPriorityEnum.DATA);
     }
 

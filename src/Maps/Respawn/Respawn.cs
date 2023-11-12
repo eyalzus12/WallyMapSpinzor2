@@ -30,9 +30,12 @@ public class Respawn : IDeserializable, ISerializable, IDrawable
         return e;
     }
 
-    public void DrawOn<TTexture>(ICanvas<TTexture> canvas, RenderSettings rs, Transform t) where TTexture : ITexture
+    
+    public void DrawOn<TTexture>
+    (ICanvas<TTexture> canvas, GlobalRenderData rd, RenderSettings rs, Transform t, double time)
+        where TTexture : ITexture
     {
-        if(!rs.RespawnShow) return;
+        if(!rs.ShowRespawn) return;
         canvas.DrawCircle(
             X, Y,
             rs.RadiusRespawn,

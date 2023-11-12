@@ -1,9 +1,8 @@
-using System.Net.Http.Headers;
 using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
 
-public abstract class AbstractCollision : IDeserializable, ISerializable
+public abstract class AbstractCollision : IDeserializable, ISerializable, IDrawable
 {
     public enum FlagEnum
     {
@@ -146,4 +145,66 @@ public abstract class AbstractCollision : IDeserializable, ISerializable
 
         return e;
     }
+
+    public virtual void DrawOn<TTexture>
+    (ICanvas<TTexture> canvas, GlobalRenderData rd, RenderSettings rs, Transform t, double time)
+        where TTexture : ITexture
+    {
+        if(!rs.ShowCollision) return;
+
+        double startX = X1, startY = Y1;
+
+        IEnumerator<(double,double)>? enumer = null;
+
+        if(AnchorX is not null && AnchorY is not null)
+        {
+            enumer = BrawlhallaMath
+                .CollisionQuad(X1, Y1, X2, Y2, AnchorX??0, AnchorY??0)
+                .GetEnumerator();
+        }
+
+        //we use a hack here to get anchors to work
+        while(startX != X2 || startY != Y2)
+        {
+            (double nextX, double nextY) = enumer?.Current ?? (X2,Y2);
+            //draw current line
+            if(Team == 0)
+                canvas.DrawLine(startX, startY, nextX, nextY, Color(rs), t, DrawPriorityEnum.DATA);
+            else
+            {
+                if(Team-1 >= rs.ColorCollisionTeam.Length)
+                    throw new ArgumentOutOfRangeException($"Collision has team {Team} which is larger than max available collision team color {rs.ColorCollisionTeam.Length}");
+                canvas.DrawDualColorLine(
+                        startX, startY, nextX, nextY,
+                        Color(rs), rs.ColorCollisionTeam[Team-1],
+                        t, DrawPriorityEnum.DATA
+                    );
+            }
+            
+            //draw collision line
+            if(rs.ShowCollisionNormal)
+            {
+                double lenX = nextX - startX;
+                if(NormalX != 0) lenX = NormalX;
+                double lenY = nextY - startY;
+                if(NormalY != 0) lenY = NormalY;
+                double len = Math.Sqrt(lenX*lenX + lenY*lenY);
+                lenX /= len; lenY /= len;
+                double normalStartX = (startX+nextX)/2;
+                double normalStartY = (startY+nextY)/2;
+                double normalEndX = normalStartX - rs.LengthCollisionNormal * lenY;
+                double normalEndY = normalStartY + rs.LengthCollisionNormal * lenX;
+
+                canvas.DrawLine(
+                    normalStartX, normalStartY, normalEndX, normalEndY,
+                    rs.ColorCollisionNormal, t, DrawPriorityEnum.DATA
+                );
+            }
+            
+            (startX, startY) = (nextX, nextY);
+            enumer?.MoveNext();
+        }
+    }
+
+    public abstract Color Color(RenderSettings rs);
 }
