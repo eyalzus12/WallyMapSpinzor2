@@ -53,11 +53,11 @@ public static class BrawlhallaMath
         for(int i = 0; i <= segments; ++i)
         {
             double fraction = i / (double)segments;
-            double offsetX0 = (anchorX - startX) * fraction;
+            double offsetX0 = (anchorX - fromX) * fraction;
             double offsetX1 = (anchorX - toX) * (1-fraction);
             double newX = (fromX + offsetX0) * (1-fraction) + (toX + offsetX1) * fraction;
-            double offsetY0 = (anchorY - startY) * fraction;
-            double offsetY1 = (anchorXY- toY) * (1-fraction);
+            double offsetY0 = (anchorY - fromY) * fraction;
+            double offsetY1 = (anchorY- toY) * (1-fraction);
             double newY = (fromY + offsetY0) * (1-fraction) + (toY + offsetY1) * fraction;
             
             yield return (newX, newY);
