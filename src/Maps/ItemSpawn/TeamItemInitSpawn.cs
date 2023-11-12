@@ -6,4 +6,6 @@ public class TeamItemInitSpawn : AbstractItemSpawn
     public override double DefaultY => 1.79769313486231e+308;
     public override double DefaultW => 50;
     public override double DefaultH => 50;
+    
+    public override Color Color(RenderSettings rs) => rs.ColorTeamItemInitSpawn;
 }

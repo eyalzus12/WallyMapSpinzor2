@@ -2,7 +2,7 @@ using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
 
-public abstract class AbstractItemSpawn: IDeserializable, ISerializable
+public abstract class AbstractItemSpawn: IDeserializable, ISerializable, IDrawable
 {
     public double X{get; set;}
     public double Y{get; set;}
@@ -35,4 +35,12 @@ public abstract class AbstractItemSpawn: IDeserializable, ISerializable
     public abstract double DefaultY{get;}
     public abstract double DefaultW{get;}
     public abstract double DefaultH{get;}
+
+    public virtual void DrawOn<TTexture>(ICanvas<TTexture> canvas, RenderSettings rs, Transform t) where TTexture : ITexture
+    {
+        if(!rs.ItemSpawnShow) return;
+        canvas.DrawRect(X, Y, W, H, true, Color(rs), t, DrawPriorityEnum.DATA);
+    }
+
+    public abstract Color Color(RenderSettings rs);
 }

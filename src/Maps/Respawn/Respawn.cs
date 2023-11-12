@@ -2,7 +2,7 @@ using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
 
-public class Respawn : IDeserializable, ISerializable
+public class Respawn : IDeserializable, ISerializable, IDrawable
 {
     public double X{get; set;}
     public double Y{get; set;}
@@ -28,5 +28,16 @@ public class Respawn : IDeserializable, ISerializable
             e.SetAttributeValue("ExpandedInit", ExpandedInit);
 
         return e;
+    }
+
+    public void DrawOn<TTexture>(ICanvas<TTexture> canvas, RenderSettings rs, Transform t) where TTexture : ITexture
+    {
+        if(!rs.RespawnShow) return;
+        canvas.DrawCircle(
+            X, Y,
+            rs.RadiusRespawn,
+            Initial?rs.ColorInitialRespawn:ExpandedInit?rs.ColorExpandedInitRespawn:rs.ColorRespawn,
+            t, DrawPriorityEnum.DATA
+        );
     }
 }

@@ -1,12 +1,13 @@
 namespace WallyMapSpinzor2;
 
-public readonly record struct AssetTransform(double X, double Y, double ScaleX, double ScaleY, double Rotation)
+public readonly record struct AssetTransform(double X, double Y, double Rotation, double SkewX, double SkewY, double ScaleX, double ScaleY)
 {
-    public static readonly AssetTransform IDENTITY = new(0,0,1,1,0);
+    public static readonly AssetTransform IDENTITY = new(0,0,0,0,0,1,1);
 
     //I hope this works
     public static explicit operator Transform(AssetTransform ass) =>
         Transform.CreateTranslate(ass.X, ass.Y) *
-        Transform.CreateScale(ass.ScaleX, ass.ScaleY) *
-        Transform.CreateRotate(ass.Rotation);
+        Transform.CreateRotate(ass.Rotation) *
+        Transform.CreateSkew(ass.SkewX, ass.SkewY) *
+        Transform.CreateScale(ass.ScaleX, ass.ScaleY);
 }

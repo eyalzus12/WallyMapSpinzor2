@@ -11,6 +11,8 @@ public class AnimatedBackground : IDeserializable, ISerializable
     public double Position_X{get; set;}
     public double Position_Y{get; set;}
 
+    public double Rotation{get; set;}
+
     public double Skew_X{get; set;}
     public double Skew_Y{get; set;}
 
@@ -18,7 +20,6 @@ public class AnimatedBackground : IDeserializable, ISerializable
     public double Scale_Y{get; set;}
 
     public int FrameOffset{get; set;}
-
 
     public void Deserialize(XElement element)
     {
@@ -30,14 +31,11 @@ public class AnimatedBackground : IDeserializable, ISerializable
         Position_X = Utils.ParseFloatOrNull(Position?[0]) ?? 0;
         Position_Y = Utils.ParseFloatOrNull(Position?[1]) ?? 0;
 
-        if(element.Element("Rotation") is not null)
-            Skew_X = Skew_Y = Utils.ParseFloatOrNull(element.Element("Rotation")?.Value) ?? 0;
-        else
-        {
-            string[]? Skew = element.Element("Skew")?.Value.Split(',', 2);
-            Skew_X = Utils.ParseFloatOrNull(Skew?[0]) ?? 0;
-            Skew_Y = Utils.ParseFloatOrNull(Skew?[1]) ?? 0;
-        }
+        Rotation = Utils.ParseFloatOrNull(element.Element("Rotation")?.Value) ?? 0;
+        
+        string[]? Skew = element.Element("Skew")?.Value.Split(',', 2);
+        Skew_X = Utils.ParseFloatOrNull(Skew?[0]) ?? 0;
+        Skew_Y = Utils.ParseFloatOrNull(Skew?[1]) ?? 0;
 
         string[]? Scale = element.Element("Scale")?.Value.Split(',', 2);
         Scale_X = Utils.ParseFloatOrNull(Scale?[0]) ?? 1;
@@ -56,10 +54,11 @@ public class AnimatedBackground : IDeserializable, ISerializable
         e.Add(Gfx.Serialize());
 
         e.Add(new XElement("Position", $"{Position_X},{Position_Y}"));
-
-        if(Skew_X == Skew_Y && Skew_X != 0)
-            e.Add(new XElement("Rotation", Skew_X.ToString()));
-        else
+        
+        if(Rotation != 0)
+            e.Add(new XElement("Rotation", Rotation.ToString()));
+        
+        if(Rotation == 0 || Skew_X != 0 || Skew_Y != 0)
             e.Add(new XElement("Skew", $"{Skew_X},{Skew_Y}"));
 
         e.Add(new XElement("Scale", $"{Scale_X},{Scale_Y}"));
