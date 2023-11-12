@@ -41,9 +41,26 @@ public static class BrawlhallaMath
 
         return num2 * weight;
     }
-
-    public static double Lerp(double from, double to, double weight)
+    
+    //create a list of points used for collision anchors
+    //when rendering pairs of points as a line, make sure to flip them so the first has a lower X
+    //to get the correct collision normal
+    public static IEnumerable<(double, double)> CollisionQuad(double fromX, double fromY, double toX, double toY, double anchorX, double anchorY)
     {
-        return from*(1-weight) + to*(weight);
+        int segments = (int)Math.Round((Math.Abs(toX-anchorX) + Math.Abs(fromX-anchorX) + Math.Abs(toY-anchorY) + Math.Abs(fromY-anchorY))/125);
+        if(segments < 4) segments = 4;
+        if(segments > 10) segments = 10;
+        for(int i = 0; i <= segments; ++i)
+        {
+            double fraction = i / (double)segments;
+            double offsetX0 = (anchorX - startX) * fraction;
+            double offsetX1 = (anchorX - toX) * (1-fraction);
+            double newX = (fromX + offsetX0) * (1-fraction) + (toX + offsetX1) * fraction;
+            double offsetY0 = (anchorY - startY) * fraction;
+            double offsetY1 = (anchorXY- toY) * (1-fraction);
+            double newY = (fromY + offsetY0) * (1-fraction) + (toY + offsetY1) * fraction;
+            
+            yield return (newX, newY);
+        }
     }
 }
