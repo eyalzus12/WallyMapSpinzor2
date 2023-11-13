@@ -12,21 +12,19 @@ public class WaveData : IDeserializable, ISerializable
     public List<CustomPath> CustomPaths{get; set;} = null!;
     public List<Group> Groups{get; set;} = null!;
 
-    public void Deserialize(XElement element)
+    public void Deserialize(XElement e)
     {
-        ID = element.GetIntAttribute("ID", 0);
-        Speed = element.GetNullableFloatAttribute("Speed");
-        Speed3 = element.GetNullableFloatAttribute("Speed3");
-        Speed4 = element.GetNullableFloatAttribute("Speed4");
-        LoopIdx = element.GetIntAttribute("LoopIdx", 0);
-        CustomPaths = element.DeserializeChildrenOfType<CustomPath>();
-        Groups = element.DeserializeChildrenOfType<Group>();
+        ID = e.GetIntAttribute("ID", 0);
+        Speed = e.GetNullableFloatAttribute("Speed");
+        Speed3 = e.GetNullableFloatAttribute("Speed3");
+        Speed4 = e.GetNullableFloatAttribute("Speed4");
+        LoopIdx = e.GetIntAttribute("LoopIdx", 0);
+        CustomPaths = e.DeserializeChildrenOfType<CustomPath>();
+        Groups = e.DeserializeChildrenOfType<Group>();
     }
 
-    public XElement Serialize()
+    public void Serialize(XElement e)
     {
-        XElement e = new("WaveData");
-
         e.SetAttributeValue("ID", ID.ToString());
 
         if(Speed is not null)
@@ -40,10 +38,8 @@ public class WaveData : IDeserializable, ISerializable
             e.SetAttributeValue("LoopIdx", LoopIdx.ToString());
         
         foreach(CustomPath c in CustomPaths)
-            e.Add(c.Serialize());
+            e.Add(c.SerializeToXElement());
         foreach(Group g in Groups)
-            e.Add(g.Serialize());
-
-        return e;
+            e.Add(g.SerializeToXElement());
     }
 }

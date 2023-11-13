@@ -15,24 +15,22 @@ public class TeamScoreboard : IDeserializable, ISerializable, IDrawable
     public string RedDigitFont{get; set;} = null!;
     public string BlueDigitFont{get; set;} = null!;
 
-    public void Deserialize(XElement element)
+    public void Deserialize(XElement e)
     {
-        RedTeamX = element.GetIntAttribute("RedTeamX", 0);
-        BlueTeamX = element.GetIntAttribute("BlueTeamX", 0);
-        Y = element.GetIntAttribute("Y", 0);
-        DoubleDigitsOnesX = element.GetIntAttribute("DoubleDigitsOnesX", 0);
-        DoubleDigitsTensX = element.GetIntAttribute("DoubleDigitsTensX", 0);
-        DoubleDigitsY = element.GetFloatAttribute("DoubleDigitsY", 0);
+        RedTeamX = e.GetIntAttribute("RedTeamX", 0);
+        BlueTeamX = e.GetIntAttribute("BlueTeamX", 0);
+        Y = e.GetIntAttribute("Y", 0);
+        DoubleDigitsOnesX = e.GetIntAttribute("DoubleDigitsOnesX", 0);
+        DoubleDigitsTensX = e.GetIntAttribute("DoubleDigitsTensX", 0);
+        DoubleDigitsY = e.GetFloatAttribute("DoubleDigitsY", 0);
         //yes, this actually defaults to 0
-        DoubleDigitsScale = element.GetFloatAttribute("DoubleDigitsScale", 0);
-        RedDigitFont = element.GetAttribute("RedDigitFont");
-        BlueDigitFont = element.GetAttribute("BlueDigitFont");
+        DoubleDigitsScale = e.GetFloatAttribute("DoubleDigitsScale", 0);
+        RedDigitFont = e.GetAttribute("RedDigitFont");
+        BlueDigitFont = e.GetAttribute("BlueDigitFont");
     }
 
-    public XElement Serialize()
+    public void Serialize(XElement e)
     {
-        XElement e = new("TeamScoreboard");
-
         e.SetAttributeValue("RedTeamX", RedTeamX.ToString());
         e.SetAttributeValue("BlueTeamX", BlueTeamX.ToString());
         e.SetAttributeValue("Y", Y.ToString());
@@ -42,8 +40,6 @@ public class TeamScoreboard : IDeserializable, ISerializable, IDrawable
         e.SetAttributeValue("DoubleDigitsScale", DoubleDigitsScale.ToString());
         e.SetAttributeValue("RedDigitFont", RedDigitFont);
         e.SetAttributeValue("BlueDigitFont", BlueDigitFont);
-
-        return e;
     }
 
     public void DrawOn<TTexture>

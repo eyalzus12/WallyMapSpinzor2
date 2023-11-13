@@ -21,34 +21,24 @@ public class MovingPlatform : AbstractAsset
     public Animation Animation{get; set;} = null!;
     public List<AbstractAsset> Assets{get; set;} = null!;
 
-    public override void Deserialize(XElement element)
+    public override void Deserialize(XElement e)
     {
-        base.Deserialize(element);
-        PlatID = element.GetAttribute("PlatID");
+        base.Deserialize(e);
+        PlatID = e.GetAttribute("PlatID");
         //Animation is always supposed to exist
         //The game technically supports it not existing
         //In which case the moving platform doesn't exist
-        Animation = element.DeserializeChildOfType<Animation>()!;
-        Assets = element.DeserializeAssetChildren();
+        Animation = e.DeserializeChildOfType<Animation>()!;
+        Assets = e.DeserializeAssetChildren();
     }
 
-    public override XElement Serialize()
+    public override void Serialize(XElement e)
     {
-        XElement e = new("MovingPlatform");
-        
-        //a hack to get PlatID to come first
-
         e.SetAttributeValue("PlatID", PlatID);
-
-        XElement e2 = base.Serialize();
-        foreach(XAttribute attr in e2.Attributes())
-            e.SetAttributeValue(attr.Name, attr.Value);
-
-        e.Add(Animation.Serialize());
+        base.Serialize(e);
+        e.Add(Animation.SerializeToXElement());
         foreach(AbstractAsset a in Assets)
-            e.Add(a.Serialize());
-
-        return e;
+            e.Add(a.SerializeToXElement());
     }
 
     public void StoreOffset(GlobalRenderData rd, double time)

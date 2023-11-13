@@ -20,6 +20,6 @@ if(element is not null)
         NewLineChars = "\n", //use UNIX line endings
         Encoding = new UTF8Encoding(false) //use UTF8 (no BOM) encoding
     });
-    levelDesc.Serialize().Save(xmlw);
+    levelDesc.SerializeToXElement().Save(xmlw);
 }
 

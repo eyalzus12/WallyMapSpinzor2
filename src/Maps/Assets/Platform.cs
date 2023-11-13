@@ -16,20 +16,18 @@ public class Platform : AbstractAsset
     public int? Blue => InstanceName.StartsWith("am_Blue")?int.Parse(InstanceName.Substring("am_Blue".Length)):null;
     public int? Red => InstanceName.StartsWith("am_Red")?int.Parse(InstanceName.Substring("am_Red".Length)):null;
 
-    public override void Deserialize(XElement element)
+    public override void Deserialize(XElement e)
     {
-        base.Deserialize(element);
-        InstanceName = element.GetAttribute("InstanceName");
-        PlatformAssetSwap = element.GetNullableAttribute("PlatformAssetSwap");
-        Theme = element.GetNullableAttribute("Theme")?.Split(',').ToList();
-        ScoringType = element.GetNullableAttribute("ScoringType");
-        AssetChildren = element.DeserializeAssetChildren();
+        base.Deserialize(e);
+        InstanceName = e.GetAttribute("InstanceName");
+        PlatformAssetSwap = e.GetNullableAttribute("PlatformAssetSwap");
+        Theme = e.GetNullableAttribute("Theme")?.Split(',').ToList();
+        ScoringType = e.GetNullableAttribute("ScoringType");
+        AssetChildren = e.DeserializeAssetChildren();
     }
 
-    public override XElement Serialize()
+    public override void Serialize(XElement e)
     {
-        XElement e = new("Platform");
-
         e.SetAttributeValue("InstanceName", InstanceName);
         
         if(PlatformAssetSwap is not null)
@@ -41,15 +39,10 @@ public class Platform : AbstractAsset
         if(ScoringType is not null)
             e.SetAttributeValue("ScoringType", ScoringType);
         
-        //hack to get InstanceName to show before the other stuff
-        XElement e2 = base.Serialize();
-        foreach(XAttribute attr in e2.Attributes())
-            e.SetAttributeValue(attr.Name, attr.Value);
+        base.Serialize(e);
 
         foreach(AbstractAsset a in AssetChildren)
-            e.Add(a.Serialize());
-
-        return e;
+            e.Add(a.SerializeToXElement());
     }
 
     

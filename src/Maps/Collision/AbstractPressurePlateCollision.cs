@@ -15,26 +15,24 @@ public abstract class AbstractPressurePlateCollision : AbstractCollision
     public string? PlatID{get; set;}
     public List<string> TrapPowers{get; set;} = null!;
 
-    public override void Deserialize(XElement element)
+    public override void Deserialize(XElement e)
     {
-        base.Deserialize(element);
-        AnimOffsetX = element.GetFloatAttribute("AnimOffsetX", 0);
-        AnimOffsetY = element.GetFloatAttribute("AnimOffsetY", 0);
-        AnimRotation = element.GetFloatAttribute("AnimRotation");
-        AssetName = element.GetAttribute("AssetName");
-        Cooldown = element.GetIntAttribute("Cooldown", 3000);
-        FaceLeft = element.GetBoolAttribute("FaceLeft", false);
-        FireOffsetX = element.GetAttribute("FireOffsetX").Split(',').Select(double.Parse).ToList();
-        FireOffsetY = element.GetAttribute("FireOffsetY").Split(',').Select(double.Parse).ToList();
+        base.Deserialize(e);
+        AnimOffsetX = e.GetFloatAttribute("AnimOffsetX", 0);
+        AnimOffsetY = e.GetFloatAttribute("AnimOffsetY", 0);
+        AnimRotation = e.GetFloatAttribute("AnimRotation");
+        AssetName = e.GetAttribute("AssetName");
+        Cooldown = e.GetIntAttribute("Cooldown", 3000);
+        FaceLeft = e.GetBoolAttribute("FaceLeft", false);
+        FireOffsetX = e.GetAttribute("FireOffsetX").Split(',').Select(double.Parse).ToList();
+        FireOffsetY = e.GetAttribute("FireOffsetY").Split(',').Select(double.Parse).ToList();
         if(FireOffsetY.Count == 0) FireOffsetY = new(){-10}; //wtf bmg
-        PlatID = element.GetNullableAttribute("PlatID");
-        TrapPowers = element.GetAttribute("TrapPowers").Split(',').ToList();
+        PlatID = e.GetNullableAttribute("PlatID");
+        TrapPowers = e.GetAttribute("TrapPowers").Split(',').ToList();
     }
 
-    public override XElement Serialize()
+    public override void Serialize(XElement e)
     {
-        XElement e = new(GetType().Name);
-
         e.SetAttributeValue("AnimOffsetX", AnimOffsetX.ToString());
         e.SetAttributeValue("AnimOffsetY", AnimOffsetY.ToString());
         if(AnimRotation != 0)
@@ -47,13 +45,6 @@ public abstract class AbstractPressurePlateCollision : AbstractCollision
         if(PlatID is not null)
             e.SetAttributeValue("PlatID", PlatID);
         e.SetAttributeValue("TrapPowers", string.Join(',', TrapPowers));
-
-        //hack to put attributes before the normal collision stuff
-        XElement e2 = base.Serialize();
-        foreach(XAttribute attr in e2.Attributes())
-            e.SetAttributeValue(attr.Name, attr.Value);
-
-
-        return e;
+        base.Serialize(e);
     }
 }

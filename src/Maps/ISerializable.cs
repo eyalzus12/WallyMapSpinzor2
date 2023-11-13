@@ -4,5 +4,5 @@ namespace WallyMapSpinzor2;
 
 public interface ISerializable
 {
-    XElement Serialize();
+    void Serialize(XElement e);
 }

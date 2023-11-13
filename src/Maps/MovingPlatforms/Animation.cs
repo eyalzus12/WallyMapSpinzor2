@@ -16,26 +16,24 @@ public class Animation : IDeserializable, ISerializable
     public List<AbstractKeyFrame> KeyFrames{get; set;} = null!;
     
     public bool HasCenter => CenterX is not null || CenterY is not null;
-    public void Deserialize(XElement element)
+    public void Deserialize(XElement e)
     {
-        NumFrames = element.GetNullableIntAttribute("NumFrames");
-        SlowMult = element.GetNullableFloatAttribute("SlowMult");
-        if(element.HasAttribute("CenterX") || element.HasAttribute("CenterY"))
+        NumFrames = e.GetNullableIntAttribute("NumFrames");
+        SlowMult = e.GetNullableFloatAttribute("SlowMult");
+        if(e.HasAttribute("CenterX") || e.HasAttribute("CenterY"))
         {
-            CenterX = element.GetFloatAttribute("CenterX", 0);
-            CenterY = element.GetFloatAttribute("CenterY", 0);
+            CenterX = e.GetFloatAttribute("CenterX", 0);
+            CenterY = e.GetFloatAttribute("CenterY", 0);
         }
-        EaseIn = element.GetBoolAttribute("EaseIn", false);
-        EaseOut = element.GetBoolAttribute("EaseOut", false);
-        EasePower = element.GetIntAttribute("EasePower", 2);
-        StartFrame = element.GetIntAttribute("StartFrame", 0);
-        KeyFrames = element.DeserializeKeyFrameChildren();
+        EaseIn = e.GetBoolAttribute("EaseIn", false);
+        EaseOut = e.GetBoolAttribute("EaseOut", false);
+        EasePower = e.GetIntAttribute("EasePower", 2);
+        StartFrame = e.GetIntAttribute("StartFrame", 0);
+        KeyFrames = e.DeserializeKeyFrameChildren();
     }
 
-    public XElement Serialize()
+    public void Serialize(XElement e)
     {
-        XElement e = new("Animation");
-        
         if(NumFrames is not null)
             e.SetAttributeValue("NumFrames", NumFrames.ToString());
         if(SlowMult is not null)
@@ -56,9 +54,7 @@ public class Animation : IDeserializable, ISerializable
         if(StartFrame != 0)
             e.SetAttributeValue("StartFrame", StartFrame.ToString());
         foreach(AbstractKeyFrame k in KeyFrames)
-            e.Add(k.Serialize());
-
-        return e;
+            e.Add(k.SerializeToXElement());
     }
 
     public readonly record struct AnimationDefaultValues(double? CenterX, double? CenterY, bool EaseIn, bool EaseOut, int EasePower)

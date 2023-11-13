@@ -8,21 +8,17 @@ public class LevelSound : IDeserializable, ISerializable
     public int Interval{get; set;}
     public int Delay{get; set;}
     
-    public void Deserialize(XElement element)
+    public void Deserialize(XElement e)
     {
-        SoundEventName = element.GetAttribute("SoundEventName");
-        Interval = element.GetIntAttribute("Interval", 0);
-        Delay = element.GetIntAttribute("Delay", 0);
+        SoundEventName = e.GetAttribute("SoundEventName");
+        Interval = e.GetIntAttribute("Interval", 0);
+        Delay = e.GetIntAttribute("Delay", 0);
     }
 
-    public XElement Serialize()
+    public void Serialize(XElement e)
     {
-        XElement e = new("LevelSound");
-
         e.SetAttributeValue("SoundEventName", SoundEventName);
         e.SetAttributeValue("Interval", Interval.ToString());
         e.SetAttributeValue("Delay", Delay.ToString());
-
-        return e;
     }
 }

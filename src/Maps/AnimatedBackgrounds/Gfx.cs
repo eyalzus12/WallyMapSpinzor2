@@ -38,39 +38,38 @@ public class Gfx : IDeserializable, ISerializable
     public List<CustomArt> CustomArts{get; set;} = null!;
     public List<ColorSwap> ColorSwaps{get; set;} = null!;
 
-    public void Deserialize(XElement element)
+    public void Deserialize(XElement e)
     {
-        AnimFile = element.Element("AnimFile")?.Value ?? "";
-        AnimClass = element.Element("AnimClass")?.Value ?? "a__Animation";
-        AnimScale = Utils.ParseFloatOrNull(element.Element("AnimScale")?.Value) ?? 1;
-        MoveAnimSpeed = Utils.ParseFloatOrNull(element.Element("MoveAnimSpeed")?.Value) ?? 1;
-        BaseAnim = element.Element("BaseAnim")?.Value ?? "Ready";
-        RunAnim = element.Element("RunAnim")?.Value ?? "Run";
-        FlipAnim = Utils.ParseBoolOrNull(element.Element("FlipAnim")?.Value) ?? false;
-        FireAndForget = Utils.ParseBoolOrNull(element.Element("FireAndForget")?.Value) ?? false;
-        RandomFrameStart = Utils.ParseBoolOrNull(element.Element("RandomFrameStart")?.Value) ?? false;
-        Desynch = Utils.ParseBoolOrNull(element.Element("Desynch")?.Value) ?? false;
-        IgnoreCachedWeapon = Utils.ParseBoolOrNull(element.Element("IgnoreCachedWeapon")?.Value) ?? false;
-        Tint = Utils.ParseUIntOrNull(element.Element("Tint")?.Value) ?? 0;
+        AnimFile = e.Element("AnimFile")?.Value ?? "";
+        AnimClass = e.Element("AnimClass")?.Value ?? "a__Animation";
+        AnimScale = Utils.ParseFloatOrNull(e.Element("AnimScale")?.Value) ?? 1;
+        MoveAnimSpeed = Utils.ParseFloatOrNull(e.Element("MoveAnimSpeed")?.Value) ?? 1;
+        BaseAnim = e.Element("BaseAnim")?.Value ?? "Ready";
+        RunAnim = e.Element("RunAnim")?.Value ?? "Run";
+        FlipAnim = Utils.ParseBoolOrNull(e.Element("FlipAnim")?.Value) ?? false;
+        FireAndForget = Utils.ParseBoolOrNull(e.Element("FireAndForget")?.Value) ?? false;
+        RandomFrameStart = Utils.ParseBoolOrNull(e.Element("RandomFrameStart")?.Value) ?? false;
+        Desynch = Utils.ParseBoolOrNull(e.Element("Desynch")?.Value) ?? false;
+        IgnoreCachedWeapon = Utils.ParseBoolOrNull(e.Element("IgnoreCachedWeapon")?.Value) ?? false;
+        Tint = Utils.ParseUIntOrNull(e.Element("Tint")?.Value) ?? 0;
         
         AsymmetrySwapFlags =
-            element.Element("AsymmetrySwapFlags")?.Value.Split(',')
-            .Select(f => Enum.Parse<AsymmetrySwapFlagEnum>(f)).ToList() ?? new();
+            e.Element("AsymmetrySwapFlags")?.Value.Split(',')
+            .Select(Enum.Parse<AsymmetrySwapFlagEnum>).ToList() ?? new();
 
-        CustomArts = element.Elements()
+        CustomArts = e.Elements()
             .Where(e => e.Name.LocalName.StartsWith("CustomArt"))
             .Select(e => e.DeserializeTo<CustomArt>())
             .ToList();
         
-        ColorSwaps = element.Elements()
+        ColorSwaps = e.Elements()
             .Where(e => e.Name.LocalName.StartsWith("ColorSwap"))
             .Select(e => e.DeserializeTo<ColorSwap>())
             .ToList();
     }
 
-    public XElement Serialize()
+    public void Serialize(XElement e)
     {
-        XElement e = new("Gfx");
         e.Add(new XElement("AnimFile", AnimFile));
         e.Add(new XElement("AnimClass", AnimClass));
         if(AnimScale != 1)
@@ -96,9 +95,8 @@ public class Gfx : IDeserializable, ISerializable
         if(AsymmetrySwapFlags.Count != 0)
             e.Add(new XElement("AsymmetrySwapFlags", string.Join(',', AsymmetrySwapFlags)));
         foreach(CustomArt ca in CustomArts)
-            e.Add(ca.Serialize());
+            e.Add(ca.SerializeToXElement());
         foreach(ColorSwap cs in ColorSwaps)
-            e.Add(cs.Serialize());
-        return e;
+            e.Add(cs.SerializeToXElement());
     }
 }

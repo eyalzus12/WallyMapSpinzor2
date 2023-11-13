@@ -11,20 +11,18 @@ public abstract class AbstractVolume : IDeserializable, ISerializable, IDrawable
     public double Y{get; set;}
     public int ID{get; set;}
     
-    public virtual void Deserialize(XElement element)
+    public virtual void Deserialize(XElement e)
     {
-        H = element.GetFloatAttribute("H");
-        Team = element.GetIntAttribute("Team");
-        W = element.GetFloatAttribute("W");
-        X = element.GetFloatAttribute("X");
-        Y = element.GetFloatAttribute("Y");
-        ID = element.GetIntAttribute("ID", 0);
+        H = e.GetFloatAttribute("H");
+        Team = e.GetIntAttribute("Team");
+        W = e.GetFloatAttribute("W");
+        X = e.GetFloatAttribute("X");
+        Y = e.GetFloatAttribute("Y");
+        ID = e.GetIntAttribute("ID", 0);
     }
 
-    public virtual XElement Serialize()
+    public virtual void Serialize(XElement e)
     {
-        XElement e = new(GetType().Name);
-
         e.SetAttributeValue("H", H.ToString());
         e.SetAttributeValue("Team", Team.ToString());
         e.SetAttributeValue("W", W.ToString());
@@ -32,8 +30,6 @@ public abstract class AbstractVolume : IDeserializable, ISerializable, IDrawable
         e.SetAttributeValue("Y", Y.ToString());
         if(ID != 0)
             e.SetAttributeValue("ID", ID.ToString());
-
-        return e;
     }
 
     public virtual void DrawOn<TTexture>

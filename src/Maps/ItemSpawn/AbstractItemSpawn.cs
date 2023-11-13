@@ -9,18 +9,16 @@ public abstract class AbstractItemSpawn: IDeserializable, ISerializable, IDrawab
     public double X{get; set;}
     public double Y{get; set;}
 
-    public void Deserialize(XElement element)
+    public void Deserialize(XElement e)
     {
-        H = element.GetFloatAttribute("H", DefaultH);
-        W = element.GetFloatAttribute("W", DefaultW);
-        X = element.GetFloatAttribute("X", DefaultX);
-        Y = element.GetFloatAttribute("Y", DefaultY);
+        H = e.GetFloatAttribute("H", DefaultH);
+        W = e.GetFloatAttribute("W", DefaultW);
+        X = e.GetFloatAttribute("X", DefaultX);
+        Y = e.GetFloatAttribute("Y", DefaultY);
     }
 
-    public XElement Serialize()
+    public void Serialize(XElement e)
     {
-        XElement e = new(GetType().Name);
-
         if(H != DefaultH)
             e.SetAttributeValue("H", H.ToString());
         if(W != DefaultW)
@@ -28,7 +26,6 @@ public abstract class AbstractItemSpawn: IDeserializable, ISerializable, IDrawab
 
         e.SetAttributeValue("X", X.ToString());
         e.SetAttributeValue("Y", Y.ToString());
-        return e;
     }
 
     public abstract double DefaultX{get;}

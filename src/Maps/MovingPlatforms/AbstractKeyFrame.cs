@@ -5,7 +5,7 @@ namespace WallyMapSpinzor2;
 public abstract class AbstractKeyFrame : IDeserializable, ISerializable
 {
     public abstract void Deserialize(XElement e);
-    public abstract XElement Serialize();
+    public abstract void Serialize(XElement e);
 
     public abstract double GetStartFrame();
     public abstract (double, double) GetPosition();

@@ -21,37 +21,35 @@ public class AnimatedBackground : IDeserializable, ISerializable
 
     public int FrameOffset{get; set;}
 
-    public void Deserialize(XElement element)
+    public void Deserialize(XElement e)
     {
-        Midground = element.GetBoolAttribute("Midground", false);
+        Midground = e.GetBoolAttribute("Midground", false);
 
-        Gfx = element.DeserializeChildOfType<Gfx>()!;
+        Gfx = e.DeserializeChildOfType<Gfx>()!;
 
-        string[]? Position = element.Element("Position")?.Value.Split(',', 2);
+        string[]? Position = e.Element("Position")?.Value.Split(',', 2);
         Position_X = Utils.ParseFloatOrNull(Position?[0]) ?? 0;
         Position_Y = Utils.ParseFloatOrNull(Position?[1]) ?? 0;
         
-        string[]? Skew = element.Element("Skew")?.Value.Split(',', 2);
+        string[]? Skew = e.Element("Skew")?.Value.Split(',', 2);
         Skew_X = Utils.ParseFloatOrNull(Skew?[0]) ?? 0;
         Skew_Y = Utils.ParseFloatOrNull(Skew?[1]) ?? 0;
 
-        string[]? Scale = element.Element("Scale")?.Value.Split(',', 2);
+        string[]? Scale = e.Element("Scale")?.Value.Split(',', 2);
         Scale_X = Utils.ParseFloatOrNull(Scale?[0]) ?? 1;
         Scale_Y = Utils.ParseFloatOrNull(Scale?[1]) ?? 1;
 
-        Rotation = Utils.ParseFloatOrNull(element.Element("Rotation")?.Value) ?? 0;
+        Rotation = Utils.ParseFloatOrNull(e.Element("Rotation")?.Value) ?? 0;
 
-        FrameOffset = Utils.ParseIntOrNull(element.Element("FrameOffset")?.Value) ?? 0;
+        FrameOffset = Utils.ParseIntOrNull(e.Element("FrameOffset")?.Value) ?? 0;
     }
 
-    public XElement Serialize()
+    public void Serialize(XElement e)
     {
-        XElement e = new("AnimatedBackground");
-
         if(Midground)
             e.SetAttributeValue("Midground", Midground.ToString().ToLower());
         
-        e.Add(Gfx.Serialize());
+        e.Add(Gfx.SerializeToXElement());
 
         e.Add(new XElement("Position", $"{Position_X},{Position_Y}"));
         
@@ -65,7 +63,5 @@ public class AnimatedBackground : IDeserializable, ISerializable
 
         if(FrameOffset != 0)
             e.Add(new XElement("FrameOffset", FrameOffset));
-
-        return e;
     }
 }

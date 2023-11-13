@@ -8,24 +8,20 @@ public class SpawnBotBounds : IDeserializable, ISerializable, IDrawable
     public double W{get; set;}
     public double X{get; set;}
     public double Y{get; set;}
-    public void Deserialize(XElement element)
+    public void Deserialize(XElement e)
     {
-        H = element.GetFloatAttribute("H");
-        W = element.GetFloatAttribute("W");
-        X = element.GetFloatAttribute("X");
-        Y = element.GetFloatAttribute("Y");
+        H = e.GetFloatAttribute("H");
+        W = e.GetFloatAttribute("W");
+        X = e.GetFloatAttribute("X");
+        Y = e.GetFloatAttribute("Y");
     }
 
-    public XElement Serialize()
+    public void Serialize(XElement e)
     {
-        XElement e = new("SpawnBotBounds");
-
         e.SetAttributeValue("H", H.ToString());
         e.SetAttributeValue("W", W.ToString());
         e.SetAttributeValue("X", X.ToString());
         e.SetAttributeValue("Y", Y.ToString());
-
-        return e;
     }
 
 

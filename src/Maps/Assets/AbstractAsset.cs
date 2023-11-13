@@ -13,23 +13,21 @@ public abstract class AbstractAsset : ISerializable, IDeserializable, IDrawable
     public double X{get; set;}
     public double Y{get; set;}
 
-    public virtual void Deserialize(XElement element)
+    public virtual void Deserialize(XElement e)
     {
-        AssetName = element.GetNullableAttribute("AssetName");
-        Rotation = element.GetFloatAttribute("Rotation", 0);
-        double Scale = element.GetFloatAttribute("Scale", 1);
-        ScaleX = element.GetFloatAttribute("ScaleX", Scale);
-        ScaleY = element.GetFloatAttribute("ScaleY", Scale);
-        H = element.GetFloatAttribute("H", 0);
-        W = element.GetFloatAttribute("W", 0);
-        X = element.GetFloatAttribute("X", 0);
-        Y = element.GetFloatAttribute("Y", 0);
+        AssetName = e.GetNullableAttribute("AssetName");
+        Rotation = e.GetFloatAttribute("Rotation", 0);
+        double Scale = e.GetFloatAttribute("Scale", 1);
+        ScaleX = e.GetFloatAttribute("ScaleX", Scale);
+        ScaleY = e.GetFloatAttribute("ScaleY", Scale);
+        H = e.GetFloatAttribute("H", 0);
+        W = e.GetFloatAttribute("W", 0);
+        X = e.GetFloatAttribute("X", 0);
+        Y = e.GetFloatAttribute("Y", 0);
     }
 
-    public virtual XElement Serialize()
+    public virtual void Serialize(XElement e)
     {
-        XElement e = new(this.GetType().Name);
-        
         if(AssetName is not null)
             e.SetAttributeValue("AssetName", AssetName);
 
@@ -57,8 +55,6 @@ public abstract class AbstractAsset : ISerializable, IDeserializable, IDrawable
             e.SetAttributeValue("X", X.ToString());
         if(Y != 0)
             e.SetAttributeValue("Y", Y.ToString());
-
-        return e;
     }
 
     

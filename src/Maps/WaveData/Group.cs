@@ -19,28 +19,26 @@ public class Group : IDeserializable, ISerializable
     public bool Shared{get; set;}
     public bool SharedPath{get; set;}
 
-    public void Deserialize(XElement element)
+    public void Deserialize(XElement e)
     {
-        Count = element.GetNullableIntAttribute("Count");
-        Count3 = element.GetNullableIntAttribute("Count3");
-        Count4 = element.GetNullableIntAttribute("Count4");
-        Delay = element.GetNullableIntAttribute("Delay");
-        Delay3 = element.GetNullableIntAttribute("Delay3");
-        Delay4 = element.GetNullableIntAttribute("Delay4");
-        Stagger = element.GetNullableIntAttribute("Stagger");
-        Stagger3 = element.GetNullableIntAttribute("Stagger3");
-        Stagger4 = element.GetNullableIntAttribute("Stagger4");
-        Dir = MapUtils.ParseDir(element.GetNullableAttribute("Dir"));
-        Path = MapUtils.ParsePath(element.GetNullableAttribute("Path"));
-        Behavior = MapUtils.ParseBehavior(element.GetNullableAttribute("Behavior"));
-        Shared = MapUtils.IsSharedDir(Dir) || element.GetBoolAttribute("Shared", false);
-        SharedPath = MapUtils.IsSharedPath(Path) || element.GetBoolAttribute("SharedPath", false);
+        Count = e.GetNullableIntAttribute("Count");
+        Count3 = e.GetNullableIntAttribute("Count3");
+        Count4 = e.GetNullableIntAttribute("Count4");
+        Delay = e.GetNullableIntAttribute("Delay");
+        Delay3 = e.GetNullableIntAttribute("Delay3");
+        Delay4 = e.GetNullableIntAttribute("Delay4");
+        Stagger = e.GetNullableIntAttribute("Stagger");
+        Stagger3 = e.GetNullableIntAttribute("Stagger3");
+        Stagger4 = e.GetNullableIntAttribute("Stagger4");
+        Dir = MapUtils.ParseDir(e.GetNullableAttribute("Dir"));
+        Path = MapUtils.ParsePath(e.GetNullableAttribute("Path"));
+        Behavior = MapUtils.ParseBehavior(e.GetNullableAttribute("Behavior"));
+        Shared = MapUtils.IsSharedDir(Dir) || e.GetBoolAttribute("Shared", false);
+        SharedPath = MapUtils.IsSharedPath(Path) || e.GetBoolAttribute("SharedPath", false);
     }
 
-    public XElement Serialize()
+    public void Serialize(XElement e)
     {
-        XElement e = new("Group");
-
         if(Count is not null)
             e.SetAttributeValue("Count", Count.ToString());
         if(Count3 is not null)
@@ -72,7 +70,5 @@ public class Group : IDeserializable, ISerializable
             e.SetAttributeValue("Shared", Shared.ToString().ToUpper());
         if(!MapUtils.IsSharedPath(Path) && SharedPath)
             e.SetAttributeValue("SharedPath", SharedPath.ToString().ToUpper());
-
-        return e;
     }
 }

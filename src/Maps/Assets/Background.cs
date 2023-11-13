@@ -12,20 +12,18 @@ public class Background : IDeserializable, ISerializable, IDrawable
     public double H{get; set;}
     public double W{get; set;}
 
-    public void Deserialize(XElement element)
+    public void Deserialize(XElement e)
     {
-        AssetName = element.GetNullableAttribute("AssetName");
-        AnimatedAssetName = element.GetNullableAttribute("AnimatedAssetName");
-        HasSkulls = element.GetBoolAttribute("HasSkulls", false);
-        Theme = element.GetNullableAttribute("Theme")?.Split(',').ToList();
-        H = element.GetFloatAttribute("H");
-        W = element.GetFloatAttribute("W");
+        AssetName = e.GetNullableAttribute("AssetName");
+        AnimatedAssetName = e.GetNullableAttribute("AnimatedAssetName");
+        HasSkulls = e.GetBoolAttribute("HasSkulls", false);
+        Theme = e.GetNullableAttribute("Theme")?.Split(',').ToList();
+        H = e.GetFloatAttribute("H");
+        W = e.GetFloatAttribute("W");
     }
 
-    public XElement Serialize()
+    public void Serialize(XElement e)
     {
-        XElement e = new("Background");
-
         e.SetAttributeValue("AssetName", AssetName);
         if(AnimatedAssetName != null)
             e.SetAttributeValue("AnimatedAssetName", AnimatedAssetName);
@@ -35,8 +33,6 @@ public class Background : IDeserializable, ISerializable, IDrawable
             e.SetAttributeValue("Theme", string.Join(',', Theme));
         e.SetAttributeValue("H", H.ToString());
         e.SetAttributeValue("W", W.ToString());
-
-        return e;
     }
 
     public void ChallengeCurrentBackground(GlobalRenderData rd, RenderSettings rs)

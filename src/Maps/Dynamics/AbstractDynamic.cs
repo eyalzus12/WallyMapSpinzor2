@@ -12,26 +12,21 @@ public abstract class AbstractDynamic<T> : ISerializable, IDeserializable, IDraw
 
     public abstract void DeserializeChildren(XElement element);
 
-    public void Deserialize(XElement element)
+    public void Deserialize(XElement e)
     {
-        PlatID = element.GetAttribute("PlatID");
-        X = element.GetFloatAttribute("X");
-        Y = element.GetFloatAttribute("Y");
-        DeserializeChildren(element);
+        PlatID = e.GetAttribute("PlatID");
+        X = e.GetFloatAttribute("X");
+        Y = e.GetFloatAttribute("Y");
+        DeserializeChildren(e);
     }
 
-    public XElement Serialize()
+    public void Serialize(XElement e)
     {
-        XElement e = new(GetType().Name);
-
         e.SetAttributeValue("PlatID", PlatID);
         e.SetAttributeValue("X", X.ToString());
         e.SetAttributeValue("Y", Y.ToString());
-        
         foreach(T c in Children)
-            e.Add(c.Serialize());
-
-        return e;
+            e.Add(c.SerializeToXElement());
     }
 
     public void DrawOn<TTexture>

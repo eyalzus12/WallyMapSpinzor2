@@ -8,26 +8,22 @@ public class Respawn : IDeserializable, ISerializable, IDrawable
     public bool ExpandedInit{get; set;}
     public double X{get; set;}
     public double Y{get; set;}
-    public void Deserialize(XElement element)
+    public void Deserialize(XElement e)
     {
-        Initial = element.GetBoolAttribute("Initial", false);
-        ExpandedInit = element.GetBoolAttribute("ExpandedInit", false);
-        X = element.GetFloatAttribute("X", 0);
-        Y = element.GetFloatAttribute("Y", 0);
+        Initial = e.GetBoolAttribute("Initial", false);
+        ExpandedInit = e.GetBoolAttribute("ExpandedInit", false);
+        X = e.GetFloatAttribute("X", 0);
+        Y = e.GetFloatAttribute("Y", 0);
     }
 
-    public XElement Serialize()
+    public void Serialize(XElement e)
     {
-        XElement e = new("Respawn");
-
         if(Initial)
             e.SetAttributeValue("Initial", Initial);
         if(ExpandedInit)
             e.SetAttributeValue("ExpandedInit", ExpandedInit);
         e.SetAttributeValue("X", X.ToString());
         e.SetAttributeValue("Y", Y.ToString());
-
-        return e;
     }
 
     

@@ -11,9 +11,9 @@ public class CustomArt : IDeserializable, ISerializable
 
     //idfk what's going on here
 
-    public void Deserialize(XElement element)
+    public void Deserialize(XElement e)
     {
-        string str = element.Value;
+        string str = e.Value;
 
         Right = str.StartsWith("RIGHT:");
         Type = Right?0:str.StartsWith("C:")?2:str.StartsWith("W:")?1:0;
@@ -24,9 +24,8 @@ public class CustomArt : IDeserializable, ISerializable
         Name = parts[1];
     }
 
-    public XElement Serialize()
+    public void Serialize(XElement e)
     {
-        XElement e = new("CustomArt");
         string prefix = Right?"RIGHT:":Type switch
         {
             1 => "W:",
@@ -34,6 +33,5 @@ public class CustomArt : IDeserializable, ISerializable
             _ => ""
         };
         e.SetValue($"{prefix}{FileName}/{Name}");
-        return e;
     }
 }

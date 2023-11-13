@@ -28,79 +28,75 @@ public class LevelDesc : IDeserializable, ISerializable, IDrawable
     public List<WaveData> WaveDatas{get; set;} = null!;
     public List<AnimatedBackground> AnimatedBackgrounds{get; set;} = null!;
 
-    public virtual void Deserialize(XElement element)
+    public virtual void Deserialize(XElement e)
     {
-        AssetDir = element.GetAttribute("AssetDir");
-        LevelName = element.GetAttribute("LevelName");
-        NumFrames = element.GetIntAttribute("NumFrames", 0);
-        SlowMult = element.GetFloatAttribute("SlowMult", 1);
+        AssetDir = e.GetAttribute("AssetDir");
+        LevelName = e.GetAttribute("LevelName");
+        NumFrames = e.GetIntAttribute("NumFrames", 0);
+        SlowMult = e.GetFloatAttribute("SlowMult", 1);
 
-        CameraBounds = element.DeserializeChildOfType<CameraBounds>()!;
-        SpawnBotBounds = element.DeserializeChildOfType<SpawnBotBounds>()!;
-        Backgrounds = element.DeserializeChildrenOfType<Background>();
-        LevelSounds = element.DeserializeChildrenOfType<LevelSound>();
-        TeamScoreboard = element.DeserializeChildOfType<TeamScoreboard>();
-        Assets = element.DeserializeAssetChildren();
-        LevelAnims = element.DeserializeChildrenOfType<LevelAnim>();
-        Volumes = element.DeserializeVolumeChildren();
-        Collisions = element.DeserializeCollisionChildren();
-        DynamicCollisions = element.DeserializeChildrenOfType<DynamicCollision>();
-        Respawns = element.DeserializeChildrenOfType<Respawn>();
-        DynamicRespawns = element.DeserializeChildrenOfType<DynamicRespawn>();
-        ItemSpawns = element.DeserializeItemSpawnChildren();
-        DynamicItemSpawns = element.DeserializeChildrenOfType<DynamicItemSpawn>();
-        NavNodes = element.DeserializeChildrenOfType<NavNode>();
-        DynamicNavNodes = element.DeserializeChildrenOfType<DynamicNavNode>();
-        WaveDatas = element.DeserializeChildrenOfType<WaveData>();
-        AnimatedBackgrounds = element.DeserializeChildrenOfType<AnimatedBackground>();
+        CameraBounds = e.DeserializeChildOfType<CameraBounds>()!;
+        SpawnBotBounds = e.DeserializeChildOfType<SpawnBotBounds>()!;
+        Backgrounds = e.DeserializeChildrenOfType<Background>();
+        LevelSounds = e.DeserializeChildrenOfType<LevelSound>();
+        TeamScoreboard = e.DeserializeChildOfType<TeamScoreboard>();
+        Assets = e.DeserializeAssetChildren();
+        LevelAnims = e.DeserializeChildrenOfType<LevelAnim>();
+        Volumes = e.DeserializeVolumeChildren();
+        Collisions = e.DeserializeCollisionChildren();
+        DynamicCollisions = e.DeserializeChildrenOfType<DynamicCollision>();
+        Respawns = e.DeserializeChildrenOfType<Respawn>();
+        DynamicRespawns = e.DeserializeChildrenOfType<DynamicRespawn>();
+        ItemSpawns = e.DeserializeItemSpawnChildren();
+        DynamicItemSpawns = e.DeserializeChildrenOfType<DynamicItemSpawn>();
+        NavNodes = e.DeserializeChildrenOfType<NavNode>();
+        DynamicNavNodes = e.DeserializeChildrenOfType<DynamicNavNode>();
+        WaveDatas = e.DeserializeChildrenOfType<WaveData>();
+        AnimatedBackgrounds = e.DeserializeChildrenOfType<AnimatedBackground>();
     }
 
-    public XElement Serialize()
+    public void Serialize(XElement e)
     {
-        XElement e = new("LevelDesc");
-
         e.SetAttributeValue("AssetDir", AssetDir);
         e.SetAttributeValue("LevelName", LevelName);
         if(NumFrames != 0)
             e.SetAttributeValue("NumFrames", NumFrames.ToString());
         if(SlowMult != 1)
             e.SetAttributeValue("SlowMult", SlowMult.ToString());
-        e.Add(CameraBounds.Serialize());
-        e.Add(SpawnBotBounds.Serialize());
+        e.Add(CameraBounds.SerializeToXElement());
+        e.Add(SpawnBotBounds.SerializeToXElement());
         foreach(Background b in Backgrounds)
-            e.Add(b.Serialize());
+            e.Add(b.SerializeToXElement());
         foreach(LevelSound ls in LevelSounds)
-            e.Add(ls.Serialize());
+            e.Add(ls.SerializeToXElement());
         if(TeamScoreboard is not null)
-            e.Add(TeamScoreboard.Serialize());
+            e.Add(TeamScoreboard.SerializeToXElement());
         foreach(AbstractAsset a in Assets)
-            e.Add(a.Serialize());
+            e.Add(a.SerializeToXElement());
         foreach(LevelAnim la in LevelAnims)
-            e.Add(la.Serialize());
+            e.Add(la.SerializeToXElement());
         foreach(AbstractVolume v in Volumes)
-            e.Add(v.Serialize());
+            e.Add(v.SerializeToXElement());
         foreach(AbstractCollision c in Collisions)
-            e.Add(c.Serialize());
+            e.Add(c.SerializeToXElement());
         foreach(DynamicCollision dc in DynamicCollisions)
-            e.Add(dc.Serialize());
+            e.Add(dc.SerializeToXElement());
         foreach(Respawn r in Respawns)
-            e.Add(r.Serialize());
+            e.Add(r.SerializeToXElement());
         foreach(DynamicRespawn dr in DynamicRespawns)
-            e.Add(dr.Serialize());
+            e.Add(dr.SerializeToXElement());
         foreach(AbstractItemSpawn i in ItemSpawns)
-            e.Add(i.Serialize());
+            e.Add(i.SerializeToXElement());
         foreach(DynamicItemSpawn di in DynamicItemSpawns)
-            e.Add(di.Serialize());
+            e.Add(di.SerializeToXElement());
         foreach(NavNode n in NavNodes)
-            e.Add(n.Serialize());
+            e.Add(n.SerializeToXElement());
         foreach(DynamicNavNode dn in DynamicNavNodes)
-            e.Add(dn.Serialize());
+            e.Add(dn.SerializeToXElement());
         foreach(WaveData wd in WaveDatas)
-            e.Add(wd.Serialize());
+            e.Add(wd.SerializeToXElement());
         foreach(AnimatedBackground ab in AnimatedBackgrounds)
-            e.Add(ab.Serialize());
-
-        return e;
+            e.Add(ab.SerializeToXElement());
     }
 
     
@@ -113,6 +109,7 @@ public class LevelDesc : IDeserializable, ISerializable, IDrawable
         rd.DefaultSlowMult = SlowMult;
         foreach(Background b in Backgrounds)
             b.ChallengeCurrentBackground(rd, rs);
+        rd.PlatIDDict = new();
         foreach(AbstractAsset a in Assets) if(a is MovingPlatform mp)
             mp.StoreOffset(rd, time);
 

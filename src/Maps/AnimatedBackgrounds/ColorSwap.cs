@@ -7,9 +7,9 @@ public class ColorSwap : IDeserializable, ISerializable
     public int OldColor{get; set;}
     public int NewColor{get; set;}
 
-    public void Deserialize(XElement element)
+    public void Deserialize(XElement e)
     {
-        string str = element.Value;
+        string str = e.Value;
         string[] parts = str.Split('=');
         if(parts.Length != 2)
         {
@@ -37,10 +37,8 @@ public class ColorSwap : IDeserializable, ISerializable
         }
     }
 
-    public XElement Serialize()
+    public void Serialize(XElement e)
     {
-        XElement e = new("ColorSwap");
         e.SetValue($"0{OldColor}=0{NewColor}");
-        return e;
     }
 }

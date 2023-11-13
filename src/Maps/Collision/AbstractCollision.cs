@@ -36,66 +36,64 @@ public abstract class AbstractCollision : IDeserializable, ISerializable, IDrawa
     public FlagEnum? Flag{get; set;}
     public ColorFlagEnum? ColorFlag{get; set;}
     
-    public virtual void Deserialize(XElement element)
+    public virtual void Deserialize(XElement e)
     {
-        TauntEvent = element.GetNullableAttribute("TauntEvent");
+        TauntEvent = e.GetNullableAttribute("TauntEvent");
         
-        Team = element.GetIntAttribute("Team", 0);
+        Team = e.GetIntAttribute("Team", 0);
 
         //brawlhalla requires both attributes to exist for an anchor
         AnchorX = AnchorY = null;
-        if(element.HasAttribute("AnchorX") && element.HasAttribute("AnchorY"))
+        if(e.HasAttribute("AnchorX") && e.HasAttribute("AnchorY"))
         {
-            AnchorX = element.GetFloatAttribute("AnchorX");
-            AnchorY = element.GetFloatAttribute("AnchorY");
+            AnchorX = e.GetFloatAttribute("AnchorX");
+            AnchorY = e.GetFloatAttribute("AnchorY");
         }
 
         //a collision with an anchor can't be a pressure plate or have a normal
         //but we don't bother implementing that
-        NormalX = element.GetFloatAttribute("NormalX", 0);
-        NormalY = element.GetFloatAttribute("NormalY", 0);
+        NormalX = e.GetFloatAttribute("NormalX", 0);
+        NormalY = e.GetFloatAttribute("NormalY", 0);
 
         X2 = X1 = 0;
-        if(element.HasAttribute("X"))
+        if(e.HasAttribute("X"))
         {
-            X2 = X1 = element.GetFloatAttribute("X");
+            X2 = X1 = e.GetFloatAttribute("X");
         }
-        else if(element.HasAttribute("X1") && element.HasAttribute("X2"))
+        else if(e.HasAttribute("X1") && e.HasAttribute("X2"))
         {
-            X1 = element.GetFloatAttribute("X1");
-            X2 = element.GetFloatAttribute("X2");
+            X1 = e.GetFloatAttribute("X1");
+            X2 = e.GetFloatAttribute("X2");
         }
         
         Y2 = Y1 = 0;
-        if(element.HasAttribute("Y"))
+        if(e.HasAttribute("Y"))
         {
-            Y2 = Y1 = element.GetFloatAttribute("Y");
+            Y2 = Y1 = e.GetFloatAttribute("Y");
         }
-        else if(element.HasAttribute("Y1") && element.HasAttribute("Y2"))
+        else if(e.HasAttribute("Y1") && e.HasAttribute("Y2"))
         {
-            Y1 = element.GetFloatAttribute("Y1");
-            Y2 = element.GetFloatAttribute("Y2");
+            Y1 = e.GetFloatAttribute("Y1");
+            Y2 = e.GetFloatAttribute("Y2");
         }
 
         Flag =
-            element.HasAttribute("Flag")
-            ?Enum.TryParse(element.GetAttribute("Flag").ToUpper(), out FlagEnum _Flag)
+            e.HasAttribute("Flag")
+            ?Enum.TryParse(e.GetAttribute("Flag").ToUpper(), out FlagEnum _Flag)
                     ?_Flag
                     :FlagEnum.DEFAULT
             :null;
         
         ColorFlag  =
-            element.HasAttribute("ColorFlag")
-            ?Enum.TryParse(element.GetAttribute("ColorFlag")?.ToUpper(), out ColorFlagEnum _ColorFlag)
+            e.HasAttribute("ColorFlag")
+            ?Enum.TryParse(e.GetAttribute("ColorFlag")?.ToUpper(), out ColorFlagEnum _ColorFlag)
                 ?_ColorFlag
                 :ColorFlagEnum.DEFAULT
             :null;
     }
 
-    public virtual XElement Serialize()
+    public virtual void Serialize(XElement e)
     {
-        XElement e = new(GetType().Name);
-
         if(TauntEvent is not null)
             e.SetAttributeValue("TauntEvent", TauntEvent);
         
@@ -138,8 +136,6 @@ public abstract class AbstractCollision : IDeserializable, ISerializable, IDrawa
         
         if(ColorFlag is not null)
             e.SetAttributeValue("ColorFlag", ColorFlag?.ToString().ToLower());
-
-        return e;
     }
 
     public virtual void DrawOn<TTexture>

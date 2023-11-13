@@ -8,24 +8,20 @@ public class CameraBounds : IDeserializable, ISerializable, IDrawable
     public double W{get; set;}
     public double X{get; set;}
     public double Y{get; set;}
-    public void Deserialize(XElement element)
+    public void Deserialize(XElement e)
     {
-        H = element.GetFloatAttribute("H", 0);
-        W = element.GetFloatAttribute("W", 0);
-        X = element.GetFloatAttribute("X", 0);
-        Y = element.GetFloatAttribute("Y", 0);
+        H = e.GetFloatAttribute("H", 0);
+        W = e.GetFloatAttribute("W", 0);
+        X = e.GetFloatAttribute("X", 0);
+        Y = e.GetFloatAttribute("Y", 0);
     }
 
-    public XElement Serialize()
+    public void Serialize(XElement e)
     {
-        XElement e = new("CameraBounds");
-
         e.SetAttributeValue("H", H.ToString());
         e.SetAttributeValue("W", W.ToString());
         e.SetAttributeValue("X", X.ToString());
         e.SetAttributeValue("Y", Y.ToString());
-
-        return e;
     }
 
     public void DrawOn<TTexture>

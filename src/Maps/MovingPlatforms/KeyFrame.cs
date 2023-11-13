@@ -16,27 +16,25 @@ public class KeyFrame : AbstractKeyFrame
 
     public bool HasCenter => CenterX is not null || CenterY is not null;
 
-    public override void Deserialize(XElement element)
+    public override void Deserialize(XElement e)
     {
-        FrameNum = element.GetIntAttribute("FrameNum", 0);
+        FrameNum = e.GetIntAttribute("FrameNum", 0);
         //Unlike other rotations, this one doesn't get translated to radians.
-        Rotation = element.GetFloatAttribute("Rotation", 0);
-        if(element.HasAttribute("CenterX") || element.HasAttribute("CenterY"))
+        Rotation = e.GetFloatAttribute("Rotation", 0);
+        if(e.HasAttribute("CenterX") || e.HasAttribute("CenterY"))
         {
-            CenterX = element.GetFloatAttribute("CenterX", 0);
-            CenterY = element.GetFloatAttribute("CenterY", 0);
+            CenterX = e.GetFloatAttribute("CenterX", 0);
+            CenterY = e.GetFloatAttribute("CenterY", 0);
         }
-        EaseIn = element.GetBoolAttribute("EaseIn", false);
-        EaseOut = element.GetBoolAttribute("EaseOut", false);
-        EasePower = element.GetIntAttribute("EasePower", 2);
-        X = element.GetFloatAttribute("X", 0);
-        Y = element.GetFloatAttribute("Y", 0);
+        EaseIn = e.GetBoolAttribute("EaseIn", false);
+        EaseOut = e.GetBoolAttribute("EaseOut", false);
+        EasePower = e.GetIntAttribute("EasePower", 2);
+        X = e.GetFloatAttribute("X", 0);
+        Y = e.GetFloatAttribute("Y", 0);
     }
 
-    public override XElement Serialize()
+    public override void Serialize(XElement e)
     {
-        XElement e = new("KeyFrame");
-
         e.SetAttributeValue("FrameNum", FrameNum.ToString());
         if(Rotation != 0)
             e.SetAttributeValue("Rotation", Rotation.ToString());
@@ -57,8 +55,6 @@ public class KeyFrame : AbstractKeyFrame
             e.SetAttributeValue("X", X.ToString());
         if(Y != 0)
             e.SetAttributeValue("Y", Y.ToString());
-
-        return e;
     }
 
     public override double GetStartFrame() => FrameNum;

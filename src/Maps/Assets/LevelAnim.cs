@@ -12,23 +12,19 @@ public class LevelAnim : IDeserializable, ISerializable
     public bool Foreground => InstanceName.StartsWith("am_Foreground");
     public bool Background => InstanceName.StartsWith("am_Background");
 
-    public void Deserialize(XElement element)
+    public void Deserialize(XElement e)
     {
-        InstanceName = element.GetAttribute("InstanceName");
-        AssetName = element.GetAttribute("AssetName");
-        X = element.GetFloatAttribute("X");
-        Y = element.GetFloatAttribute("Y");
+        InstanceName = e.GetAttribute("InstanceName");
+        AssetName = e.GetAttribute("AssetName");
+        X = e.GetFloatAttribute("X");
+        Y = e.GetFloatAttribute("Y");
     }
 
-    public XElement Serialize()
+    public void Serialize(XElement e)
     {
-        XElement e = new("LevelAnim");
-
         e.SetAttributeValue("InstanceName", InstanceName);
         e.SetAttributeValue("AssetName", AssetName);
         e.SetAttributeValue("X", X.ToString());
         e.SetAttributeValue("Y", Y.ToString());
-
-        return e;
     }
 }

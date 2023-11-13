@@ -5,18 +5,14 @@ namespace WallyMapSpinzor2;
 public class CustomPath : IDeserializable, ISerializable
 {
     public List<Point> Points{get; set;} = null!;
-    public void Deserialize(XElement element)
+    public void Deserialize(XElement e)
     {
-        Points = element.DeserializeChildrenOfType<Point>();
+        Points = e.DeserializeChildrenOfType<Point>();
     }
 
-    public XElement Serialize()
+    public void Serialize(XElement e)
     {
-        XElement e = new("CustomPath");
-        
         foreach(Point p in Points)
-            e.Add(p.Serialize());
-
-        return e;
+            e.Add(p.SerializeToXElement());
     }
 }

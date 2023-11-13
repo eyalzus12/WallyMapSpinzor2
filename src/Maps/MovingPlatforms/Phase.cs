@@ -8,21 +8,17 @@ public class Phase : AbstractKeyFrame
 
     public List<AbstractKeyFrame> KeyFrames{get; set;} = null!;
 
-    public override void Deserialize(XElement element)
+    public override void Deserialize(XElement e)
     {
-        StartFrame = element.GetIntAttribute("StartFrame", 0);
-        KeyFrames = element.DeserializeKeyFrameChildren();
+        StartFrame = e.GetIntAttribute("StartFrame", 0);
+        KeyFrames = e.DeserializeKeyFrameChildren();
     }
 
-    public override XElement Serialize()
+    public override void Serialize(XElement e)
     {
-        XElement e = new("Phase");
-
         e.SetAttributeValue("StartFrame", StartFrame);
         foreach(AbstractKeyFrame k in KeyFrames)
-            e.Add(k.Serialize());
-
-        return e;
+            e.Add(k.SerializeToXElement());
     }
 
     public override double GetStartFrame() => StartFrame;
