@@ -7,5 +7,5 @@ public class ItemSpawn : AbstractItemSpawn
     public override double DefaultW => 1.79769313486231e+308;
     public override double DefaultH => 10;
     
-    public override Color Color(RenderSettings rs) => rs.ColorItemSpawn;
+    public override Color GetColor(RenderSettings rs) => rs.ColorItemSpawn;
 }

@@ -32,6 +32,8 @@ public class RenderSettings
 
     //whether to show assets
     public bool ShowAssets{get; set;} = true;
+    //whether to show the background
+    public bool ShowBackground{get; set;} = true;
 
     //whether to show collision
     public bool ShowCollision{get; set;} = true;
@@ -50,6 +52,9 @@ public class RenderSettings
 
     //whether to show item spawns
     public bool ShowItemSpawn{get; set;} = true;
+
+    //whether to show navnodes
+    public bool ShowNavNode{get; set;} = false;
 
     //circle radius to use for drawing points
     public double RadiusPointDraw{get; set;} = 10;

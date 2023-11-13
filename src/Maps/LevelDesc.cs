@@ -113,13 +113,17 @@ public class LevelDesc : IDeserializable, ISerializable, IDrawable
         rd.AssetDir = AssetDir;
         rd.DefaultNumFrames = NumFrames;
         rd.DefaultSlowMult = SlowMult;
+        foreach(Background b in Backgrounds)
+            b.ChallengeCurrentBackground(rd, rs);
 
         CameraBounds.DrawOn(canvas, rd, rs, t, time);
         SpawnBotBounds.DrawOn(canvas, rd, rs, t, time);
-        //foreach(Background b in Backgrounds)
+        foreach(Background b in Backgrounds)
+            b.DrawOn(canvas, rd, rs, t, time);
         //foreach(LevelSound ls in LevelSounds)
         TeamScoreboard?.DrawOn(canvas, rd, rs, t, time);
-        //foreach(MovingPlatform mp in MovingPlatforms)
+        foreach(MovingPlatform mp in MovingPlatforms)
+            mp.DrawOn(canvas, rd, rs, t, time);
         foreach(Platform p in Platforms)
             p.DrawOn(canvas, rd, rs, t, time);
         //foreach(LevelAnim la in LevelAnims)
@@ -127,15 +131,20 @@ public class LevelDesc : IDeserializable, ISerializable, IDrawable
             v.DrawOn(canvas, rd, rs, t, time);
         foreach(AbstractCollision c in Collisions)
             c.DrawOn(canvas, rd, rs, t, time);
-        //foreach(DynamicCollision dc in DynamicCollisions)
+        foreach(DynamicCollision dc in DynamicCollisions)
+            dc.DrawOn(canvas, rd, rs, t, time);
         foreach(Respawn r in Respawns)
             r.DrawOn(canvas, rd, rs, t, time);
-        //foreach(DynamicRespawn dr in DynamicRespawns)
+        foreach(DynamicRespawn dr in DynamicRespawns)
+            dr.DrawOn(canvas, rd, rs, t, time);
         foreach(AbstractItemSpawn i in ItemSpawns)
             i.DrawOn(canvas, rd, rs, t, time);
-        //foreach(DynamicItemSpawn di in DynamicItemSpawns)
-        //foreach(NavNode n in NavNodes)
-        //foreach(DynamicNavNode dn in DynamicNavNodes)
+        foreach(DynamicItemSpawn di in DynamicItemSpawns)
+            di.DrawOn(canvas, rd, rs, t, time);
+        foreach(NavNode n in NavNodes)
+            n.DrawOn(canvas, rd, rs, t, time);
+        foreach(DynamicNavNode dn in DynamicNavNodes)
+            dn.DrawOn(canvas, rd, rs, t, time);
         //foreach(WaveData wd in WaveDatas)
         //foreach(AnimatedBackground ab in AnimatedBackgrounds)
     }

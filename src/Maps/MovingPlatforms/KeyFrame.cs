@@ -56,4 +56,27 @@ public class KeyFrame : AbstractKeyFrame
 
         return e;
     }
+
+    public override double GetStartFrame() => FrameNum;
+    public override (double, double) GetPosition() => (X, Y);
+
+    public override (double, double) LerpTo<T>
+    (T kk, double? centerX, double? centerY, double time, double kTimeOffset = 0)
+    {
+        if(kk is KeyFrame k)
+        {
+            double w = (k.FrameNum + kTimeOffset - FrameNum)/(time - FrameNum);
+            w = BrawlhallaMath.EaseWeight(w, EaseIn, EaseOut, EasePower);
+            if(CenterX is not null || CenterY is not null || centerX is not null || centerY is not null)
+                return BrawlhallaMath.LerpWithCenter(X, Y, k.X, k.Y, CenterX??centerX??0, CenterY??centerY??0, w);
+            else
+                return BrawlhallaMath.Lerp(X, Y, k.X, k.Y, w);
+        }
+        else if(kk is Phase p)
+        {
+            return LerpTo(p.KeyFrames[0], centerX, centerY, time, kTimeOffset + p.StartFrame);
+        }
+        else
+            throw new ArgumentException($"Keyframe cannot interpolate to unknown abstract keyframe type {typeof(T).Name}");
+    }
 }

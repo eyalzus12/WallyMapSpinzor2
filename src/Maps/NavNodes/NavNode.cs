@@ -2,7 +2,7 @@ using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
 
-public class NavNode : IDeserializable, ISerializable
+public class NavNode : IDeserializable, ISerializable, IDrawable
 {
     public string NavID{get; set;} = null!;
     public List<string> Path{get; set;} = null!;
@@ -27,5 +27,13 @@ public class NavNode : IDeserializable, ISerializable
         e.SetAttributeValue("Y", Y.ToString());
 
         return e;
+    }
+
+    public void DrawOn<TTexture>
+    (ICanvas<TTexture> canvas, GlobalRenderData rd, RenderSettings rs, Transform t, double time) 
+        where TTexture : ITexture
+    {
+        if(!rs.ShowNavNode) return;
+        canvas.DrawCircle(X, Y, 10, Color.FromHex(0x0000007F), t, DrawPriorityEnum.NAVNODE);
     }
 }

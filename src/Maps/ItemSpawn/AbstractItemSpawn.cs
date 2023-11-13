@@ -41,8 +41,8 @@ public abstract class AbstractItemSpawn: IDeserializable, ISerializable, IDrawab
         where TTexture : ITexture
     {
         if(!rs.ShowItemSpawn) return;
-        canvas.DrawRect(X, Y, W, H, true, Color(rs), t, DrawPriorityEnum.DATA);
+        canvas.DrawRect(X, Y, W, H, true, GetColor(rs), t, DrawPriorityEnum.DATA);
     }
 
-    public abstract Color Color(RenderSettings rs);
+    public abstract Color GetColor(RenderSettings rs);
 }

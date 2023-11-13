@@ -57,4 +57,22 @@ public class Animation : IDeserializable, ISerializable
 
         return e;
     }
+
+    public (double, double) GetOffset(GlobalRenderData rd, double time)
+    {
+        //apply time offsets
+        time += StartFrame;
+        time *= SlowMult ?? rd.DefaultSlowMult ?? 1;
+        time = BrawlhallaMath.SafeMod(time, NumFrames ?? rd.DefaultNumFrames ?? 0);
+        //find the keyframe pair
+        int i = 0;
+        for(; i < KeyFrames.Count; ++i)
+        {
+            if(KeyFrames[i].GetStartFrame() >= time) break;
+        }
+        int j = (i == 0 ? KeyFrames.Count : i) - 1;
+        if(i == KeyFrames.Count) i = 0;
+        //lerp
+        return KeyFrames[j].LerpTo(KeyFrames[i], CenterX, CenterY, time);
+    }
 }

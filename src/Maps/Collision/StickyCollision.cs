@@ -2,5 +2,5 @@ namespace WallyMapSpinzor2;
 
 public class StickyCollision : AbstractCollision
 {
-    public override Color Color(RenderSettings rs) => rs.ColorStickyCollision;
+    public override Color GetColor(RenderSettings rs) => rs.ColorStickyCollision;
 }

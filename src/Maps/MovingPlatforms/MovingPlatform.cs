@@ -2,7 +2,7 @@ using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
 
-public class MovingPlatform : IDeserializable, ISerializable
+public class MovingPlatform : IDeserializable, ISerializable, IDrawable
 {
     public double X{get; set;}
     public double Y{get; set;}
@@ -34,5 +34,20 @@ public class MovingPlatform : IDeserializable, ISerializable
             e.Add(p.Serialize());
 
         return e;
+    }
+
+    public void DrawOn<TTexture>
+    (ICanvas<TTexture> canvas, GlobalRenderData rd, RenderSettings rs, Transform t, double time) 
+        where TTexture : ITexture
+    {
+        rd.PlatIDDict ??= new();
+        (double _X, double _Y) = Animation.GetOffset(rd, time);
+        //for some reason, dynamics need the first keyframe position of the animation removed
+        (double _AX, double _AY) = Animation.KeyFrames[0].GetPosition();
+        rd.PlatIDDict[PlatID] = (_X - _AX, _Y - _AY);
+
+        Transform tt = t * Transform.CreateTranslate(X + _X, Y + _Y);
+        foreach(Platform p in Platforms)
+            p.DrawOn(canvas, rd, rs, tt, time);
     }
 }

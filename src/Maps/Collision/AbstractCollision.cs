@@ -169,14 +169,14 @@ public abstract class AbstractCollision : IDeserializable, ISerializable, IDrawa
             (double nextX, double nextY) = enumer?.Current ?? (X2,Y2);
             //draw current line
             if(Team == 0)
-                canvas.DrawLine(startX, startY, nextX, nextY, Color(rs), t, DrawPriorityEnum.DATA);
+                canvas.DrawLine(startX, startY, nextX, nextY, GetColor(rs), t, DrawPriorityEnum.DATA);
             else
             {
                 if(Team-1 >= rs.ColorCollisionTeam.Length)
                     throw new ArgumentOutOfRangeException($"Collision has team {Team} which is larger than max available collision team color {rs.ColorCollisionTeam.Length}");
                 canvas.DrawDualColorLine(
                         startX, startY, nextX, nextY,
-                        Color(rs), rs.ColorCollisionTeam[Team-1],
+                        GetColor(rs), rs.ColorCollisionTeam[Team-1],
                         t, DrawPriorityEnum.DATA
                     );
             }
@@ -206,5 +206,5 @@ public abstract class AbstractCollision : IDeserializable, ISerializable, IDrawa
         }
     }
 
-    public abstract Color Color(RenderSettings rs);
+    public abstract Color GetColor(RenderSettings rs);
 }
