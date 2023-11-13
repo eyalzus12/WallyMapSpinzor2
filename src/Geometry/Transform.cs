@@ -45,4 +45,6 @@ public readonly record struct Transform(double ScaleX, double SkewX, double Skew
         t.SkewY*f, t.ScaleY*f,
         t.TranslateX*f, t.TranslateY*f
     );
+
+    public double Determinant => ScaleX * ScaleY - SkewX * SkewY;
 }

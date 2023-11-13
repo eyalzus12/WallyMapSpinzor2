@@ -108,4 +108,161 @@ public static class BrawlhallaMath
         if(x < 0) x += m;
         return x;
     }
+
+    //horde random path generation
+    public static IEnumerable<(double, double)> GenerateHordePath(
+        BrawlhallaRandom rand, //random number generator
+        double boundX, double boundY, double boundW, double boundH, //camera bounds
+        double door1X, double door1Y, //door 1
+        double door2X, double door2Y, //door 2
+        DirEnum dir, PathEnum path, //type
+        int idx //path index
+    )
+    {
+        return _().SelectMany(_ => _);
+
+        //hack: yield return multiple IEnumerable's, and then SelectMany them to flatten the list
+        //please C# gods give us a yield all thingy
+        //and the field keyword we've been waiting on that since C# 9
+        IEnumerable<IEnumerable<(double, double)>> _()
+        {
+            idx %= 20;
+            switch(dir)
+            {
+                case DirEnum.TOP:
+                {
+                    double jump = boundW / 10;
+                    (double fromX, double fromY) = (boundX + idx * jump, boundY);
+                    (double doorX, double doorY) = PickDoor(path, fromX < boundW/2)?(door1X,door1Y):(door2X,door2Y);
+                    if(rand.Next() % 4 == 0)
+                    {
+                        bool idfk = Math.Abs(doorX - fromX) >= boundW/3;
+                        (double midX, double midY) = (doorX + (((fromX > doorX)==idfk)?1:-1)*jump, 1000);
+                        yield return GeneratePathSegment(fromX, fromY, midX, midY, 2, true, true);
+                        yield return GeneratePathSegment(midX, midY, doorX, doorY, 2, false, false);
+                    }
+                    else
+                    {
+                        yield return GeneratePathSegment(fromX, fromY, doorX, doorY, 2, true, false);
+                    }
+                }
+                break;
+                case DirEnum.RIGHT:
+                {
+                    double jump = boundH / 10;
+                    (double fromX, double fromY) = (boundX + boundW, boundY + idx * jump);
+                    (double doorX, double doorY) = PickDoor(path, false)?(door1X,door1Y):(door2X,door2Y);
+                    if(path == PathEnum.FAR && rand.Next() % 3 == 0)
+                    {
+                        (double midX1, double midY1) = (3220, 1050);
+                        (double midX2, double midY2) = (2220, 850);
+                        yield return GeneratePathSegment(fromX, fromY, midX1, midY1, 2, true, true);
+                        yield return GeneratePathSegment(midX1, midY1, midX2, midY2, 2, false, true);
+                        yield return GeneratePathSegment(midX2, midY2, doorX, doorY, 2, false, false);
+                    }
+                    else
+                    {
+                        (double midX, double midY) = (3220, 1300);
+                        yield return GeneratePathSegment(fromX, fromY, midX, midY, 3, true, true);
+                        yield return GeneratePathSegment(midX, midY, doorX, doorY, 3, false, false);
+                    }
+                }
+                break;
+                case DirEnum.BOTTOM:
+                {
+                    double jump = boundW / 20;
+                    (double fromX, double fromY) = (boundX + idx * jump, boundY + boundH + 100);
+                    double doorX, doorY;
+                    double midX1, midY1 = 2800;
+                    double midX2, midY2 = 1600;
+                    if(fromX < boundX + boundW/3)
+                    {
+                        (doorX, doorY) = PickDoor(PathEnum.CLOSE, true)?(door1X,door1Y):(door2X,door2Y);
+                        midX1 = -650;
+                        midX2 = -550;
+                    }
+                    else if(fromX > boundX + 2*boundW/3)
+                    {
+                        (doorX, doorY) = PickDoor(PathEnum.CLOSE, false)?(door1X,door1Y):(door2X,door2Y);
+                        midX1 = 3320;
+                        midX2 = 3220;
+                    }
+                    else
+                    {
+                        (doorX, doorY) = PickDoor(PathEnum.CLOSE, fromX < boundX + boundW/2)?(door1X,door1Y):(door2X,door2Y);
+                        bool chance50 = rand.Next()%2 == 0;
+                        bool chance25 = rand.Next()%4 == 0;
+                        if(chance50)
+                        {
+                            midX1 = 1201;
+                            midX2 = chance25?1461:1201;
+                        }
+                        else
+                        {
+                            midX1 = 1461;
+                            midX2 = chance25?1201:1461;
+                        }
+                    }
+
+                    yield return GeneratePathSegment(fromX, fromY, midX1, midY1, 3, true, true);
+                    yield return GeneratePathSegment(midX1, midY1, midX2, midY2, 3, false, true);
+                    yield return GeneratePathSegment(midX2, midY2, doorX, doorY, 3, false, false);
+                }
+                break;
+                case DirEnum.LEFT:
+                {
+                    double jump = boundH / 10;
+                    (double fromX, double fromY) = (boundX, boundY + idx * jump);
+                    (double doorX, double doorY) = PickDoor(path, true)?(door1X,door1Y):(door2X,door2Y);
+                    if(path == PathEnum.FAR && rand.Next() % 3 == 0)
+                    {
+                        (double midX1, double midY1) = (-550, 1050);
+                        (double midX2, double midY2) = (1450, 850);
+
+                        yield return GeneratePathSegment(fromX, fromY, midX1, midY1, 2, true, true);
+                        yield return GeneratePathSegment(midX1, midY1, midX2, midY2, 2, false, true);
+                        yield return GeneratePathSegment(midX2, midY2, doorX, doorY, 2, false, false);
+                    }
+                    else
+                    {
+                        (double midX, double midY) = (-550, 1300);
+                        yield return GeneratePathSegment(fromX, fromY, midX, midY, 3, true, true);
+                        yield return GeneratePathSegment(midX, midY, doorX, doorY, 3, false, false);
+                    }
+                }
+                break;
+            }
+        }
+
+        bool PickDoor(PathEnum path, bool left) =>
+            (path == PathEnum.ANY)
+                ?(rand.Next()%2 == 0)
+                :(left == (path == PathEnum.LEFT));
+
+        IEnumerable<(double, double)> GeneratePathSegment(double X1, double Y1, double X2, double Y2, int parts, bool first, bool middle)
+        {
+            if(first)
+                yield return (X1, Y1);
+
+            for(int i = 0; i < parts; ++i)
+            {
+                if(i == parts-1 && !middle)
+                    yield return (X2, Y2);
+                else
+                {
+                    double _X1 = (X2 - X1)/(parts - i);
+                    double _Y1 = (Y2 - Y1)/(parts - i);
+                    double _X2 = _X1 + X1;
+                    double _Y2 = _Y1 + Y1;
+                    if(_X1 < -150) _X1 = -150;
+                    else if(-15 < _X1 && X1 < 0) _X1 = -15;
+                    else if(0 <= _X1 && _X1 < 15) _X1 = 15;
+                    else if(150 < _X1) _X1 = 150;
+                    double RX = _X2 - _X1 + (rand.Next() % (2*_X1));
+                    double RY = _Y2 - _Y1 + (rand.Next() % (2*_Y1));
+                    yield return (RX, RY);
+                }
+            }
+        }
+    }
 }
