@@ -47,4 +47,31 @@ public abstract class AbstractPressurePlateCollision : AbstractCollision
         e.SetAttributeValue("TrapPowers", string.Join(',', TrapPowers));
         base.Serialize(e);
     }
+
+    public override void DrawOn<TTexture>
+    (ICanvas<TTexture> canvas, GlobalRenderData rd, RenderSettings rs, Transform t, double time)
+    {
+        base.DrawOn(canvas, rd, rs, t, time);
+        if(rs.ShowAssets)
+        {
+            if(PlatID is not null && !rd.PlatIDMovingPlatformOffset.ContainsKey(PlatID))
+                throw new InvalidOperationException($"Plat ID dictionary did not contain plat id {PlatID} when attempting to draw pressure plate. Make sure to call StoreOffset beforehand.");
+            TTexture texture = canvas.LoadTextureFromSWF("bones/Bones_GameModes.swf", AssetName);
+            (double _X, double _Y) = (PlatID is null)?(0, 0):rd.PlatIDMovingPlatformOffset[PlatID];
+            _X += AnimOffsetX; _Y += AnimOffsetY;
+            //for some reason brawlhalla further offsets the sprite by half its size
+            _X -= texture.W / 2; _Y -= texture.H / 2;
+
+            /*
+            WARNING:
+            the asset transform for pressure plates is different from its collision transform. 
+            the moving platform's platID is used instead of the parent Dynamic's.
+            this means that we have to ignore the given draw transform.
+
+            hopefully this won't cause any issues in the future...
+            */
+            Transform tt = Transform.CreateFrom(x : _X, y : _Y, rot : AnimRotation);
+            canvas.DrawTexture(0, 0, texture, tt, DrawPriorityEnum.MIDGROUND);
+        }
+    }
 }

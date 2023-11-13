@@ -13,5 +13,6 @@ public class GlobalRenderData
 
     public Background? CurrentBackground{get; set;} = null;
 
-    public Dictionary<string, (double, double)> PlatIDDict{get; set;} = new();
+    public Dictionary<string, (double, double)> PlatIDDynamicOffset{get; set;} = new();
+    public Dictionary<string, (double, double)> PlatIDMovingPlatformOffset{get; set;} = new();
 }

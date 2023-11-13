@@ -33,11 +33,11 @@ public abstract class AbstractDynamic<T> : ISerializable, IDeserializable, IDraw
     (ICanvas<TTexture> canvas, GlobalRenderData rd, RenderSettings rs, Transform t, double time) 
         where TTexture : ITexture
     {
-        if(rd.PlatIDDict is null)
+        if(rd.PlatIDDynamicOffset is null)
             throw new InvalidOperationException($"Plat ID dictionary was null when attempting to draw {GetType().Name}");
-        if(!rd.PlatIDDict.ContainsKey(PlatID))
+        if(!rd.PlatIDDynamicOffset.ContainsKey(PlatID))
             throw new InvalidOperationException($"Plat ID dictionary did not contain plat id {PlatID} when attempting to draw {GetType().Name}. Make sure to call StoreOffset on all MovingPlatforms.");
-        (double _X, double _Y) = rd.PlatIDDict[PlatID];
+        (double _X, double _Y) = rd.PlatIDDynamicOffset[PlatID];
         Transform tt = t * Transform.CreateTranslate(X + _X, Y + _Y);
         foreach(T c in Children)
             c.DrawOn(canvas, rd, rs, tt, time);

@@ -109,7 +109,8 @@ public class LevelDesc : IDeserializable, ISerializable, IDrawable
         rd.DefaultSlowMult = SlowMult;
         foreach(Background b in Backgrounds)
             b.ChallengeCurrentBackground(rd, rs);
-        rd.PlatIDDict = new();
+        rd.PlatIDDynamicOffset = new();
+        rd.PlatIDMovingPlatformOffset = new();
         foreach(AbstractAsset a in Assets) if(a is MovingPlatform mp)
             mp.StoreOffset(rd, time);
 

@@ -18,7 +18,7 @@ public readonly record struct Transform(double ScaleX, double SkewX, double Skew
     public static Transform CreateScale(double scaleX, double scaleY) => IDENTITY with {ScaleX = scaleX, ScaleY = scaleY};
     public static Transform CreateSkew(double skewX, double skewY) => IDENTITY with {ScaleX = Math.Cos(skewY), SkewX = -Math.Sin(skewX), SkewY = Math.Sin(skewY), ScaleY = Math.Cos(skewX)};
     public static Transform CreateRotate(double rot) => CreateSkew(rot, rot);
-    public static Transform CreateFrom(double x, double y, double rot, double skewX, double skewY, double scaleX, double scaleY) =>
+    public static Transform CreateFrom(double x = 0, double y = 0, double rot = 0, double skewX = 0, double skewY = 0, double scaleX = 1, double scaleY = 1) =>
         CreateTranslate(x, y) *
         CreateRotate(rot) *
         CreateSkew(skewX, skewY) *
