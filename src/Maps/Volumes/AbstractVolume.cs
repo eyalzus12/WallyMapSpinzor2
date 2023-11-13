@@ -45,7 +45,7 @@ public abstract class AbstractVolume : IDeserializable, ISerializable, IDrawable
         if(Team >= rs.ColorVolumeTeam.Length)
             throw new ArgumentOutOfRangeException($"Volume has team {Team}, which is larger than max available volume team color {rs.ColorVolumeTeam.Length-1}");
 
-        canvas.DrawRect(X, Y, W, H, true, rs.ColorVolumeTeam[Team], t, DrawPriorityEnum.VOLUMES);
+        canvas.DrawRect((int)X, (int)Y, (int)W, (int)H, true, rs.ColorVolumeTeam[Team], t, DrawPriorityEnum.VOLUMES);
     }
 
     public abstract bool ShouldShow(RenderSettings rs);
