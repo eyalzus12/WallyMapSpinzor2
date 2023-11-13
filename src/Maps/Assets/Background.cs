@@ -4,30 +4,28 @@ namespace WallyMapSpinzor2;
 
 public class Background : IDeserializable, ISerializable, IDrawable
 {
-    public double W{get; set;}
-    public double H{get; set;}
     //AssetName and AnimatedAssetName cannot both be non-null at the same time
     public string? AssetName{get; set;}
     public string? AnimatedAssetName{get; set;}
     public bool HasSkulls{get; set;}
     public List<string>? Theme{get; set;}
+    public double H{get; set;}
+    public double W{get; set;}
 
     public void Deserialize(XElement element)
     {
-        W = element.GetFloatAttribute("W");
-        H = element.GetFloatAttribute("H");
         AssetName = element.GetNullableAttribute("AssetName");
         AnimatedAssetName = element.GetNullableAttribute("AnimatedAssetName");
         HasSkulls = element.GetBoolAttribute("HasSkulls", false);
         Theme = element.GetNullableAttribute("Theme")?.Split(',').ToList();
+        H = element.GetFloatAttribute("H");
+        W = element.GetFloatAttribute("W");
     }
 
     public XElement Serialize()
     {
         XElement e = new("Background");
 
-        e.SetAttributeValue("W", W.ToString());
-        e.SetAttributeValue("H", H.ToString());
         e.SetAttributeValue("AssetName", AssetName);
         if(AnimatedAssetName != null)
             e.SetAttributeValue("AnimatedAssetName", AnimatedAssetName);
@@ -35,6 +33,8 @@ public class Background : IDeserializable, ISerializable, IDrawable
             e.SetAttributeValue("HasSkulls", HasSkulls.ToString());
         if(Theme is not null)
             e.SetAttributeValue("Theme", string.Join(',', Theme));
+        e.SetAttributeValue("H", H.ToString());
+        e.SetAttributeValue("W", W.ToString());
 
         return e;
     }

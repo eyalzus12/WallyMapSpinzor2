@@ -4,51 +4,59 @@ namespace WallyMapSpinzor2;
 
 public abstract class AbstractAsset : ISerializable, IDeserializable, IDrawable
 {
-    public double X{get; set;}
-    public double Y{get; set;}
-    public double W{get; set;}
-    public double H{get; set;}
+    public string? AssetName{get; set;}
     public double ScaleX{get; set;}
     public double ScaleY{get; set;}
     public double Rotation{get; set;}
-    public string? AssetName{get; set;}
+    public double X{get; set;}
+    public double Y{get; set;}
+    public double H{get; set;}
+    public double W{get; set;}
 
     public virtual void Deserialize(XElement element)
     {
-        X = element.GetFloatAttribute("X", 0);
-        Y = element.GetFloatAttribute("Y", 0);
-        W = element.GetFloatAttribute("W", 0);
-        H = element.GetFloatAttribute("H", 0);
+        AssetName = element.GetNullableAttribute("AssetName");
         double Scale = element.GetFloatAttribute("Scale", 1);
         ScaleX = element.GetFloatAttribute("ScaleX", Scale);
         ScaleY = element.GetFloatAttribute("ScaleY", Scale);
         Rotation = element.GetFloatAttribute("Rotation", 0);
-        AssetName = element.GetNullableAttribute("AssetName");
+        X = element.GetFloatAttribute("X", 0);
+        Y = element.GetFloatAttribute("Y", 0);
+        H = element.GetFloatAttribute("H", 0);
+        W = element.GetFloatAttribute("W", 0);
     }
 
     public virtual XElement Serialize()
     {
         XElement e = new(this.GetType().Name);
-
-        e.SetAttributeValue("X", X.ToString());
-        e.SetAttributeValue("Y", Y.ToString());
-        if(W != 0)
-            e.SetAttributeValue("W", W.ToString());
-        if(H != 0)
-            e.SetAttributeValue("H", H.ToString());
+        
+        if(AssetName is not null)
+            e.SetAttributeValue("AssetName", AssetName);
 
         if(ScaleX == ScaleY)
         {
-            e.SetAttributeValue("Scale", ScaleX.ToString());
+            if(ScaleX != 1)
+                e.SetAttributeValue("Scale", ScaleX.ToString());
         }
         else
         {
-            e.SetAttributeValue("ScaleX", ScaleX.ToString());
-            e.SetAttributeValue("ScaleY", ScaleY.ToString());
+            if(ScaleX != 1)
+                e.SetAttributeValue("ScaleX", ScaleX.ToString());
+            if(ScaleY != 1)
+                e.SetAttributeValue("ScaleY", ScaleY.ToString());
         }
 
         if(Rotation != 0)
             e.SetAttributeValue("Rotation", Rotation.ToString());
+        
+        if(X != 0)
+            e.SetAttributeValue("X", X.ToString());
+        if(Y != 0)
+            e.SetAttributeValue("Y", Y.ToString());
+        if(H != 0)
+            e.SetAttributeValue("H", H.ToString());
+        if(W != 0)
+            e.SetAttributeValue("W", W.ToString());
 
         return e;
     }

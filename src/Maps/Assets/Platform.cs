@@ -4,10 +4,10 @@ namespace WallyMapSpinzor2;
 
 public class Platform : AbstractAsset
 {
-    public string? ScoringType{get; set;}
-    public string? PlatformAssetSwap{get; set;}
-    public List<string>? Theme{get; set;}
     public string InstanceName{get; set;} = null!;
+    public string? PlatformAssetSwap{get; set;}
+    public string? ScoringType{get; set;}
+    public List<string>? Theme{get; set;}
 
     public List<AbstractAsset> AssetChildren{get; set;} = null!;
     
@@ -19,28 +19,32 @@ public class Platform : AbstractAsset
     public override void Deserialize(XElement element)
     {
         base.Deserialize(element);
-        AssetName = element.GetNullableAttribute("AssetName");
-        ScoringType = element.GetNullableAttribute("ScoringType");
-        PlatformAssetSwap = element.GetNullableAttribute("PlatformAssetSwap");
-        Theme = element.GetNullableAttribute("Theme")?.Split(',').ToList();
         InstanceName = element.GetAttribute("InstanceName");
+        PlatformAssetSwap = element.GetNullableAttribute("PlatformAssetSwap");
+        ScoringType = element.GetNullableAttribute("ScoringType");
+        Theme = element.GetNullableAttribute("Theme")?.Split(',').ToList();
         AssetChildren = element.DeserializeAssetChildren();
     }
 
     public override XElement Serialize()
     {
-        XElement e = base.Serialize();
-        
-        if(ScoringType is not null)
-            e.SetAttributeValue("ScoringType", ScoringType);
+        XElement e = new("Platform");
+
+        e.SetAttributeValue("InstanceName", InstanceName);
         
         if(PlatformAssetSwap is not null)
             e.SetAttributeValue("PlatformAssetSwap", PlatformAssetSwap);
         
+        if(ScoringType is not null)
+            e.SetAttributeValue("ScoringType", ScoringType);
+        
         if(Theme is not null)
             e.SetAttributeValue("Theme", string.Join(',', Theme));
-
-        e.SetAttributeValue("InstanceName", InstanceName);
+        
+        //hack to get InstanceName to show before the other stuff
+        XElement e2 = base.Serialize();
+        foreach(XAttribute attr in e2.Attributes())
+            e.SetAttributeValue(attr.Name, attr.Value);
 
         foreach(AbstractAsset a in AssetChildren)
             e.Add(a.Serialize());

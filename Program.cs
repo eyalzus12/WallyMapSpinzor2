@@ -12,7 +12,7 @@ XElement? element = document.FirstNode as XElement;
 if(element is not null)
 {
     LevelDesc levelDesc = element.DeserializeTo<LevelDesc>();
-    FileStream toFile = new(toPath, FileMode.OpenOrCreate, FileAccess.Write);
+    FileStream toFile = new(toPath, FileMode.Create, FileAccess.Write);
     using XmlWriter xmlw = XmlWriter.Create(toFile, new(){OmitXmlDeclaration = true, IndentChars = "    ", Indent = true});
     levelDesc.Serialize().Save(xmlw);
 }

@@ -11,23 +11,23 @@ public abstract class AbstractItemSpawn: IDeserializable, ISerializable, IDrawab
 
     public void Deserialize(XElement element)
     {
-        X = element.GetFloatAttribute("X", DefaultX);
-        Y = element.GetFloatAttribute("Y", DefaultY);
         W = element.GetFloatAttribute("W", DefaultW);
         H = element.GetFloatAttribute("H", DefaultH);
+        X = element.GetFloatAttribute("X", DefaultX);
+        Y = element.GetFloatAttribute("Y", DefaultY);
     }
 
     public XElement Serialize()
     {
         XElement e = new(GetType().Name);
 
-        e.SetAttributeValue("X", X.ToString());
-        e.SetAttributeValue("Y", Y.ToString());
         if(W != DefaultW)
             e.SetAttributeValue("W", W.ToString());
         if(H != DefaultH)
             e.SetAttributeValue("H", H.ToString());
 
+        e.SetAttributeValue("X", X.ToString());
+        e.SetAttributeValue("Y", Y.ToString());
         return e;
     }
 

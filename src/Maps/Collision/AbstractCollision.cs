@@ -112,7 +112,7 @@ public abstract class AbstractCollision : IDeserializable, ISerializable, IDrawa
 
         if(Y1 == Y2)
         {
-            e.SetAttributeValue("Y", X1.ToString());
+            e.SetAttributeValue("Y", Y1.ToString());
         }
         else
         {
