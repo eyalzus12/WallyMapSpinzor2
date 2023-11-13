@@ -23,8 +23,10 @@ public class NavNode : IDeserializable, ISerializable, IDrawable
 
         e.SetAttributeValue("NavID", NavID);
         e.SetAttributeValue("Path", string.Join(',', Path));
-        e.SetAttributeValue("X", X.ToString());
-        e.SetAttributeValue("Y", Y.ToString());
+        if(X != 0)
+            e.SetAttributeValue("X", X.ToString());
+        if(Y != 0)
+            e.SetAttributeValue("Y", Y.ToString());
 
         return e;
     }

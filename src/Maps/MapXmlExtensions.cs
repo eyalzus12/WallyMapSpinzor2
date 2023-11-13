@@ -81,6 +81,7 @@ public static class MapXmlExtensions
     {
         nameof(Platform) => element.DeserializeTo<Platform>(),
         nameof(Asset) => element.DeserializeTo<Asset>(),
+        nameof(MovingPlatform) => element.DeserializeTo<MovingPlatform>(),
         _ => null
     };
 }

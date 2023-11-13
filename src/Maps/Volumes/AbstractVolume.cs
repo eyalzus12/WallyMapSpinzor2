@@ -4,21 +4,20 @@ namespace WallyMapSpinzor2;
 
 public abstract class AbstractVolume : IDeserializable, ISerializable, IDrawable
 {
-    //yes, brawlhalla defines those as ints.
-    public int X{get; set;}
-    public int Y{get; set;}
-    public int W{get; set;}
-    public int H{get; set;}
+    public double H{get; set;}
     public int Team{get; set;}
+    public double W{get; set;}
+    public double X{get; set;}
+    public double Y{get; set;}
     public int ID{get; set;}
     
     public virtual void Deserialize(XElement element)
     {
-        X = element.GetIntAttribute("X");
-        Y = element.GetIntAttribute("Y");
-        W = element.GetIntAttribute("W");
-        H = element.GetIntAttribute("H");
+        H = element.GetFloatAttribute("H");
         Team = element.GetIntAttribute("Team");
+        W = element.GetFloatAttribute("W");
+        X = element.GetFloatAttribute("X");
+        Y = element.GetFloatAttribute("Y");
         ID = element.GetIntAttribute("ID", 0);
     }
 
@@ -26,11 +25,11 @@ public abstract class AbstractVolume : IDeserializable, ISerializable, IDrawable
     {
         XElement e = new(GetType().Name);
 
-        e.SetAttributeValue("X", X.ToString());
-        e.SetAttributeValue("Y", Y.ToString());
-        e.SetAttributeValue("W", W.ToString());
         e.SetAttributeValue("H", H.ToString());
         e.SetAttributeValue("Team", Team.ToString());
+        e.SetAttributeValue("W", W.ToString());
+        e.SetAttributeValue("X", X.ToString());
+        e.SetAttributeValue("Y", Y.ToString());
         if(ID != 0)
             e.SetAttributeValue("ID", ID.ToString());
 

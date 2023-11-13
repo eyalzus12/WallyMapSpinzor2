@@ -41,7 +41,7 @@ public abstract class AbstractDynamic<T> : ISerializable, IDeserializable, IDraw
         if(rd.PlatIDDict is null)
             throw new InvalidOperationException($"Plat ID dictionary was null when attempting to draw {GetType().Name}");
         if(!rd.PlatIDDict.ContainsKey(PlatID))
-            throw new InvalidOperationException($"Plat ID dictionary did not contain plat id {PlatID} when attempting to draw {GetType().Name}. Make sure all MovingPlatforms are drawn before dynamics.");
+            throw new InvalidOperationException($"Plat ID dictionary did not contain plat id {PlatID} when attempting to draw {GetType().Name}. Make sure to call StoreOffset on all MovingPlatforms.");
         (double _X, double _Y) = rd.PlatIDDict[PlatID];
         Transform tt = t * Transform.CreateTranslate(X + _X, Y + _Y);
         foreach(T c in Children)

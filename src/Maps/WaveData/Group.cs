@@ -14,8 +14,8 @@ public class Group : IDeserializable, ISerializable
     public int? Stagger3{get; set;}
     public int? Stagger4{get; set;}
     public DirEnum Dir{get; set;}
-    public PathEnum Path{get; set;}
     public BehaviorEnum Behavior{get; set;}
+    public PathEnum Path{get; set;}
     public bool Shared{get; set;}
     public bool SharedPath{get; set;}
 
@@ -31,8 +31,8 @@ public class Group : IDeserializable, ISerializable
         Stagger3 = element.GetNullableIntAttribute("Stagger3");
         Stagger4 = element.GetNullableIntAttribute("Stagger4");
         Dir = MapUtils.ParseDir(element.GetNullableAttribute("Dir"));
-        Path = MapUtils.ParsePath(element.GetNullableAttribute("Path"));
         Behavior = MapUtils.ParseBehavior(element.GetNullableAttribute("Behavior"));
+        Path = MapUtils.ParsePath(element.GetNullableAttribute("Path"));
         Shared = MapUtils.IsSharedDir(Dir) || element.GetBoolAttribute("Shared", false);
         SharedPath = MapUtils.IsSharedPath(Path) || element.GetBoolAttribute("SharedPath", false);
     }
@@ -62,10 +62,12 @@ public class Group : IDeserializable, ISerializable
         if(Stagger4 is not null)
             e.SetAttributeValue("Stagger4", Stagger4.ToString());
         
-        e.SetAttributeValue("Dir", Dir.ToString().ToUpper());
-        e.SetAttributeValue("Path", Path.ToString().ToUpper());
+        if(Dir != DirEnum.ANY)
+            e.SetAttributeValue("Dir", Dir.ToString().ToUpper());
         if(Behavior != BehaviorEnum.NORMAL)
-            e.SetAttributeValue("Behavior", Path.ToString().ToUpper());
+            e.SetAttributeValue("Behavior", Behavior.ToString().ToUpper());
+        if(Path != PathEnum.ANY)
+            e.SetAttributeValue("Path", Path.ToString().ToUpper());
         if(!MapUtils.IsSharedDir(Dir) && Shared)
             e.SetAttributeValue("Shared", Shared.ToString().ToUpper());
         if(!MapUtils.IsSharedPath(Path) && SharedPath)

@@ -23,6 +23,10 @@ public abstract class AbstractCollision : IDeserializable, ISerializable, IDrawa
         DEFAULT = 0
     }
 
+    public double? AnchorX{get; set;}
+    public double? AnchorY{get; set;}
+    public double NormalX{get; set;}
+    public double NormalY{get; set;}
     public double X1{get; set;}
     public double X2{get; set;}
     public double Y1{get; set;}
@@ -30,14 +34,23 @@ public abstract class AbstractCollision : IDeserializable, ISerializable, IDrawa
     public string? TauntEvent{get; set;}
     public FlagEnum? Flag{get; set;}
     public ColorFlagEnum? ColorFlag{get; set;}
-    public double? AnchorX{get; set;}
-    public double? AnchorY{get; set;}
-    public double NormalX{get; set;}
-    public double NormalY{get; set;}
     public int Team{get; set;}
     
     public virtual void Deserialize(XElement element)
     {
+        //brawlhalla requires both attributes to exist for an anchor
+        AnchorX = AnchorY = null;
+        if(element.HasAttribute("AnchorX") && element.HasAttribute("AnchorY"))
+        {
+            AnchorX = element.GetFloatAttribute("AnchorX");
+            AnchorY = element.GetFloatAttribute("AnchorY");
+        }
+
+        //a collision with an anchor can't be a pressure plate or have a normal
+        //but we don't bother implementing that
+        NormalX = element.GetFloatAttribute("NormalX", 0);
+        NormalY = element.GetFloatAttribute("NormalY", 0);
+
         X2 = X1 = 0;
         if(element.HasAttribute("X"))
         {
@@ -76,19 +89,6 @@ public abstract class AbstractCollision : IDeserializable, ISerializable, IDrawa
                 :ColorFlagEnum.DEFAULT
             :null;
         
-        //brawlhalla requires both attributes to exist for an anchor
-        AnchorX = AnchorY = null;
-        if(element.HasAttribute("AnchorX") && element.HasAttribute("AnchorY"))
-        {
-            AnchorX = element.GetFloatAttribute("AnchorX");
-            AnchorY = element.GetFloatAttribute("AnchorY");
-        }
-
-        //a collision with an anchor can't be a pressure plate or have a normal
-        //but we don't bother implementing that
-        NormalX = element.GetFloatAttribute("NormalX", 0);
-        NormalY = element.GetFloatAttribute("NormalY", 0);
-
         Team = element.GetIntAttribute("Team", 0);
     }
 
@@ -96,6 +96,17 @@ public abstract class AbstractCollision : IDeserializable, ISerializable, IDrawa
     {
         XElement e = new(GetType().Name);
 
+        if(AnchorX is not null && AnchorY is not null)
+        {
+            e.SetAttributeValue("AnchorX", AnchorX.ToString());
+            e.SetAttributeValue("AnchorY", AnchorY.ToString());
+        }
+
+        if(NormalX != 0)
+            e.SetAttributeValue("NormalX", NormalX.ToString());
+        if(NormalY != 0)
+            e.SetAttributeValue("NormalY", NormalY.ToString());
+        
         if(X1 == X2)
         {
             e.SetAttributeValue("X", X1.ToString());
@@ -124,17 +135,6 @@ public abstract class AbstractCollision : IDeserializable, ISerializable, IDrawa
         
         if(ColorFlag is not null)
             e.SetAttributeValue("ColorFlag", ColorFlag?.ToString().ToLower());
-        
-        if(AnchorX is not null && AnchorY is not null)
-        {
-            e.SetAttributeValue("AnchorX", AnchorX.ToString());
-            e.SetAttributeValue("AnchorY", AnchorY.ToString());
-        }
-
-        if(NormalX != 0)
-            e.SetAttributeValue("NormalX", NormalX.ToString());
-        if(NormalY != 0)
-            e.SetAttributeValue("NormalY", NormalY.ToString());
         
         if(Team != 0)
             e.SetAttributeValue("Team", Team.ToString());

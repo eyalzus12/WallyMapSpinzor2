@@ -8,13 +8,13 @@ public class LevelDesc : IDeserializable, ISerializable, IDrawable
     public string LevelName{get; set;} = null!;
     public int NumFrames{get; set;}
     public double SlowMult{get; set;}
+
     public CameraBounds CameraBounds{get; set;} = null!;
     public SpawnBotBounds SpawnBotBounds{get; set;} = null!;
     public List<Background> Backgrounds{get; set;} = null!;
     public List<LevelSound> LevelSounds{get; set;} = null!;
     public TeamScoreboard? TeamScoreboard{get; set;}
-    public List<MovingPlatform> MovingPlatforms{get; set;} = null!;
-    public List<Platform> Platforms{get; set;} = null!;
+    public List<AbstractAsset> Assets{get; set;} = null!;
     public List<LevelAnim> LevelAnims{get; set;} = null!;
     public List<AbstractVolume> Volumes{get; set;} = null!;
     public List<AbstractCollision> Collisions{get; set;} = null!;
@@ -34,13 +34,13 @@ public class LevelDesc : IDeserializable, ISerializable, IDrawable
         LevelName = element.GetAttribute("LevelName");
         NumFrames = element.GetIntAttribute("NumFrames", 0);
         SlowMult = element.GetFloatAttribute("SlowMult", 1);
+
         CameraBounds = element.DeserializeChildOfType<CameraBounds>()!;
         SpawnBotBounds = element.DeserializeChildOfType<SpawnBotBounds>()!;
         Backgrounds = element.DeserializeChildrenOfType<Background>();
         LevelSounds = element.DeserializeChildrenOfType<LevelSound>();
         TeamScoreboard = element.DeserializeChildOfType<TeamScoreboard>();
-        MovingPlatforms = element.DeserializeChildrenOfType<MovingPlatform>();
-        Platforms = element.DeserializeChildrenOfType<Platform>();
+        Assets = element.DeserializeAssetChildren();
         LevelAnims = element.DeserializeChildrenOfType<LevelAnim>();
         Volumes = element.DeserializeVolumeChildren();
         Collisions = element.DeserializeCollisionChildren();
@@ -73,10 +73,8 @@ public class LevelDesc : IDeserializable, ISerializable, IDrawable
             e.Add(ls.Serialize());
         if(TeamScoreboard is not null)
             e.Add(TeamScoreboard.Serialize());
-        foreach(MovingPlatform mp in MovingPlatforms)
-            e.Add(mp.Serialize());
-        foreach(Platform p in Platforms)
-            e.Add(p.Serialize());
+        foreach(AbstractAsset a in Assets)
+            e.Add(a.Serialize());
         foreach(LevelAnim la in LevelAnims)
             e.Add(la.Serialize());
         foreach(AbstractVolume v in Volumes)
@@ -115,6 +113,8 @@ public class LevelDesc : IDeserializable, ISerializable, IDrawable
         rd.DefaultSlowMult = SlowMult;
         foreach(Background b in Backgrounds)
             b.ChallengeCurrentBackground(rd, rs);
+        foreach(AbstractAsset a in Assets) if(a is MovingPlatform mp)
+            mp.StoreOffset(rd, time);
 
         CameraBounds.DrawOn(canvas, rd, rs, t, time);
         SpawnBotBounds.DrawOn(canvas, rd, rs, t, time);
@@ -122,10 +122,8 @@ public class LevelDesc : IDeserializable, ISerializable, IDrawable
             b.DrawOn(canvas, rd, rs, t, time);
         //foreach(LevelSound ls in LevelSounds)
         TeamScoreboard?.DrawOn(canvas, rd, rs, t, time);
-        foreach(MovingPlatform mp in MovingPlatforms)
-            mp.DrawOn(canvas, rd, rs, t, time);
-        foreach(Platform p in Platforms)
-            p.DrawOn(canvas, rd, rs, t, time);
+        foreach(AbstractAsset a in Assets)
+            a.DrawOn(canvas, rd, rs, t, time);
         //foreach(LevelAnim la in LevelAnims)
         foreach(AbstractVolume v in Volumes)
             v.DrawOn(canvas, rd, rs, t, time);

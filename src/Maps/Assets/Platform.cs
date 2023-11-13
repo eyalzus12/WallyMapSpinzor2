@@ -82,10 +82,13 @@ public class Platform : AbstractAsset
         else if(Red is not null && Red != rs.PickedPlatform)
             return;
 
-        //will only draw if AssetName is not null
-        base.DrawOn(canvas, rd, rs, t, time);
-
-        if(AssetName is null)
+        //normal asset
+        if(AssetName is not null)
+        {
+            base.DrawOn(canvas, rd, rs, t, time);
+        }
+        //not a normal asset
+        else
         {
             foreach(AbstractAsset a in AssetChildren)
                 a.DrawOn(canvas, rd, rs, t * Transform, time);

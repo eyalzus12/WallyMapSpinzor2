@@ -4,15 +4,15 @@ namespace WallyMapSpinzor2;
 
 public abstract class AbstractItemSpawn: IDeserializable, ISerializable, IDrawable
 {
+    public double H{get; set;}
+    public double W{get; set;}
     public double X{get; set;}
     public double Y{get; set;}
-    public double W{get; set;}
-    public double H{get; set;}
 
     public void Deserialize(XElement element)
     {
-        W = element.GetFloatAttribute("W", DefaultW);
         H = element.GetFloatAttribute("H", DefaultH);
+        W = element.GetFloatAttribute("W", DefaultW);
         X = element.GetFloatAttribute("X", DefaultX);
         Y = element.GetFloatAttribute("Y", DefaultY);
     }
@@ -21,10 +21,10 @@ public abstract class AbstractItemSpawn: IDeserializable, ISerializable, IDrawab
     {
         XElement e = new(GetType().Name);
 
-        if(W != DefaultW)
-            e.SetAttributeValue("W", W.ToString());
         if(H != DefaultH)
             e.SetAttributeValue("H", H.ToString());
+        if(W != DefaultW)
+            e.SetAttributeValue("W", W.ToString());
 
         e.SetAttributeValue("X", X.ToString());
         e.SetAttributeValue("Y", Y.ToString());
