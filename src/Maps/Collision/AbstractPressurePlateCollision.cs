@@ -56,7 +56,14 @@ public abstract class AbstractPressurePlateCollision : AbstractCollision
         {
             if(PlatID is not null && !rd.PlatIDMovingPlatformOffset.ContainsKey(PlatID))
                 throw new InvalidOperationException($"Plat ID dictionary did not contain plat id {PlatID} when attempting to draw pressure plate. Make sure to call StoreOffset beforehand.");
-            TTexture texture = canvas.LoadTextureFromSWF("bones/Bones_GameModes.swf", AssetName);
+            
+            string finalAssetName = AssetName;
+            //that's how the game does this check. don't ask me.
+            if(finalAssetName.Length > "a__AnimationPressurePlate".Length + 1)
+                finalAssetName = finalAssetName["a__AnimationPressurePlate".Length..];
+            
+            TTexture texture = canvas.LoadTextureFromSWF("bones/Bones_GameModes.swf", finalAssetName);
+
             (double _X, double _Y) = (PlatID is null)?(0, 0):rd.PlatIDMovingPlatformOffset[PlatID];
             _X += AnimOffsetX; _Y += AnimOffsetY;
             //for some reason brawlhalla further offsets the sprite by half its size
