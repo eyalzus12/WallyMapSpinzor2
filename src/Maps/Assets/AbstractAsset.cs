@@ -5,9 +5,9 @@ namespace WallyMapSpinzor2;
 public abstract class AbstractAsset : ISerializable, IDeserializable, IDrawable
 {
     public string? AssetName{get; set;}
+    public double Rotation{get; set;}
     public double ScaleX{get; set;}
     public double ScaleY{get; set;}
-    public double Rotation{get; set;}
     public double H{get; set;}
     public double W{get; set;}
     public double X{get; set;}
@@ -16,10 +16,10 @@ public abstract class AbstractAsset : ISerializable, IDeserializable, IDrawable
     public virtual void Deserialize(XElement element)
     {
         AssetName = element.GetNullableAttribute("AssetName");
+        Rotation = element.GetFloatAttribute("Rotation", 0);
         double Scale = element.GetFloatAttribute("Scale", 1);
         ScaleX = element.GetFloatAttribute("ScaleX", Scale);
         ScaleY = element.GetFloatAttribute("ScaleY", Scale);
-        Rotation = element.GetFloatAttribute("Rotation", 0);
         H = element.GetFloatAttribute("H", 0);
         W = element.GetFloatAttribute("W", 0);
         X = element.GetFloatAttribute("X", 0);
@@ -33,6 +33,9 @@ public abstract class AbstractAsset : ISerializable, IDeserializable, IDrawable
         if(AssetName is not null)
             e.SetAttributeValue("AssetName", AssetName);
 
+        if(Rotation != 0)
+            e.SetAttributeValue("Rotation", Rotation.ToString());
+
         if(ScaleX == ScaleY)
         {
             if(ScaleX != 1)
@@ -45,9 +48,6 @@ public abstract class AbstractAsset : ISerializable, IDeserializable, IDrawable
             if(ScaleY != 1)
                 e.SetAttributeValue("ScaleY", ScaleY.ToString());
         }
-
-        if(Rotation != 0)
-            e.SetAttributeValue("Rotation", Rotation.ToString());
         
         if(H != 0)
             e.SetAttributeValue("H", H.ToString());

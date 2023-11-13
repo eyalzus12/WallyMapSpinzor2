@@ -23,6 +23,8 @@ public abstract class AbstractCollision : IDeserializable, ISerializable, IDrawa
         DEFAULT = 0
     }
 
+    public string? TauntEvent{get; set;}
+    public int Team{get; set;}
     public double? AnchorX{get; set;}
     public double? AnchorY{get; set;}
     public double NormalX{get; set;}
@@ -31,13 +33,15 @@ public abstract class AbstractCollision : IDeserializable, ISerializable, IDrawa
     public double X2{get; set;}
     public double Y1{get; set;}
     public double Y2{get; set;}
-    public string? TauntEvent{get; set;}
     public FlagEnum? Flag{get; set;}
     public ColorFlagEnum? ColorFlag{get; set;}
-    public int Team{get; set;}
     
     public virtual void Deserialize(XElement element)
     {
+        TauntEvent = element.GetNullableAttribute("TauntEvent");
+        
+        Team = element.GetIntAttribute("Team", 0);
+
         //brawlhalla requires both attributes to exist for an anchor
         AnchorX = AnchorY = null;
         if(element.HasAttribute("AnchorX") && element.HasAttribute("AnchorY"))
@@ -73,8 +77,6 @@ public abstract class AbstractCollision : IDeserializable, ISerializable, IDrawa
             Y2 = element.GetFloatAttribute("Y2");
         }
 
-        TauntEvent = element.GetNullableAttribute("TauntEvent");
-
         Flag =
             element.HasAttribute("Flag")
             ?Enum.TryParse(element.GetAttribute("Flag").ToUpper(), out FlagEnum _Flag)
@@ -88,13 +90,17 @@ public abstract class AbstractCollision : IDeserializable, ISerializable, IDrawa
                 ?_ColorFlag
                 :ColorFlagEnum.DEFAULT
             :null;
-        
-        Team = element.GetIntAttribute("Team", 0);
     }
 
     public virtual XElement Serialize()
     {
         XElement e = new(GetType().Name);
+
+        if(TauntEvent is not null)
+            e.SetAttributeValue("TauntEvent", TauntEvent);
+        
+        if(Team != 0)
+            e.SetAttributeValue("Team", Team.ToString());
 
         if(AnchorX is not null && AnchorY is not null)
         {
@@ -126,18 +132,12 @@ public abstract class AbstractCollision : IDeserializable, ISerializable, IDrawa
             e.SetAttributeValue("Y1", Y1.ToString());
             e.SetAttributeValue("Y2", Y2.ToString());
         }
-
-        if(TauntEvent is not null)
-            e.SetAttributeValue("TauntEvent", TauntEvent);
         
         if(Flag is not null)
             e.SetAttributeValue("Flag", Flag?.ToString().ToLower());
         
         if(ColorFlag is not null)
             e.SetAttributeValue("ColorFlag", ColorFlag?.ToString().ToLower());
-        
-        if(Team != 0)
-            e.SetAttributeValue("Team", Team.ToString());
 
         return e;
     }

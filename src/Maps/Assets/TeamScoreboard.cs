@@ -10,8 +10,8 @@ public class TeamScoreboard : IDeserializable, ISerializable, IDrawable
     public int Y{get; set;}
     public int DoubleDigitsOnesX{get; set;}
     public int DoubleDigitsTensX{get; set;}
-    public double DoubleDigitsScale{get; set;}
     public double DoubleDigitsY{get; set;}
+    public double DoubleDigitsScale{get; set;}
     public string RedDigitFont{get; set;} = null!;
     public string BlueDigitFont{get; set;} = null!;
 
@@ -22,9 +22,9 @@ public class TeamScoreboard : IDeserializable, ISerializable, IDrawable
         Y = element.GetIntAttribute("Y", 0);
         DoubleDigitsOnesX = element.GetIntAttribute("DoubleDigitsOnesX", 0);
         DoubleDigitsTensX = element.GetIntAttribute("DoubleDigitsTensX", 0);
+        DoubleDigitsY = element.GetFloatAttribute("DoubleDigitsY", 0);
         //yes, this actually defaults to 0
         DoubleDigitsScale = element.GetFloatAttribute("DoubleDigitsScale", 0);
-        DoubleDigitsY = element.GetFloatAttribute("DoubleDigitsY", 0);
         RedDigitFont = element.GetAttribute("RedDigitFont");
         BlueDigitFont = element.GetAttribute("BlueDigitFont");
     }
@@ -35,10 +35,11 @@ public class TeamScoreboard : IDeserializable, ISerializable, IDrawable
 
         e.SetAttributeValue("RedTeamX", RedTeamX.ToString());
         e.SetAttributeValue("BlueTeamX", BlueTeamX.ToString());
+        e.SetAttributeValue("Y", Y.ToString());
         e.SetAttributeValue("DoubleDigitsOnesX", DoubleDigitsOnesX.ToString());
         e.SetAttributeValue("DoubleDigitsTensX", DoubleDigitsTensX.ToString());
-        e.SetAttributeValue("DoubleDigitsScale", DoubleDigitsScale.ToString());
         e.SetAttributeValue("DoubleDigitsY", DoubleDigitsY.ToString());
+        e.SetAttributeValue("DoubleDigitsScale", DoubleDigitsScale.ToString());
         e.SetAttributeValue("RedDigitFont", RedDigitFont);
         e.SetAttributeValue("BlueDigitFont", BlueDigitFont);
 
