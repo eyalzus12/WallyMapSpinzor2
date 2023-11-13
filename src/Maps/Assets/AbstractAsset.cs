@@ -8,10 +8,10 @@ public abstract class AbstractAsset : ISerializable, IDeserializable, IDrawable
     public double ScaleX{get; set;}
     public double ScaleY{get; set;}
     public double Rotation{get; set;}
-    public double X{get; set;}
-    public double Y{get; set;}
     public double H{get; set;}
     public double W{get; set;}
+    public double X{get; set;}
+    public double Y{get; set;}
 
     public virtual void Deserialize(XElement element)
     {
@@ -20,10 +20,10 @@ public abstract class AbstractAsset : ISerializable, IDeserializable, IDrawable
         ScaleX = element.GetFloatAttribute("ScaleX", Scale);
         ScaleY = element.GetFloatAttribute("ScaleY", Scale);
         Rotation = element.GetFloatAttribute("Rotation", 0);
-        X = element.GetFloatAttribute("X", 0);
-        Y = element.GetFloatAttribute("Y", 0);
         H = element.GetFloatAttribute("H", 0);
         W = element.GetFloatAttribute("W", 0);
+        X = element.GetFloatAttribute("X", 0);
+        Y = element.GetFloatAttribute("Y", 0);
     }
 
     public virtual XElement Serialize()
@@ -49,14 +49,14 @@ public abstract class AbstractAsset : ISerializable, IDeserializable, IDrawable
         if(Rotation != 0)
             e.SetAttributeValue("Rotation", Rotation.ToString());
         
-        if(X != 0)
-            e.SetAttributeValue("X", X.ToString());
-        if(Y != 0)
-            e.SetAttributeValue("Y", Y.ToString());
         if(H != 0)
             e.SetAttributeValue("H", H.ToString());
         if(W != 0)
             e.SetAttributeValue("W", W.ToString());
+        if(X != 0)
+            e.SetAttributeValue("X", X.ToString());
+        if(Y != 0)
+            e.SetAttributeValue("Y", Y.ToString());
 
         return e;
     }

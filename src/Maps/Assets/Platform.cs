@@ -6,8 +6,8 @@ public class Platform : AbstractAsset
 {
     public string InstanceName{get; set;} = null!;
     public string? PlatformAssetSwap{get; set;}
-    public string? ScoringType{get; set;}
     public List<string>? Theme{get; set;}
+    public string? ScoringType{get; set;}
 
     public List<AbstractAsset> AssetChildren{get; set;} = null!;
     
@@ -21,8 +21,8 @@ public class Platform : AbstractAsset
         base.Deserialize(element);
         InstanceName = element.GetAttribute("InstanceName");
         PlatformAssetSwap = element.GetNullableAttribute("PlatformAssetSwap");
-        ScoringType = element.GetNullableAttribute("ScoringType");
         Theme = element.GetNullableAttribute("Theme")?.Split(',').ToList();
+        ScoringType = element.GetNullableAttribute("ScoringType");
         AssetChildren = element.DeserializeAssetChildren();
     }
 
@@ -35,11 +35,11 @@ public class Platform : AbstractAsset
         if(PlatformAssetSwap is not null)
             e.SetAttributeValue("PlatformAssetSwap", PlatformAssetSwap);
         
-        if(ScoringType is not null)
-            e.SetAttributeValue("ScoringType", ScoringType);
-        
         if(Theme is not null)
             e.SetAttributeValue("Theme", string.Join(',', Theme));
+        
+        if(ScoringType is not null)
+            e.SetAttributeValue("ScoringType", ScoringType);
         
         //hack to get InstanceName to show before the other stuff
         XElement e2 = base.Serialize();

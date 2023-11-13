@@ -5,18 +5,18 @@ namespace WallyMapSpinzor2;
 public abstract class AbstractDynamic<T> : ISerializable, IDeserializable, IDrawable
     where T : ISerializable, IDeserializable, IDrawable
 {
+    public string PlatID{get; set;} = null!;
     public double X{get; set;}
     public double Y{get; set;}
-    public string PlatID{get; set;} = null!;
     public List<T> Children{get; set;} = null!;
 
     public abstract void DeserializeChildren(XElement element);
 
     public void Deserialize(XElement element)
     {
+        PlatID = element.GetAttribute("PlatID");
         X = element.GetFloatAttribute("X");
         Y = element.GetFloatAttribute("Y");
-        PlatID = element.GetAttribute("PlatID");
         DeserializeChildren(element);
     }
 
@@ -24,9 +24,9 @@ public abstract class AbstractDynamic<T> : ISerializable, IDeserializable, IDraw
     {
         XElement e = new(GetType().Name);
 
+        e.SetAttributeValue("PlatID", PlatID);
         e.SetAttributeValue("X", X.ToString());
         e.SetAttributeValue("Y", Y.ToString());
-        e.SetAttributeValue("PlatID", PlatID);
         
         foreach(T c in Children)
             e.Add(c.Serialize());

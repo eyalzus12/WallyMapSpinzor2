@@ -59,10 +59,6 @@ public abstract class AbstractCollision : IDeserializable, ISerializable, IDrawa
             Y1 = element.GetFloatAttribute("Y1");
             Y2 = element.GetFloatAttribute("Y2");
         }
-        
-        //swap
-        //im not 100% sure why brawlhalla does this
-        if(X1 > X2) (X2, X1) = (X1, X2);
 
         TauntEvent = element.GetNullableAttribute("TauntEvent");
 
@@ -184,6 +180,16 @@ public abstract class AbstractCollision : IDeserializable, ISerializable, IDrawa
             //draw collision line
             if(rs.ShowCollisionNormal)
             {
+                //swap to ensure normal is correct
+                //brawlhalla does this when creating the collision
+                bool swapped = false;
+                if(startX > nextX)
+                {
+                    (startX, nextX) = (nextX, startX);
+                    (startY, nextY) = (nextY, startY);
+                    swapped = true;
+                }
+
                 double lenX = nextX - startX;
                 if(NormalX != 0) lenX = NormalX;
                 double lenY = nextY - startY;
@@ -199,6 +205,13 @@ public abstract class AbstractCollision : IDeserializable, ISerializable, IDrawa
                     normalStartX, normalStartY, normalEndX, normalEndY,
                     rs.ColorCollisionNormal, t, DrawPriorityEnum.DATA
                 );
+
+                //swap back
+                if(swapped)
+                {
+                    (startX, nextX) = (nextX, startX);
+                    (startY, nextY) = (nextY, startY);
+                }
             }
             
             (startX, startY) = (nextX, nextY);

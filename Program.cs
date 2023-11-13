@@ -1,4 +1,5 @@
-﻿using System.Xml;
+﻿using System.Text;
+using System.Xml;
 using System.Xml.Linq;
 using WallyMapSpinzor2;
 
@@ -13,7 +14,12 @@ if(element is not null)
 {
     LevelDesc levelDesc = element.DeserializeTo<LevelDesc>();
     FileStream toFile = new(toPath, FileMode.Create, FileAccess.Write);
-    using XmlWriter xmlw = XmlWriter.Create(toFile, new(){OmitXmlDeclaration = true, IndentChars = "    ", Indent = true});
+    using XmlWriter xmlw = XmlWriter.Create(toFile, new(){
+        OmitXmlDeclaration = true, //no xml header
+        IndentChars = "    ", Indent = true, //ident with four spaces
+        NewLineChars = "\n", //use UNIX line endings
+        Encoding = new UTF8Encoding(false) //use UTF8 (no BOM) encoding
+    });
     levelDesc.Serialize().Save(xmlw);
 }
 
