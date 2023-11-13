@@ -29,8 +29,8 @@ public class Phase : AbstractKeyFrame
     public override (double, double) GetPosition() => KeyFrames[0].GetPosition();
 
     public override (double, double) LerpTo<T>
-    (T kk, double? centerX, double? centerY, double time, double kTimeOffset = 0)
+    (T kk, Animation.AnimationDefaultValues defaults, double time, double kTimeOffset = 0)
     {
-        return KeyFrames.Last().LerpTo(kk, centerX, centerY, time, kTimeOffset);
+        return KeyFrames.Last().LerpTo(kk, defaults, time, kTimeOffset);
     }
 }

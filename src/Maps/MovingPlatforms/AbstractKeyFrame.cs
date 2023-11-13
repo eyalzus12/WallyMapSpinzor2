@@ -11,6 +11,6 @@ public abstract class AbstractKeyFrame : IDeserializable, ISerializable
     public abstract (double, double) GetPosition();
 
     public abstract (double, double) LerpTo<T>
-    (T kk, double? centerX, double? centerY, double time, double kTimeOffset = 0)
+    (T kk, Animation.AnimationDefaultValues defaults, double time, double kTimeOffset = 0)
     where T : AbstractKeyFrame;
 }

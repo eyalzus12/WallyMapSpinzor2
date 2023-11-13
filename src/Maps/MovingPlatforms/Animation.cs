@@ -58,6 +58,11 @@ public class Animation : IDeserializable, ISerializable
         return e;
     }
 
+    public readonly record struct AnimationDefaultValues(double? CenterX, double? CenterY, bool EaseIn, bool EaseOut, int EasePower)
+    {
+
+    }
+
     public (double, double) GetOffset(GlobalRenderData rd, double time)
     {
         //apply time offsets
@@ -73,6 +78,6 @@ public class Animation : IDeserializable, ISerializable
         int j = (i == 0 ? KeyFrames.Count : i) - 1;
         if(i == KeyFrames.Count) i = 0;
         //lerp
-        return KeyFrames[j].LerpTo(KeyFrames[i], CenterX, CenterY, time);
+        return KeyFrames[j].LerpTo(KeyFrames[i], new(CenterX, CenterY, EaseIn, EaseOut, EasePower), time);
     }
 }
