@@ -67,7 +67,7 @@ public abstract class AbstractPressurePlateCollision : AbstractCollision
             (double _X, double _Y) = (PlatID is null)?(0, 0):rd.PlatIDMovingPlatformOffset[PlatID];
             _X += AnimOffsetX; _Y += AnimOffsetY;
             //for some reason brawlhalla further offsets the sprite by half its size
-            _X -= texture.W / 2; _Y -= texture.H / 2;
+            _X -= texture.W / 2.0; _Y -= texture.H / 2.0;
 
             /*
             WARNING:
