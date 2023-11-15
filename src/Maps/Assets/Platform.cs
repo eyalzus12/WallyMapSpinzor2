@@ -12,9 +12,9 @@ public class Platform : AbstractAsset
     public List<AbstractAsset> AssetChildren{get; set;} = null!;
     
     public bool NoSkulls => InstanceName == "am_NoSkulls";
-    public string? Hotkey => InstanceName.StartsWith("am_Hotkey")?InstanceName.Substring(InstanceName.LastIndexOf('_')+1):null;
-    public int? Blue => InstanceName.StartsWith("am_Blue")?int.Parse(InstanceName.Substring("am_Blue".Length)):null;
-    public int? Red => InstanceName.StartsWith("am_Red")?int.Parse(InstanceName.Substring("am_Red".Length)):null;
+    public string? Hotkey => InstanceName.StartsWith("am_Hotkey")?InstanceName[(InstanceName.LastIndexOf('_') + 1)..] :null;
+    public int? Blue => InstanceName.StartsWith("am_Blue")?int.Parse(InstanceName["am_Blue".Length..]):null;
+    public int? Red => InstanceName.StartsWith("am_Red")?int.Parse(InstanceName["am_Red".Length..]):null;
 
     public override void Deserialize(XElement e)
     {
