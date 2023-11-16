@@ -52,10 +52,17 @@ public class Platform : AbstractAsset
         //checks for showing assets. logic follows the game's code.
         if(!rs.ShowAssets)
             return;
-        else if(NoSkulls)
-            if(!rs.NoSkulls) return;
+        
+        if(NoSkulls)
+        {
+            if(!rs.NoSkulls)
+                return;
+        }
         else if(Hotkey is not null)
-            if(Hotkey != rs.Hotkey) return;
+        {
+            if(Hotkey != rs.Hotkey)
+                return;
+        }
         else if(Theme is not null || ScoringType is not null)
         {
             bool themeMatches = Theme?.Contains(rs.Theme) ?? false;
