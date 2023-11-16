@@ -6,12 +6,16 @@ namespace WallyMapSpinzor2;
 /// <typeparam name="T">The type of elements in the collection</typeparam>
 public class BucketPriorityQueue<T>
 {
+    private int _count;
+    
+    public int Count => _count;
     public List<Queue<T>> Buckets{get; protected set;}
     public int MinBucket{get; protected set;}
     public int MaxBucket{get; protected set;}
 
     public BucketPriorityQueue(int bucketCount)
     {
+        _count = 0;
         Buckets = new(bucketCount); for(int i = 0; i < bucketCount; ++i) Buckets.Add(new());
         MinBucket = bucketCount; MaxBucket = 0;
     }
@@ -25,6 +29,7 @@ public class BucketPriorityQueue<T>
         if(priority > MaxBucket) MaxBucket = priority;
 
         Buckets[priority].Enqueue(element);
+        _count++;
     }
 
     protected void UpdateMinBucket()
@@ -36,6 +41,7 @@ public class BucketPriorityQueue<T>
     {
         UpdateMinBucket();
         if(MinBucket >= Buckets.Count) throw new IndexOutOfRangeException("Attempt to pop min from empty bucket queue");
+        _count--;
         return Buckets[MinBucket].Dequeue();
     }
 
@@ -48,6 +54,7 @@ public class BucketPriorityQueue<T>
     {
         UpdateMaxBucket();
         if(MaxBucket < 0) throw new IndexOutOfRangeException("Attempt to pop max from empty bucket queue");
+        _count--;
         return Buckets[MaxBucket].Dequeue();
     }
 }
