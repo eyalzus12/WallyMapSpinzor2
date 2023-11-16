@@ -65,6 +65,7 @@ public class Animation : IDeserializable, ISerializable
     public (double, double) GetOffset(GlobalRenderData rd, double time)
     {
         //apply time offsets
+        time /= 16;
         time += StartFrame;
         time *= SlowMult ?? rd.DefaultSlowMult ?? 1;
         time = BrawlhallaMath.SafeMod(time, NumFrames ?? rd.DefaultNumFrames ?? 0);

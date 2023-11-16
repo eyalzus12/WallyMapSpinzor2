@@ -77,11 +77,12 @@ public abstract class AbstractAsset : ISerializable, IDeserializable, IDrawable
     }
 
     public Transform Transform =>
+        Transform.CreateScale((W < 0)?-1:1, (H < 0)?-1:1) *
         Transform.CreateFrom(
             x : X,
             y : Y, 
             rot : Rotation * Math.PI / 180,
-            scaleX : ScaleX * ((W < 0)?-1:1),
-            scaleY : ScaleY * ((H < 0)?-1:1)
+            scaleX : ScaleX,
+            scaleY : ScaleY
         );
 }
