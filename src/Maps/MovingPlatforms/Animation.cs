@@ -65,10 +65,11 @@ public class Animation : IDeserializable, ISerializable
     public (double, double) GetOffset(GlobalRenderData rd, double time)
     {
         //apply time offsets
-        time /= 16;
-        time += StartFrame;
-        time *= SlowMult ?? rd.DefaultSlowMult ?? 1;
-        time = BrawlhallaMath.SafeMod(time, NumFrames ?? rd.DefaultNumFrames ?? 0);
+        time /= 16; //frames to keyframe time (~milliseconds)
+        time += StartFrame; //apply start frame
+        time *= SlowMult ?? rd.DefaultSlowMult ?? 1; //slow mult
+        time += 1; //keyframe frame numbers start at 1
+        time = BrawlhallaMath.SafeMod(time, NumFrames ?? rd.DefaultNumFrames ?? 0); //clamp to animation range
         //find the keyframe pair
         int i = 0;
         for(; i < KeyFrames.Count; ++i)
