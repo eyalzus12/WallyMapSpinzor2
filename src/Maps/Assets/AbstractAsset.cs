@@ -71,7 +71,7 @@ public abstract class AbstractAsset : ISerializable, IDeserializable, IDrawable
             throw new InvalidOperationException("Attempting to draw an asset, but global data is missing the AssetDir.");
         string path = Path.Join(rd.AssetDir, AssetName).ToString();
         TTexture texture = canvas.LoadTextureFromPath(path);
-        Transform tt = t * Transform.CreateTranslate(X, Y) * Transform.CreateScale(W/texture.W, H/texture.H);
+        Transform tt = t * Transform * Transform.CreateScale(W/texture.W, H/texture.H);
         
         canvas.DrawTexture(0, 0, texture, tt, DrawPriorityEnum.MIDGROUND);
     }
