@@ -90,8 +90,9 @@ public class Platform : AbstractAsset
         //not a normal asset
         else
         {
+            Transform tt = t * Transform;
             foreach(AbstractAsset a in AssetChildren)
-                a.DrawOn(canvas, rd, rs, t * Transform, time);
+                a.DrawOn(canvas, rd, rs, tt, time);
         }
     }
 }
