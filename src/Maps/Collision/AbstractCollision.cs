@@ -155,9 +155,11 @@ public abstract class AbstractCollision : IDeserializable, ISerializable, IDrawa
                 .GetEnumerator();
         }
 
+        bool finished = false;
         //we use a hack here to get anchors to work
-        while(startX != X2 || startY != Y2)
+        while(!finished)
         {
+            enumer?.MoveNext();
             (double nextX, double nextY) = enumer?.Current ?? (X2,Y2);
             //draw current line
             if(Team == 0)
@@ -211,7 +213,7 @@ public abstract class AbstractCollision : IDeserializable, ISerializable, IDrawa
             }
             
             (startX, startY) = (nextX, nextY);
-            enumer?.MoveNext();
+            finished = !enumer?.MoveNext() ?? true;
         }
     }
 
