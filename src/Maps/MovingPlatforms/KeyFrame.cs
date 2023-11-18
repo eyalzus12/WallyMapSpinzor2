@@ -61,11 +61,15 @@ public class KeyFrame : AbstractKeyFrame
     public override (double, double) GetPosition() => (X, Y);
 
     public override (double, double) LerpTo<T>
-    (T kk, Animation.AnimationDefaultValues defaults, double time, double kTimeOffset = 0)
+    (T kk, Animation.AnimationDefaultValues defaults, double numframes, double time, double fromTimeOffset, double toTimeOffset)
     {
         if(kk is KeyFrame k)
         {
-            double w = (k.FrameNum + kTimeOffset - FrameNum)/(time - FrameNum);
+            double fdiff = (k.FrameNum + toTimeOffset) - (FrameNum + fromTimeOffset);
+            fdiff = BrawlhallaMath.SafeMod(fdiff, numframes);
+            double tdiff = (time + 1) - (FrameNum + fromTimeOffset);
+            tdiff = BrawlhallaMath.SafeMod(tdiff, numframes);
+            double w = tdiff/fdiff;
             w = BrawlhallaMath.EaseWeight(w,
                 EaseIn || defaults.EaseIn,
                 EaseOut || defaults.EaseOut,
@@ -78,7 +82,25 @@ public class KeyFrame : AbstractKeyFrame
         }
         else if(kk is Phase p)
         {
-            return LerpTo(p.KeyFrames[0], defaults, time, kTimeOffset + p.StartFrame);
+            //has 0 frame num on first keyframe
+            if(p.KeyFrames[0].GetStartFrame() == 0)
+            {
+                return LerpTo(p.KeyFrames[0], defaults, numframes, time, fromTimeOffset, toTimeOffset + p.StartFrame);
+            }
+            //non-0 frame num on first keyframe. gotta wait for phase start.
+            else
+            {
+                //phase hasn't started. remain in position.
+                if(toTimeOffset + p.StartFrame >= BrawlhallaMath.SafeMod(time+1, numframes))
+                {
+                    return (X,Y);
+                }
+                //phase started
+                else
+                {
+                    return LerpTo(p.KeyFrames[0], defaults, numframes, time, fromTimeOffset + p.StartFrame - 1, toTimeOffset + p.StartFrame);
+                }
+            }
         }
         else
             throw new ArgumentException($"Keyframe cannot interpolate to unknown abstract keyframe type {typeof(T).Name}");

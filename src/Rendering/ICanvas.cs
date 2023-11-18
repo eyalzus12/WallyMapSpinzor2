@@ -22,4 +22,6 @@ public interface ICanvas<TTexture> where TTexture : ITexture
     public void DrawTexture(double X, double Y, TTexture texture, Transform t, DrawPriorityEnum p);
     //draw a texture, resizing it to fit inside a rectangle
     public void DrawTextureRect(double X, double Y, double W, double H, TTexture texture, Transform t, DrawPriorityEnum p);
+
+    public void ClearTextureCache();
 }

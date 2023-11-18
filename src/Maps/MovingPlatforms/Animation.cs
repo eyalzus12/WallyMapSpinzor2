@@ -67,18 +67,26 @@ public class Animation : IDeserializable, ISerializable
         //apply time offsets
         time /= 16; //frames to keyframe time (~milliseconds)
         time += StartFrame; //apply start frame
-        time *= SlowMult ?? rd.DefaultSlowMult ?? 1; //slow mult
-        time += 1; //keyframe frame numbers start at 1
-        time = BrawlhallaMath.SafeMod(time, NumFrames ?? rd.DefaultNumFrames ?? 0); //clamp to animation range
+        double numframes = NumFrames ?? rd.DefaultNumFrames ?? 0;
+        double slowmult = SlowMult ?? rd.DefaultSlowMult ?? 1;
+        time /= slowmult;
+        double _time = BrawlhallaMath.SafeMod(time+1, numframes);
         //find the keyframe pair
         int i = 0;
         for(; i < KeyFrames.Count; ++i)
         {
-            if(KeyFrames[i].GetStartFrame() >= time) break;
+            if(KeyFrames[i].GetStartFrame() >= _time) break;
         }
-        int j = (i == 0 ? KeyFrames.Count : i) - 1;
+
         if(i == KeyFrames.Count) i = 0;
+        int j = (i == 0 ? KeyFrames.Count : i) - 1;
         //lerp
-        return KeyFrames[j].LerpTo(KeyFrames[i], new(CenterX, CenterY, EaseIn, EaseOut, EasePower), time);
+        return KeyFrames[j].LerpTo(KeyFrames[i],
+            new(CenterX, CenterY, EaseIn, EaseOut, EasePower),
+            numframes,
+            time,
+            0,
+            0
+        );
     }
 }
