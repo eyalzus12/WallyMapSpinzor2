@@ -98,7 +98,9 @@ public class KeyFrame : AbstractKeyFrame
                 //phase started
                 else
                 {
-                    return LerpTo(p.KeyFrames[0], defaults, numframes, time, fromTimeOffset + p.StartFrame - 1, toTimeOffset + p.StartFrame);
+                    //use p.StartFrame - FrameNum to fake a keyframe at the phase start
+                    //there's a bug here for nested phases... hopefully that never becomes an issue.
+                    return LerpTo(p.KeyFrames[0], defaults, numframes, time, p.StartFrame - FrameNum, toTimeOffset + p.StartFrame);
                 }
             }
         }
