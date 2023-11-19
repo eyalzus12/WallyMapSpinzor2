@@ -6,22 +6,43 @@ namespace WallyMapSpinzor2;
 
 public static class Sample
 {
-    public static void DeserializeThenSerialize(string fromPath, string toPath)
+    public static void DeserializeThenSerialize(string ldFromPath, string ltFromPath, string ldDestPath, string ltDestPath)
     {
-        //read. use MapUtils.FixBmg on the content to fix xml non-compliances on a few maps
-        FileStream fromFile = new(fromPath, FileMode.Open, FileAccess.Read);
-        using StreamReader fsr = new(fromFile);
-        XDocument document = XDocument.Parse(MapUtils.FixBmg(fsr.ReadToEnd()));
-        if (document.FirstNode is not XElement element) return;
-        //write to file.
-        LevelDesc levelDesc = element.DeserializeTo<LevelDesc>();
-        FileStream toFile = new(toPath, FileMode.Create, FileAccess.Write);
-        using XmlWriter xmlw = XmlWriter.Create(toFile, new(){
-            OmitXmlDeclaration = true, //no xml header
-            IndentChars = "    ", Indent = true, //ident with four spaces
-            NewLineChars = "\n", //use UNIX line endings
-            Encoding = new UTF8Encoding(false) //use UTF8 (no BOM) encoding
-        });
-        levelDesc.SerializeToXElement().Save(xmlw);
+        //LevelDesc
+        {
+            //read. use MapUtils.FixBmg on the content to fix xml non-compliances on a few maps
+            FileStream fromFile = new(ldFromPath, FileMode.Open, FileAccess.Read);
+            using StreamReader fsr = new(fromFile);
+            XDocument document = XDocument.Parse(MapUtils.FixBmg(fsr.ReadToEnd()));
+            if (document.FirstNode is not XElement element) return;
+            //write to file.
+            LevelDesc levelDesc = element.DeserializeTo<LevelDesc>();
+            FileStream toFile = new(ldDestPath, FileMode.Create, FileAccess.Write);
+            using XmlWriter xmlw = XmlWriter.Create(toFile, new(){
+                OmitXmlDeclaration = true, //no xml header
+                IndentChars = "    ", Indent = true, //indent with four spaces
+                NewLineChars = "\n", //use UNIX line endings
+                Encoding = new UTF8Encoding(false) //use UTF8 (no BOM) encoding
+            });
+            levelDesc.SerializeToXElement().Save(xmlw);
+        }
+
+        //LevelTypes
+        {
+            FileStream fromFile = new(ltFromPath, FileMode.Open, FileAccess.Read);
+            using StreamReader fsr = new(fromFile);
+            XDocument doc = XDocument.Parse(fsr.ReadToEnd());
+            if (doc.FirstNode is not XElement element) return;
+
+            LevelTypes levelTypes = element.DeserializeTo<LevelTypes>();
+            FileStream toFile = new(ltDestPath, FileMode.Create, FileAccess.Write);
+            using XmlWriter xmlw = XmlWriter.Create(toFile, new(){
+                OmitXmlDeclaration = true,
+                IndentChars = "    ", Indent = true,
+                NewLineChars = "\n",
+                Encoding = new UTF8Encoding(false)
+            });
+            levelTypes.SerializeToXElement().Save(xmlw);
+        }
     }
 }
