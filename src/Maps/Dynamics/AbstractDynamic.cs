@@ -29,7 +29,7 @@ public abstract class AbstractDynamic<T> : ISerializable, IDeserializable, IDraw
             e.Add(c.SerializeToXElement());
     }
 
-    public void DrawOn<TTexture>
+    public virtual void DrawOn<TTexture>
     (ICanvas<TTexture> canvas, GlobalRenderData rd, RenderSettings rs, Transform t, double time) 
         where TTexture : ITexture
     {

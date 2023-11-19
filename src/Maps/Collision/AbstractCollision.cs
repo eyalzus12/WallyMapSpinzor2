@@ -137,30 +137,50 @@ public abstract class AbstractCollision : IDeserializable, ISerializable, IDrawa
         if(ColorFlag is not null)
             e.SetAttributeValue("ColorFlag", ColorFlag?.ToString().ToLower());
     }
+    
+    private List<(double, double)>? _curve = null;
+    
+    public void ClearCurveCache()
+    {
+        _curve = null;
+    }
+    
+    public void CalculateCurve(double XOff, double YOff)
+    {
+        //no anchor
+        if(AnchorX is null || AnchorY is null)
+        {
+            _curve = null;
+            return;
+        }
+        
+        //already calculated anchor
+        if(_curve is not null)
+            return;
+        
+        _curve = BrawlhallaMath.CollisionQuad(X1, Y1, X2, Y2, (AnchorX??0) - XOff, (AnchorY??0) - YOff).ToList();
+    }
 
     public virtual void DrawOn<TTexture>
     (ICanvas<TTexture> canvas, GlobalRenderData rd, RenderSettings rs, Transform t, double time)
         where TTexture : ITexture
     {
         if(!rs.ShowCollision) return;
+        
+        if((AnchorX is not null && AnchorY is not null) && _curve is null)
+            throw new InvalidOperationException("Collision has non-null anchor, but cached curve is null. Make sure CalculateCurve is called.");
+        if((AnchorX is null || AnchorY is null) && _curve is not null)
+            throw new InvalidOperationException("Collision has null anchor, but cached curve is non null. Make sure ClearCurveCache is called when changing the collision.");
 
-        double startX = X1, startY = Y1;
+        (double startX, double startY) = (X1, Y1);
 
-        IEnumerator<(double,double)>? enumer = null;
-
-        if(AnchorX is not null && AnchorY is not null)
-        {
-            enumer = BrawlhallaMath
-                .CollisionQuad(X1, Y1, X2, Y2, AnchorX??0, AnchorY??0)
-                .GetEnumerator();
-        }
-
+        IEnumerator<(double,double)>? enumer = _curve?.GetEnumerator();
+        
         bool finished = false;
         //we use a hack here to get anchors to work
-        while(!finished)
+        while((enumer?.MoveNext() ?? false) || !finished)
         {
-            enumer?.MoveNext();
-            (double nextX, double nextY) = enumer?.Current ?? (X2,Y2);
+            (double nextX, double nextY) = enumer?.Current ?? (X2, Y2);
             //draw current line
             if(Team == 0)
                 canvas.DrawLine(startX, startY, nextX, nextY, GetColor(rs), t, DrawPriorityEnum.DATA);
@@ -213,7 +233,7 @@ public abstract class AbstractCollision : IDeserializable, ISerializable, IDrawa
             }
             
             (startX, startY) = (nextX, nextY);
-            finished = !enumer?.MoveNext() ?? true;
+            finished = true;
         }
     }
 

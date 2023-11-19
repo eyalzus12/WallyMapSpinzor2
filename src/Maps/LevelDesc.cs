@@ -113,6 +113,8 @@ public class LevelDesc : IDeserializable, ISerializable, IDrawable
         rd.PlatIDMovingPlatformOffset = new();
         foreach(AbstractAsset a in Assets) if(a is MovingPlatform mp)
             mp.StoreOffset(rd, time);
+        foreach(AbstractCollision c in Collisions)
+            c.CalculateCurve(0, 0);
 
         CameraBounds.DrawOn(canvas, rd, rs, t, time);
         SpawnBotBounds.DrawOn(canvas, rd, rs, t, time);
