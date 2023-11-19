@@ -66,10 +66,10 @@ public class Animation : IDeserializable, ISerializable
     {
         //apply time offsets
         time /= 16; //frames to keyframe time (~milliseconds)
-        time += StartFrame; //apply start frame
         double numframes = NumFrames ?? rd.DefaultNumFrames ?? 0;
         double slowmult = SlowMult ?? rd.DefaultSlowMult ?? 1;
-        time /= slowmult;
+        time /= slowmult; //slow mult
+        time += StartFrame; //apply start frame
         double _time = BrawlhallaMath.SafeMod(time+1, numframes);
         //find the keyframe pair
         int i = 0;
