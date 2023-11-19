@@ -140,11 +140,6 @@ public abstract class AbstractCollision : IDeserializable, ISerializable, IDrawa
     
     private List<(double, double)>? _curve = null;
     
-    public void ClearCurveCache()
-    {
-        _curve = null;
-    }
-    
     public void CalculateCurve(double XOff, double YOff)
     {
         //no anchor
@@ -168,9 +163,9 @@ public abstract class AbstractCollision : IDeserializable, ISerializable, IDrawa
         if(!rs.ShowCollision) return;
         
         if((AnchorX is not null && AnchorY is not null) && _curve is null)
-            throw new InvalidOperationException("Collision has non-null anchor, but cached curve is null. Make sure CalculateCurve is called.");
+            throw new InvalidOperationException("Collision has non null anchor, but cached curve is null. Make sure CalculateCurve is called.");
         if((AnchorX is null || AnchorY is null) && _curve is not null)
-            throw new InvalidOperationException("Collision has null anchor, but cached curve is non null. Make sure ClearCurveCache is called when changing the collision.");
+            throw new InvalidOperationException("Collision has null anchor, but cached curve is non null. Make sure CalculateCurve is called.");
 
         (double startX, double startY) = (X1, Y1);
 
@@ -235,6 +230,9 @@ public abstract class AbstractCollision : IDeserializable, ISerializable, IDrawa
             (startX, startY) = (nextX, nextY);
             finished = true;
         }
+        
+        //mandate calling CalculateCurve
+        _curve = null;
     }
 
     public abstract Color GetColor(RenderSettings rs);
