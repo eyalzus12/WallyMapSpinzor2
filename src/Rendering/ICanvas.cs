@@ -7,7 +7,7 @@ public interface ICanvas<TTexture> where TTexture : ITexture
     //draw a line
     void DrawLine(double X1, double Y1, double X2, double Y2, Color c, Transform t, DrawPriorityEnum p);
     //draw a line that has 2 colors. used to indicate teams.
-    void DrawDualColorLine(double X1, double Y1, double X2, double Y2, Color c1, Color c2, Transform t, DrawPriorityEnum p);
+    void DrawLineMultiColor(double X1, double Y1, double X2, double Y2, Color[] cs, Transform t, DrawPriorityEnum p);
     //draw rect
     void DrawRect(double X, double Y, double W, double H, bool filled, Color c, Transform t, DrawPriorityEnum p);
     //draw text. possibly multiline.
