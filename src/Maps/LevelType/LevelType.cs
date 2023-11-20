@@ -25,7 +25,7 @@ public class LevelType : IDeserializable, ISerializable
     public bool? HardLeftKill{get; set;} //LeftKill needs to be equal or more than 200 for this to be true
     public bool? HardRightKill{get; set;} //RightKill needs to be equal or more than 200 for this to be true
     public string? BGMusic{get; set;} = null!;
-    public string ThumbnailPNGFile{get; set;} = null!;
+    public string? ThumbnailPNGFile{get; set;}
     public bool? AIStrictRecover{get; set;}
 
     //used nowhere except in the template
@@ -48,7 +48,7 @@ public class LevelType : IDeserializable, ISerializable
     public double? AIGroundLine{get; set;}
 
     //not used in LevelTypes.xml, but they exist in the code
-    public uint? ShadowTint{get; set;}
+    public int? ShadowTint{get; set;}
     public string? ItemOverride{get; set;}
 
     public void Deserialize(XElement e)
@@ -75,7 +75,7 @@ public class LevelType : IDeserializable, ISerializable
         HardLeftKill = Utils.ParseBoolOrNull(e.Element("HardLeftKill")?.Value);
         HardRightKill = Utils.ParseBoolOrNull(e.Element("HardRightKill")?.Value);
         BGMusic = e.Element("BGMusic")?.Value;
-        ThumbnailPNGFile = e.Element("ThumbnailPNGFile")?.Value ?? "CorruptFile.png";
+        ThumbnailPNGFile = e.Element("ThumbnailPNGFile")?.Value;
         AIStrictRecover = Utils.ParseBoolOrNull(e.Element("AIStrictRecover")?.Value);
         MidgroundTint = Utils.ParseUIntOrNull(e.Element("MidgroundTint")?.Value);
         MidgroundOffset = Utils.ParseUIntOrNull(e.Element("MidgroundOffset")?.Value);
@@ -88,11 +88,11 @@ public class LevelType : IDeserializable, ISerializable
         StartFrame = Utils.ParseIntOrNull(e.Element("StartFrame")?.Value);
         FixedCamera = Utils.ParseBoolOrNull(e.Element("FixedCamera")?.Value);
         AllowItemSpawnOverlap = Utils.ParseBoolOrNull(e.Element("AllowItemSpawnOverlap")?.Value);
-        ColorExclusionList = e.Element("ColorExclusionList")?.Value.Split(",").ToList() ?? new();
+        ColorExclusionList = e.Elements("ColorExclusionList").LastOrDefault()?.Value.Split(",").ToList() ?? new();
         FixedWidth = Utils.ParseBoolOrNull(e.Element("FixedWidth")?.Value);
         AIPanicLine = Utils.ParseFloatOrNull(e.Element("AIPanicLine")?.Value);
         AIGroundLine = Utils.ParseFloatOrNull(e.Element("AIGroundLine")?.Value);
-        ShadowTint = Utils.ParseUIntOrNull(e.Element("ShadowTint")?.Value);
+        ShadowTint = Utils.ParseIntOrNull(e.Element("ShadowTint")?.Value);
 
         string _itemOverride = string.Join(',', e.Elements("ItemOverride").Select(ee => e.Value));
         ItemOverride = _itemOverride==""?null:_itemOverride;
@@ -122,20 +122,20 @@ public class LevelType : IDeserializable, ISerializable
             e.Add(new XElement("HardRightKill", (bool)HardRightKill && RightKill >= 200));
 
         e.AddIfNotNull("BGMusic", BGMusic);
-        e.AddIfNotNull("FixedWidth", FixedWidth);
+        e.AddIfNotNull("FixedWidth", FixedWidth?.ToString()?.ToUpperInvariant());
         e.AddIfNotNull("ThumbnailPNGFile", ThumbnailPNGFile);
-        e.AddIfNotNull("AIStrictRecover", AIStrictRecover);
+        e.AddIfNotNull("AIStrictRecover", AIStrictRecover?.ToString()?.ToUpperInvariant());
 
-        if(MidgroundTint == 0) e.Add(new XElement("MidgroundTint", 0));
-        else if(MidgroundTint > 0) e.Add(new XElement("MidgroundTint", "0x" + MidgroundTint?.ToString("X6")));
-        if(MidgroundOffset == 0) e.Add(new XElement("MidgroundOffset", 0));
-        else if(MidgroundOffset > 0) e.Add(new XElement("MidgroundOffset", "0x" + MidgroundTint?.ToString("X6")));
+        if(MidgroundTint is not null)
+            e.Add(new XElement("MidgroundTint", "0x" + MidgroundTint?.ToString("X6")));
+        if(MidgroundOffset is not null)
+            e.Add(new XElement("MidgroundOffset", "0x" + MidgroundTint?.ToString("X6")));
         e.AddIfNotNull("MidgroundFraction", MidgroundFraction);
         
         if(BotTint == 0) e.Add(new XElement("BotTint", 0));
         else if(BotTint > 0) e.Add(new XElement("BotTint", "0x" + BotTint?.ToString("X6")));
-        if(BotOffset== 0) e.Add(new XElement("BotOffset", 0));
-        else if(BotOffset > 0) e.Add(new XElement("BotOffset", "0x" + BotOffset?.ToString("X6")));
+        if(LevelName == "Template") e.Add(new XElement("BotOffset", 0));
+        else if(BotOffset is not null) e.Add(new XElement("BotOffset", "0x" + BotOffset?.ToString("X6")));
         e.AddIfNotNull("BotFraction", BotFraction);
 
         e.AddIfNotNull("ShowPlatsDuringMove", ShowPlatsDuringMove);
@@ -150,8 +150,8 @@ public class LevelType : IDeserializable, ISerializable
         e.AddIfNotNull("AIGroundLine", AIGroundLine);
         e.AddIfNotNull("AIPanicLine", AIPanicLine);
 
-        if(ShadowTint == 0) e.Add(new XElement("ShadowTint", ShadowTint)); 
-        else if(ShadowTint > 0) e.Add(new XElement("ShadowTint", "0x" + ShadowTint?.ToString("X6")));
+        if(ShadowTint is not null)
+            e.Add(new XElement("ShadowTint", ShadowTint));
 
         //it is unclear how ItemOverride would be formatted, but this is my best guess
         //due to how it works
