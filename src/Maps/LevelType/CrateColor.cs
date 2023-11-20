@@ -1,6 +1,6 @@
 namespace WallyMapSpinzor2;
 
-public record struct CrateColor(byte R, byte G, byte B)
+public readonly record struct CrateColor(byte R, byte G, byte B)
 {
     public static CrateColor FromHex(uint hex) => new
     (
@@ -9,5 +9,5 @@ public record struct CrateColor(byte R, byte G, byte B)
         B : (byte)(hex >> 00)    
     );
 
-    public readonly string ToHexString() => $"0x{R:X2}{G:X2}{B:X2}";
+    public string ToHexString() => $"0x{R:X2}{G:X2}{B:X2}";
 }

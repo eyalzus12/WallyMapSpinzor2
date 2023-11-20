@@ -49,7 +49,7 @@ public class LevelType : IDeserializable, ISerializable
 
     //not used in LevelTypes.xml, but they exist in the code
     public uint? ShadowTint{get; set;}
-    //public idk ItemOverride{get; set;}
+    public string? ItemOverride{get; set;}
 
     public void Deserialize(XElement e)
     {
@@ -93,6 +93,9 @@ public class LevelType : IDeserializable, ISerializable
         AIPanicLine = Utils.ParseFloatOrNull(e.Element("AIPanicLine")?.Value);
         AIGroundLine = Utils.ParseFloatOrNull(e.Element("AIGroundLine")?.Value);
         ShadowTint = Utils.ParseUIntOrNull(e.Element("ShadowTint")?.Value);
+
+        string _itemOverride = string.Join(',', e.Elements("ItemOverride").Select(ee => e.Value));
+        ItemOverride = _itemOverride==""?null:_itemOverride;
     }
 
     public void Serialize(XElement e)
@@ -149,5 +152,18 @@ public class LevelType : IDeserializable, ISerializable
 
         if(ShadowTint == 0) e.Add(new XElement("ShadowTint", ShadowTint)); 
         else if(ShadowTint > 0) e.Add(new XElement("ShadowTint", "0x" + ShadowTint?.ToString("X6")));
+
+        //it is unclear how ItemOverride would be formatted, but this is my best guess
+        //due to how it works
+        if(ItemOverride is not null)
+        {
+            string[] split = ItemOverride.Split(',');
+            for(int i = 0; i < split.Length-1; i += 2)
+            {
+                e.Add(new XElement("ItemOverride", $"{split[i]},{split[i+1]}"));
+            }
+            if(split.Length % 2 != 0)
+                e.Add(new XElement("ItemOverride", split[^1]));
+        }
     }
 }
