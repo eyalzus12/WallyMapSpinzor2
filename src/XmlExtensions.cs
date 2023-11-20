@@ -14,4 +14,9 @@ public static class XmlExtensions
     public static bool? GetNullableBoolAttribute(this XElement element, string attribute) => Utils.ParseBoolOrNull(GetNullableAttribute(element, attribute));
     public static int? GetNullableIntAttribute(this XElement element, string attribute) => Utils.ParseIntOrNull(GetNullableAttribute(element, attribute));
     public static double? GetNullableFloatAttribute(this XElement element, string attribute) => Utils.ParseFloatOrNull(GetNullableAttribute(element, attribute));
+
+    public static void AddIfNotNull(this XElement element, string name, object? value)
+    {
+        if(value is not null) element.Add(new XElement(name, value));
+    }
 }
