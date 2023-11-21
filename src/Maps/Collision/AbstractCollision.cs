@@ -185,7 +185,7 @@ public abstract class AbstractCollision : IDeserializable, ISerializable, IDrawa
                     throw new ArgumentOutOfRangeException($"Collision has team {Team} which is larger than max available collision team color {rs.ColorCollisionTeam.Length}");
                 canvas.DrawLineMultiColor(
                         startX, startY, nextX, nextY,
-                        new[]{GetColor(rs), rs.ColorCollisionTeam[Team-1]},
+                        new[]{rs.ColorCollisionTeam[Team-1], GetColor(rs), rs.ColorCollisionTeam[Team-1]},
                         t, DrawPriorityEnum.DATA
                     );
             }
