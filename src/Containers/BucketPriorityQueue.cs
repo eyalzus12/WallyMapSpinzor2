@@ -9,21 +9,21 @@ public class BucketPriorityQueue<T>
     private int _count;
     
     public int Count => _count;
-    public List<Queue<T>> Buckets{get; protected set;}
+    public Queue<T>[] Buckets{get; protected set;}
     public int MinBucket{get; protected set;}
     public int MaxBucket{get; protected set;}
 
     public BucketPriorityQueue(int bucketCount)
     {
         _count = 0;
-        Buckets = new(bucketCount); for(int i = 0; i < bucketCount; ++i) Buckets.Add(new());
+        Buckets = new Queue<T>[bucketCount]; for(int i = 0; i < bucketCount; ++i) Buckets[i] = new();
         MinBucket = bucketCount; MaxBucket = 0;
     }
 
     public void Push(T element, int priority)
     {
         if(priority < 0) throw new IndexOutOfRangeException($"Priority {priority} is negative");
-        if(priority >= Buckets.Count) throw new IndexOutOfRangeException($"Priority {priority} is bigger than bucket size {Buckets.Count}");
+        if(priority >= Buckets.Length) throw new IndexOutOfRangeException($"Priority {priority} is bigger than bucket size {Buckets.Length}");
         
         if(priority < MinBucket) MinBucket = priority;
         if(priority > MaxBucket) MaxBucket = priority;
@@ -34,13 +34,13 @@ public class BucketPriorityQueue<T>
 
     protected void UpdateMinBucket()
     {
-        while(MinBucket < Buckets.Count && Buckets[MinBucket].Count == 0) MinBucket++;
+        while(MinBucket < Buckets.Length && Buckets[MinBucket].Count == 0) MinBucket++;
     }
 
     public T PopMin()
     {
         UpdateMinBucket();
-        if(MinBucket >= Buckets.Count) throw new IndexOutOfRangeException("Attempt to pop min from empty bucket queue");
+        if(MinBucket >= Buckets.Length) throw new IndexOutOfRangeException("Attempt to pop min from empty bucket queue");
         _count--;
         return Buckets[MinBucket].Dequeue();
     }
