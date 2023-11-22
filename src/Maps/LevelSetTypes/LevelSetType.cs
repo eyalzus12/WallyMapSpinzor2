@@ -7,7 +7,7 @@ public class LevelSetType : IDeserializable, ISerializable
     public string LevelSetName{get; set;} = null!;
 
     public string DisplayNameKey{get; set;} = null!;
-    public int LevelSetID{get; set;}
+    public uint LevelSetID{get; set;}
     public List<string> LevelTypes{get; set;} = null!;
     public bool? SkipOrderValidation{get; set;}
 
@@ -15,7 +15,7 @@ public class LevelSetType : IDeserializable, ISerializable
     {
         LevelSetName = e.GetAttribute("LevelSetName");
         DisplayNameKey = e.Element("DisplayNameKey")!.Value;
-        LevelSetID = Utils.ParseIntOrNull(e.Element("LevelSetID")?.Value) ?? 0;
+        LevelSetID = Utils.ParseUIntOrNull(e.Element("LevelSetID")?.Value) ?? 0;
         LevelTypes = e.Element("LevelTypes")?.Value.Split(",").ToList() ?? new();
         SkipOrderValidation = Utils.ParseBoolOrNull(e.Element("SkipOrderValidation")?.Value);
     }
