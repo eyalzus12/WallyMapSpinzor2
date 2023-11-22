@@ -28,11 +28,13 @@ public class LevelSetType : IDeserializable, ISerializable
         e.Add(new XElement("LevelSetID", LevelSetID));
 
         if (LevelSetName == "Auto")
-            e.Add(new XElement("SkipOrderValidation", "Don't abuse this to be lazy. It's for special cases like Bubble Tag where we explicitly want the order to be different."));
-        else
         {
-            e.AddIfNotNull("SkipOrderValidation", SkipOrderValidation);
-            e.Add(new XElement("LevelTypes", string.Join(",", LevelTypes)));
+            e.Add(new XElement("SkipOrderValidation", "Don't abuse this to be lazy. It's for special cases like Bubble Tag where we explicitly want the order to be different."));
+            return;
         }
+
+        e.AddIfNotNull("SkipOrderValidation", SkipOrderValidation);
+        if (LevelTypes.Count > 0)
+            e.Add(new XElement("LevelTypes", string.Join(",", LevelTypes)));
     }
 }
