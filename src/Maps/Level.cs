@@ -4,31 +4,47 @@ namespace WallyMapSpinzor2;
 
 public class Level : IDeserializable, ISerializable, IDrawable
 {
+    //saved so we can update the playlists
+    private LevelSetTypes _types;
+
     public LevelDesc Desc{get; set;}
     public LevelType Type{get; set;}
     public HashSet<string> Playlists{get; set;} = null!;
 
     public Level(LevelDesc ld, LevelTypes lt, LevelSetTypes lst)
     {
+        _types = lst;
+
         Desc = ld;
-        Type = lt.Levels.Find(l => l.LevelName == Desc.LevelName) ?? new();
+        Type = lt.Levels
+            .Where(l => l.LevelName == Desc.LevelName)
+            .FirstOrDefault() ?? throw new KeyNotFoundException($"Cannot find LevelType {Desc.LevelName} in given LevelTypes");
         Playlists = lst.Playlists
-            .FindAll(l => l.LevelTypes.Contains(Desc.LevelName))
-            .ConvertAll(l => l.LevelSetName)
+            .Where(l => l.LevelTypes.Contains(Desc.LevelName))
+            .Select(l => l.LevelSetName)
             .ToHashSet();
     }
 
     public void SetLevelName(string name)
     {
+        //update in playlists
+        foreach(LevelSetType lst in _types.Playlists)
+        {
+            if(!Playlists.Contains(lst.LevelSetName))
+                continue;
+            int idx = lst.LevelTypes.IndexOf(Desc.LevelName);
+            lst.LevelTypes[idx] = name;
+        }
+        //update desc and type
         Desc.LevelName = name; 
         Type.LevelName = name;
     }
 
     public void Deserialize(XElement e)
     {
-        Desc = e.DeserializeChildOfType<LevelDesc>() ?? new();
-        Type = e.DeserializeChildOfType<LevelType>() ?? new();
-        Playlists = e.Element("Playlists")?.Value.Split(",").ToHashSet() ?? new();
+        Desc = e.DeserializeChildOfType<LevelDesc>() ?? throw new ArgumentException("Given XML file does not contain a LevelDesc element. Invalid save format.");
+        Type = e.DeserializeChildOfType<LevelType>() ?? throw new ArgumentException("Given XML file does not contain a LevelType element. Invalid save format.");
+        Playlists = e.Element("Playlists")?.Value.Split(",").ToHashSet() ?? throw new ArgumentException("Given XML file does not contain a Playlists element. Invalid save format.");
     }
 
     public void Serialize(XElement e)
