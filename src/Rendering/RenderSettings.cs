@@ -27,6 +27,8 @@ public class RenderSettings
 
     //whether to show the camera bounds
     public bool ShowCameraBounds{get; set;} = true;
+    //wether to show the kill bounds
+    public bool ShowKillBounds{get; set;} = true;
     //whether to show the sidekick bounds
     public bool ShowSpawnBotBounds{get; set;} = false;
 
@@ -65,6 +67,7 @@ public class RenderSettings
 
     //colors
     public Color ColorCameraBounds{get; set;} = Color.FromHex(0xFF00007F);
+    public Color ColorKillBounds{get; set;} = Color.FromHex(0x5F00007F);
     public Color ColorSpawnBotBounds{get ;set;} = Color.FromHex(0xFFFFCC7F);
 
     public Color ColorHardCollision{get; set;} = Color.FromHex(0x00FF00FF);
