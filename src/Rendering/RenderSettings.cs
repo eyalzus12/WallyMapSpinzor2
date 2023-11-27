@@ -4,16 +4,16 @@ public class RenderSettings
 {
     //Which ScoringType to use. Possible values are any scoring type name.
     //Case Sensitive. Empty string to not have a scoring type.
-    public string ScoringType{get; set;} = "";
+    public string ScoringType{get; set;} = Enum.GetName((ScoringTypeEnum)0) ?? "";
     //Which theme to use. Possible values:
     //Christmas, Halloween, TWDHalloween
     //Keep as empty string to not have a theme.
-    public string Theme{get; set;} = "";
+    public string Theme{get; set;} = Enum.GetName((ThemeEnum)0) ?? "";
     //Whether backgrounds are animated.
     public bool AnimatedBackgrounds{get; set;} = false;
     //What keys to render in Tutorial1. Possible values:
     //Keyboard, PS4, Mouse, Switch, SwitchJoyConSolo, Controller, Mobile
-    public string Hotkey{get; set;} = "Keyboard";
+    public string Hotkey{get; set;} = Enum.GetName(HotkeyEnum.Keyboard) ?? "";
     //Whether to act as if -noskulls is on
     public bool NoSkulls{get; set;} = false;
     //In platform king, which of the platforms is the red one
@@ -23,6 +23,24 @@ public class RenderSettings
     //used for TeamScoreboard
     public int BlueScore{get; set;} = 0;
     public int RedScore{get; set;} = 0;
+
+    //whether to show the brawldown ropes (only applies if scoring type is RING)
+    public bool ShowRingRopes{get; set;} = true;
+
+    //whether to show the zombie spawn points (only applies if scoring type is ZOMBIE)
+    public bool ShowZombieSpawns{get; set;} = true;
+
+    //whether to show the bombsketball tagets (only applies if scoring type is BOMBSKETBALL)
+    public bool ShowBombsketballTargets{get; set;} = true;
+
+    //whether to show the bombsketball bomb timers (only applies if scoring type is BOMBSKETBALL)
+    //requires animation... we'll figure that out alongside the rest of the swf
+    //public bool ShowBombsketballTimers{get; set;} = true;
+    
+    //whether to show the horde doors (only applies if scoring type is HORDE)
+    public bool ShowHordeDoors{get; set;} = true;
+    //how many hits each door took. if array is too short, rest of doors will have 0
+    public int[] DamageHordeDoors{get; set;} = new[]{0, 0};
 
 
     //whether to show the camera bounds
@@ -62,6 +80,8 @@ public class RenderSettings
     public double RadiusPointDraw{get; set;} = 10;
     //circle radius to use for respawns
     public double RadiusRespawn{get; set;} = 30;
+    //circle radius to use for zombie spawns
+    public double RadiusZombieSpawn{get; set;} = 20;
     //length of collision normals
     public double LengthCollisionNormal{get; set;} = 10;
 
@@ -114,4 +134,6 @@ public class RenderSettings
         Color.FromHex(0xFFFF0033), //4
         Color.FromHex(0xFF00FF33)  //5
     };
+
+    public Color ColorZombieSpawns{get; set;} = Color.FromHex(0xFFFFFF7F);
 }

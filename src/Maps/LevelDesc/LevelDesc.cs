@@ -1,3 +1,4 @@
+using System.Reflection.Metadata.Ecma335;
 using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
@@ -146,5 +147,67 @@ public class LevelDesc : IDeserializable, ISerializable, IDrawable
             dn.DrawOn(canvas, rd, rs, t, time);
         //foreach(WaveData wd in WaveDatas)
         //foreach(AnimatedBackground ab in AnimatedBackgrounds)
+
+
+        //Gamemode stuff
+        if(rs.ScoringType == Enum.GetName(ScoringTypeEnum.RING))
+        {
+            if(rs.ShowRingRopes)
+            {
+                TTexture rope = canvas.LoadTextureFromSWF("bones/Bones_GameModes.swf", "a_DefaultRopes");
+                canvas.DrawTexture(521, 1293, rope, t, DrawPriorityEnum.FOREGROUND);
+                canvas.DrawTexture(2934, 1293, rope, t * Transform.CreateScale(-1, 1), DrawPriorityEnum.FOREGROUND);
+            }
+        }
+        if(rs.ScoringType == Enum.GetName(ScoringTypeEnum.ZOMBIE))
+        {
+            if(rs.ShowZombieSpawns)
+            {
+                canvas.DrawCircle(230, 390, rs.RadiusZombieSpawn, rs.ColorZombieSpawns, t, DrawPriorityEnum.DATA);
+                canvas.DrawCircle(180, 900, rs.RadiusZombieSpawn, rs.ColorZombieSpawns, t, DrawPriorityEnum.DATA);
+                canvas.DrawCircle(-1160, 900, rs.RadiusZombieSpawn, rs.ColorZombieSpawns, t, DrawPriorityEnum.DATA);
+                canvas.DrawCircle(-1990, 390, rs.RadiusZombieSpawn, rs.ColorZombieSpawns, t, DrawPriorityEnum.DATA);
+            }
+        }
+        if(rs.ScoringType == Enum.GetName(ScoringTypeEnum.BOMBSKETBALL))
+        {
+            if(rs.ShowBombsketballTargets)
+            {
+                TTexture red = canvas.LoadTextureFromSWF("bones/Bones_GameModes.swf", "a_TargetAnchoredRed");
+                TTexture blue = canvas.LoadTextureFromSWF("bones/Bones_GameModes.swf", "a_TargetAnchoredBlue");
+                Goal? goalred = Volumes.OfType<Goal>().Where(g => g.Team == 2).FirstOrDefault();
+                Goal? goalblue = Volumes.OfType<Goal>().Where(g => g.Team == 1).FirstOrDefault();
+                if(goalred is not null)
+                    canvas.DrawTexture((goalred.X+goalred.W)/2, (goalred.Y+goalred.H)/2, red, t, DrawPriorityEnum.FOREGROUND);
+                if(goalblue is not null)
+                    canvas.DrawTexture((goalblue.X+goalblue.W)/2, (goalblue.Y+goalblue.H)/2, blue, t, DrawPriorityEnum.FOREGROUND);
+            }
+        }
+        if(rs.ScoringType == Enum.GetName(ScoringTypeEnum.HORDE))
+        {
+            if(rs.ShowHordeDoors)
+            {
+                int i = 0;
+                foreach(Goal g in Volumes.OfType<Goal>())
+                {
+                    int hits = (i >= rs.DamageHordeDoors.Length)?0:rs.DamageHordeDoors[i];
+
+                    if(hits < 24)
+                    {
+                        TTexture door = hits switch
+                        {
+                            <= 6 => canvas.LoadTextureFromSWF("bones/Bones_GameModes.swf", "a_ValhallaDoor_000"),
+                            <= 12 => canvas.LoadTextureFromSWF("bones/Bones_GameModes.swf", "a_ValhallaDoor_025"),
+                            // <=23
+                            _ => canvas.LoadTextureFromSWF("bones/Bones_GameModes.swf", "a_ValhallaDoor_050"),
+                        };
+
+                        canvas.DrawTexture((g.X+g.W)/2, (g.Y+g.H)/2, door, t, DrawPriorityEnum.FOREGROUND);
+                    }
+
+                    ++i;
+                }
+            }
+        }
     }
 }
