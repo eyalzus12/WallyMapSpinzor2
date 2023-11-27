@@ -98,7 +98,7 @@ public class RenderSettings
     public Color ColorBouncySoftCollision{get; set;} = Color.FromHex(0x999933FF);
     public Color ColorBouncyNoSlideCollision{get; set;} = Color.FromHex(0x339999FF);
     public Color ColorTriggerCollision{get; set;} = Color.FromHex(0x0000FFFF);
-    public Color ColorStickyCollision{get; set;} = Color.FromHex(0xFF0000FF);
+    public Color ColorStickyCollision{get; set;} = Color.FromHex(0x66FF66FF);
     public Color ColorItemIgnoreCollision{get; set;} = Color.FromHex(0xFF00FFFF);
     public Color ColorPressurePlateCollision{get; set;} = Color.FromHex(0xCC6619FF);
     public Color ColorSoftPressurePlateCollision{get; set;} = Color.FromHex(0x7F1900FF);
@@ -112,7 +112,7 @@ public class RenderSettings
     public Color ColorItemSpawn{get; set;} = Color.FromHex(0x007FFF7F);
     public Color ColorItemInitSpawn{get; set;} = Color.FromHex(0x7F007F7F);
     public Color ColorItemSet{get; set;} = Color.FromHex(0x007F7F7F);
-    public Color ColorTeamItemInitSpawn{get; set;} = Color.FromHex(0x007F007F);
+    public Color ColorTeamItemInitSpawn{get; set;} = Color.FromHex(0x7F7F007F);
 
     //1 indexed
     public Color[] ColorCollisionTeam{get; set;} = new[]
