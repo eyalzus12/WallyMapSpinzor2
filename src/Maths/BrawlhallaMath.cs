@@ -238,7 +238,7 @@ public static class BrawlhallaMath
         bool PickDoor(PathEnum path, bool left) =>
             (path == PathEnum.ANY)
                 ?(rand.Next()%2 == 0)
-                :(left == (path == PathEnum.LEFT));
+                :(left == (path == PathEnum.CLOSE));
 
         IEnumerable<(double, double)> GeneratePathSegment(double X1, double Y1, double X2, double Y2, int parts, bool first, bool middle)
         {
@@ -255,10 +255,14 @@ public static class BrawlhallaMath
                     double _Y1 = (Y2 - Y1)/(parts - i);
                     double _X2 = _X1 + X1;
                     double _Y2 = _Y1 + Y1;
-                    if(_X1 < -150) _X1 = -150;
-                    else if(-15 < _X1 && X1 < 0) _X1 = -15;
-                    else if(0 <= _X1 && _X1 < 15) _X1 = 15;
-                    else if(150 < _X1) _X1 = 150;
+                    double signX = _X1>=0?1:-1;
+                    double signY = _Y1>=0?1:-1;
+                    _X1 = Math.Abs(_X1);
+                    _Y1 = Math.Abs(_Y1);
+                    _X1 = (_X1 < 15)?15:(150 < _X1)?150:_X1;
+                    _Y1 = (_Y1 < 15)?15:(150 < _Y1)?150:_Y1;
+                    _X1 *= signX;
+                    _Y1 *= signY;
                     double RX = _X2 - _X1 + (rand.Next() % (2*_X1));
                     double RY = _Y2 - _Y1 + (rand.Next() % (2*_Y1));
                     yield return (RX, RY);

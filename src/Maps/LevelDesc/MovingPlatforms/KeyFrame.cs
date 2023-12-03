@@ -75,6 +75,9 @@ public class KeyFrame : AbstractKeyFrame
                 EaseOut || defaults.EaseOut,
                 EasePower == 2 ? defaults.EasePower : EasePower
             );
+            if(w < 0 || 1 < w)
+                throw new InvalidOperationException($"Invalid weight {w} during keyframe interpolation. From: {FrameNum}(+{fromTimeOffset}) To: {k.FrameNum}(+{toTimeOffset}). Time: {time}. Frame diff: {fdiff}. Time diff: {tdiff}.");
+            
             if(CenterX is not null || CenterY is not null || defaults.CenterX is not null || defaults.CenterY is not null)
                 return BrawlhallaMath.LerpWithCenter(X, Y, k.X, k.Y, CenterX??defaults.CenterX??0, CenterY??defaults.CenterY??0, w);
             else
@@ -98,9 +101,11 @@ public class KeyFrame : AbstractKeyFrame
                 //phase started
                 else
                 {
-                    //use p.StartFrame - FrameNum to fake a keyframe at the phase start
-                    //there's a bug here for nested phases... hopefully that never becomes an issue.
-                    return LerpTo(p.KeyFrames[0], defaults, numframes, time, p.StartFrame - FrameNum, toTimeOffset + p.StartFrame);
+                    //use -FrameNum to fake a keyframe at the start of the phase.
+                    //this will be as if we are interpolating from keyframe with framenum 0.
+                    //we pass toTimeOffset + p.StartFrame to ensure that interpolation into a phase
+                    //will be able to know if the phase started.
+                    return LerpTo(p.KeyFrames[0], defaults, numframes, time, toTimeOffset + p.StartFrame - FrameNum, toTimeOffset + p.StartFrame);
                 }
             }
         }
