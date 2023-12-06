@@ -61,13 +61,13 @@ public class KeyFrame : AbstractKeyFrame
     public override (double, double) GetPosition() => (X, Y);
 
     public override (double, double) LerpTo<T>
-    (T kk, Animation.AnimationDefaultValues defaults, double numframes, double time, double fromTimeOffset, double toTimeOffset)
+    (T kk, Animation.AnimationDefaultValues defaults, double numframes, double frame, double fromTimeOffset, double toTimeOffset)
     {
         if(kk is KeyFrame k)
         {
             double fdiff = (k.FrameNum + toTimeOffset) - (FrameNum + fromTimeOffset);
             fdiff = BrawlhallaMath.SafeMod(fdiff, numframes);
-            double tdiff = (time + 1) - (FrameNum + fromTimeOffset);
+            double tdiff = (frame) - (FrameNum + fromTimeOffset);
             tdiff = BrawlhallaMath.SafeMod(tdiff, numframes);
             double w = tdiff/fdiff;
             w = BrawlhallaMath.EaseWeight(w,
@@ -76,7 +76,7 @@ public class KeyFrame : AbstractKeyFrame
                 EasePower == 2 ? defaults.EasePower : EasePower
             );
             if(w < 0 || 1 < w)
-                throw new InvalidOperationException($"Invalid weight {w} during keyframe interpolation. From: {FrameNum}(+{fromTimeOffset}) To: {k.FrameNum}(+{toTimeOffset}). Time: {time}. Frame diff: {fdiff}. Time diff: {tdiff}.");
+                throw new InvalidOperationException($"Invalid weight {w} during keyframe interpolation. From: {FrameNum}(+{fromTimeOffset}) To: {k.FrameNum}(+{toTimeOffset}). Keyframe time: {frame}. Frame diff: {fdiff}. Time diff: {tdiff}.");
             
             if(CenterX is not null || CenterY is not null || defaults.CenterX is not null || defaults.CenterY is not null)
                 return BrawlhallaMath.LerpWithCenter(X, Y, k.X, k.Y, CenterX??defaults.CenterX??0, CenterY??defaults.CenterY??0, w);
@@ -88,13 +88,13 @@ public class KeyFrame : AbstractKeyFrame
             //has 0 frame num on first keyframe
             if(p.KeyFrames[0].GetStartFrame() == 0)
             {
-                return LerpTo(p.KeyFrames[0], defaults, numframes, time, fromTimeOffset, toTimeOffset + p.StartFrame);
+                return LerpTo(p.KeyFrames[0], defaults, numframes, frame, fromTimeOffset, toTimeOffset + p.StartFrame);
             }
             //non-0 frame num on first keyframe. gotta wait for phase start.
             else
             {
                 //phase hasn't started. remain in position.
-                if(toTimeOffset + p.StartFrame >= BrawlhallaMath.SafeMod(time+1, numframes))
+                if(toTimeOffset + p.StartFrame >= BrawlhallaMath.SafeMod(frame, numframes))
                 {
                     return (X,Y);
                 }
@@ -105,11 +105,11 @@ public class KeyFrame : AbstractKeyFrame
                     //this will be as if we are interpolating from keyframe with framenum 0.
                     //we pass toTimeOffset + p.StartFrame to ensure that interpolation into a phase
                     //will be able to know if the phase started.
-                    return LerpTo(p.KeyFrames[0], defaults, numframes, time, toTimeOffset + p.StartFrame - FrameNum, toTimeOffset + p.StartFrame);
+                    return LerpTo(p.KeyFrames[0], defaults, numframes, frame, toTimeOffset + p.StartFrame - FrameNum, toTimeOffset + p.StartFrame);
                 }
             }
         }
         else
-            throw new ArgumentException($"Keyframe cannot interpolate to unknown abstract keyframe type {typeof(T).Name}");
+            throw new ArgumentException($"Keyframe cannot interpolate to unknown abstract keyframe type {kk.GetType().Name}");
     }
 }

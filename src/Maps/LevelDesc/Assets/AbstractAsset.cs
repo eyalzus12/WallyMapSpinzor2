@@ -59,7 +59,7 @@ public abstract class AbstractAsset : ISerializable, IDeserializable, IDrawable
 
     
     public virtual void DrawOn<TTexture>
-    (ICanvas<TTexture> canvas, GlobalRenderData rd, RenderSettings rs, Transform t, double time)
+    (ICanvas<TTexture> canvas, GlobalRenderData rd, RenderSettings rs, Transform t, TimeSpan time)
         where TTexture : ITexture
     {
         if(!rs.ShowAssets)

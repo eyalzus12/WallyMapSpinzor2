@@ -47,7 +47,7 @@ public class Platform : AbstractAsset
 
     
     public override void DrawOn<TTexture>
-    (ICanvas<TTexture> canvas, GlobalRenderData rd, RenderSettings rs, Transform t, double time)
+    (ICanvas<TTexture> canvas, GlobalRenderData rd, RenderSettings rs, Transform t, TimeSpan time)
     {
         //checks for showing assets. logic follows the game's code.
         if(!rs.ShowAssets)

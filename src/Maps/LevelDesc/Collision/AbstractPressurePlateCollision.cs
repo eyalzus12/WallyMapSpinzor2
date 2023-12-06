@@ -26,7 +26,7 @@ public abstract class AbstractPressurePlateCollision : AbstractCollision
         FaceLeft = e.GetBoolAttribute("FaceLeft", false);
         FireOffsetX = e.GetAttribute("FireOffsetX").Split(',').Select(double.Parse).ToList();
         FireOffsetY = e.GetAttribute("FireOffsetY").Split(',').Select(double.Parse).ToList();
-        if(FireOffsetY.Count == 0) FireOffsetY = new(){-10}; //wtf bmg
+        if(FireOffsetY.Count == 0) FireOffsetY = new(){-10}; //the game defaults it to -10
         PlatID = e.GetNullableAttribute("PlatID");
         TrapPowers = e.GetAttribute("TrapPowers").Split(',').ToList();
     }
@@ -49,7 +49,7 @@ public abstract class AbstractPressurePlateCollision : AbstractCollision
     }
 
     public override void DrawOn<TTexture>
-    (ICanvas<TTexture> canvas, GlobalRenderData rd, RenderSettings rs, Transform t, double time)
+    (ICanvas<TTexture> canvas, GlobalRenderData rd, RenderSettings rs, Transform t, TimeSpan time)
     {
         base.DrawOn(canvas, rd, rs, t, time);
         if(rs.ShowAssets)
@@ -64,20 +64,16 @@ public abstract class AbstractPressurePlateCollision : AbstractCollision
             
             TTexture texture = canvas.LoadTextureFromSWF("bones/Bones_GameModes.swf", finalAssetName);
 
+            //replace the dynamic transform with the moving platform's transform
+            (double DynX, double DynY) = (PlatID is null)?(0, 0):rd.PlatIDDynamicOffset[PlatID];
             (double _X, double _Y) = (PlatID is null)?(0, 0):rd.PlatIDMovingPlatformOffset[PlatID];
+            _X -= DynX; _Y -= DynY;
+            
             _X += AnimOffsetX; _Y += AnimOffsetY;
             //for some reason brawlhalla further offsets the sprite by half its size
             _X -= texture.W / 2.0; _Y -= texture.H / 2.0;
-
-            /*
-            WARNING:
-            the asset transform for pressure plates is different from its collision transform. 
-            the moving platform's platID is used instead of the parent Dynamic's.
-            this means that we have to ignore the given draw transform.
-
-            hopefully this won't cause any issues in the future...
-            */
-            Transform tt = Transform.CreateFrom(x : _X, y : _Y, rot : AnimRotation);
+            
+            Transform tt = t * Transform.CreateFrom(x : _X, y : _Y, rot : AnimRotation);
             canvas.DrawTexture(0, 0, texture, tt, DrawPriorityEnum.MIDGROUND);
         }
     }

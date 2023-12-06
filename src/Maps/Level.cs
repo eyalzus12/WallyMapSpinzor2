@@ -55,7 +55,7 @@ public class Level : IDeserializable, ISerializable, IDrawable
     }
 
     public void DrawOn<TTexture>
-    (ICanvas<TTexture> c, GlobalRenderData rd, RenderSettings rs, Transform t, double time) 
+    (ICanvas<TTexture> c, GlobalRenderData rd, RenderSettings rs, Transform t, TimeSpan time) 
         where TTexture : ITexture
     {
         Desc.DrawOn(c, rd, rs, t, time);

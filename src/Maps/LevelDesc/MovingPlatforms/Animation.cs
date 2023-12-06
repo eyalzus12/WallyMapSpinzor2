@@ -61,21 +61,26 @@ public class Animation : IDeserializable, ISerializable
     {
 
     }
+    
+    //the game wants to do 0.05, but there's a 0.96 multiplier on top of that
+    //because brawlhalla stores time as 16*frames, which is 1/960th of a second (almost, but not exactly, a millisecond)
+    //but instead of dividing by 16 to get the frame count, they multiply by 60/1000.
+    public const double FRAME_MULTIPLIER = 0.048;
 
-    public (double, double) GetOffset(GlobalRenderData rd, double time)
+    public (double, double) GetOffset(GlobalRenderData rd, TimeSpan time)
     {
-        //apply time offsets
-        time /= 16; //frames to keyframe time (~milliseconds)
         double numframes = NumFrames ?? rd.DefaultNumFrames ?? 0;
         double slowmult = SlowMult ?? rd.DefaultSlowMult ?? 1;
-        time /= slowmult; //slow mult
-        time += StartFrame; //apply start frame
-        double _time = BrawlhallaMath.SafeMod(time+1, numframes);
+        double frame = FRAME_MULTIPLIER * (60.0 * time.TotalSeconds);
+        frame /= slowmult; //slow mult
+        frame += StartFrame; //apply start frame
+        frame += 1; //frames start at 1
+        double _frame = BrawlhallaMath.SafeMod(frame, numframes);
         //find the keyframe pair
         int i = 0;
         for(; i < KeyFrames.Count; ++i)
         {
-            if(KeyFrames[i].GetStartFrame() >= _time) break;
+            if(KeyFrames[i].GetStartFrame() >= _frame) break;
         }
 
         if(i == KeyFrames.Count) i = 0;
@@ -84,7 +89,7 @@ public class Animation : IDeserializable, ISerializable
         return KeyFrames[j].LerpTo(KeyFrames[i],
             new(CenterX, CenterY, EaseIn, EaseOut, EasePower),
             numframes,
-            time,
+            frame,
             0,
             0
         );

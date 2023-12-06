@@ -25,30 +25,30 @@ public class Phase : AbstractKeyFrame
     public override (double, double) GetPosition() => KeyFrames[0].GetPosition();
 
     public override (double, double) LerpTo<T>
-    (T kk, Animation.AnimationDefaultValues defaults, double numframes, double time, double fromTimeOffset, double toTimeOffset)
+    (T kk, Animation.AnimationDefaultValues defaults, double numframes, double frame, double fromTimeOffset, double toTimeOffset)
     {
-        double _time = BrawlhallaMath.SafeMod(time+1, numframes);
+        double _frame = BrawlhallaMath.SafeMod(frame, numframes);
         //this happens when the animation resets and the time becomes close to 0
         //so as a hacky fix we readjust the time to match the "future"
-        if(_time < StartFrame)
-            _time += numframes;
+        if(_frame < StartFrame)
+            _frame += numframes;
         
         //find the keyframe pair
         int i = 0;
         for(; i < KeyFrames.Count; ++i)
         {
-            if(StartFrame + KeyFrames[i].GetStartFrame() >= _time) break;
+            if(StartFrame + KeyFrames[i].GetStartFrame() >= _frame) break;
         }
 
         //need to interpolate from phase end
         if(i == KeyFrames.Count)
         {
-            return KeyFrames.Last().LerpTo(kk, defaults, numframes, time, fromTimeOffset + StartFrame, toTimeOffset);
+            return KeyFrames.Last().LerpTo(kk, defaults, numframes, frame, fromTimeOffset + StartFrame, toTimeOffset);
         }
         //interpolation is inside phase
         else
         {
-            return KeyFrames[i-1].LerpTo(KeyFrames[i], defaults, numframes, time, fromTimeOffset + StartFrame, toTimeOffset + StartFrame);
+            return KeyFrames[i-1].LerpTo(KeyFrames[i], defaults, numframes, frame, fromTimeOffset + StartFrame, toTimeOffset + StartFrame);
         }
     }
 }
