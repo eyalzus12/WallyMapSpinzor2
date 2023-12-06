@@ -7,5 +7,5 @@ public class ItemSet : AbstractItemSpawn
     public override double DefaultW => 40;
     public override double DefaultH => 40;
 
-    public override Color GetColor(RenderSettings rs) => rs.ColorItemSet;
+    public override Color GetColor(RenderConfig config) => config.ColorItemSet;
 }

@@ -156,11 +156,10 @@ public abstract class AbstractCollision : IDeserializable, ISerializable, IDrawa
         _curve = BrawlhallaMath.CollisionQuad(X1, Y1, X2, Y2, (AnchorX??0) - XOff, (AnchorY??0) - YOff).ToList();
     }
 
-    public virtual void DrawOn<TTexture>
-    (ICanvas<TTexture> canvas, GlobalRenderData rd, RenderSettings rs, Transform t, TimeSpan time)
-        where TTexture : ITexture
+    public virtual void DrawOn<T>(ICanvas<T> canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data)
+        where T : ITexture
     {
-        if(!rs.ShowCollision) return;
+        if(!config.ShowCollision) return;
         
         if((AnchorX is not null && AnchorY is not null) && _curve is null)
             throw new InvalidOperationException("Collision has non null anchor, but cached curve is null. Make sure CalculateCurve is called.");
@@ -178,20 +177,20 @@ public abstract class AbstractCollision : IDeserializable, ISerializable, IDrawa
             (double nextX, double nextY) = enumer?.Current ?? (X2, Y2);
             //draw current line
             if(Team == 0)
-                canvas.DrawLine(startX, startY, nextX, nextY, GetColor(rs), t, DrawPriorityEnum.DATA);
+                canvas.DrawLine(startX, startY, nextX, nextY, GetColor(config), trans, DrawPriorityEnum.DATA);
             else
             {
-                if(Team-1 >= rs.ColorCollisionTeam.Length)
-                    throw new ArgumentOutOfRangeException($"Collision has team {Team} which is larger than max available collision team color {rs.ColorCollisionTeam.Length}");
+                if(Team-1 >= config.ColorCollisionTeam.Length)
+                    throw new ArgumentOutOfRangeException($"Collision has team {Team} which is larger than max available collision team color {config.ColorCollisionTeam.Length}");
                 canvas.DrawLineMultiColor(
                         startX, startY, nextX, nextY,
-                        new[]{rs.ColorCollisionTeam[Team-1], GetColor(rs), rs.ColorCollisionTeam[Team-1]},
-                        t, DrawPriorityEnum.DATA
+                        new[]{config.ColorCollisionTeam[Team-1], GetColor(config), config.ColorCollisionTeam[Team-1]},
+                        trans, DrawPriorityEnum.DATA
                     );
             }
             
             //draw collision line
-            if(rs.ShowCollisionNormal)
+            if(config.ShowCollisionNormal)
             {
                 //swap to ensure normal is correct
                 //brawlhalla does this when creating the collision
@@ -211,12 +210,12 @@ public abstract class AbstractCollision : IDeserializable, ISerializable, IDrawa
                 lenX /= len; lenY /= len;
                 double normalStartX = (startX+nextX)/2;
                 double normalStartY = (startY+nextY)/2;
-                double normalEndX = normalStartX - rs.LengthCollisionNormal * lenY;
-                double normalEndY = normalStartY + rs.LengthCollisionNormal * lenX;
+                double normalEndX = normalStartX - config.LengthCollisionNormal * lenY;
+                double normalEndY = normalStartY + config.LengthCollisionNormal * lenX;
 
                 canvas.DrawLine(
                     normalStartX, normalStartY, normalEndX, normalEndY,
-                    rs.ColorCollisionNormal, t, DrawPriorityEnum.DATA
+                    config.ColorCollisionNormal, trans, DrawPriorityEnum.DATA
                 );
 
                 //swap back
@@ -235,5 +234,5 @@ public abstract class AbstractCollision : IDeserializable, ISerializable, IDrawa
         _curve = null;
     }
 
-    public abstract Color GetColor(RenderSettings rs);
+    public abstract Color GetColor(RenderConfig rs);
 }

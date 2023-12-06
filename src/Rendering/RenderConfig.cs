@@ -1,6 +1,6 @@
 namespace WallyMapSpinzor2;
 
-public class RenderSettings
+public class RenderConfig
 {
     //Which ScoringType to use. Possible values are any scoring type name.
     //Case Sensitive. Empty string to not have a scoring type.

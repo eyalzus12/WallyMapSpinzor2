@@ -67,10 +67,10 @@ public class Animation : IDeserializable, ISerializable
     //but instead of dividing by 16 to get the frame count, they multiply by 60/1000.
     public const double FRAME_MULTIPLIER = 0.048;
 
-    public (double, double) GetOffset(GlobalRenderData rd, TimeSpan time)
+    public (double, double) GetOffset(RenderData data, TimeSpan time)
     {
-        double numframes = NumFrames ?? rd.DefaultNumFrames ?? 0;
-        double slowmult = SlowMult ?? rd.DefaultSlowMult ?? 1;
+        double numframes = NumFrames ?? data.DefaultNumFrames ?? 0;
+        double slowmult = SlowMult ?? data.DefaultSlowMult ?? 1;
         double frame = FRAME_MULTIPLIER * (60.0 * time.TotalSeconds);
         frame /= slowmult; //slow mult
         frame += StartFrame; //apply start frame

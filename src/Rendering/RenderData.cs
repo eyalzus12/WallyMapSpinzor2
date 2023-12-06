@@ -1,6 +1,6 @@
 namespace WallyMapSpinzor2;
 
-public class GlobalRenderData
+public class RenderData
 {
     public string? AssetDir{get; set;}
     public int? DefaultNumFrames{get; set;}

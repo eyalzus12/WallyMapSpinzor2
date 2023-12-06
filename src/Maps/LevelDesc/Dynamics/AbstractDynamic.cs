@@ -29,17 +29,16 @@ public abstract class AbstractDynamic<T> : ISerializable, IDeserializable, IDraw
             e.Add(c.SerializeToXElement());
     }
 
-    public virtual void DrawOn<TTexture>
-    (ICanvas<TTexture> canvas, GlobalRenderData rd, RenderSettings rs, Transform t, TimeSpan time) 
-        where TTexture : ITexture
+    public virtual void DrawOn<E>(ICanvas<E> canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data) 
+        where E : ITexture
     {
-        if(rd.PlatIDDynamicOffset is null)
+        if(data.PlatIDDynamicOffset is null)
             throw new InvalidOperationException($"Plat ID dictionary was null when attempting to draw {GetType().Name}");
-        if(!rd.PlatIDDynamicOffset.ContainsKey(PlatID))
+        if(!data.PlatIDDynamicOffset.ContainsKey(PlatID))
             throw new InvalidOperationException($"Plat ID dictionary did not contain plat id {PlatID} when attempting to draw {GetType().Name}. Make sure to call StoreOffset on all MovingPlatforms.");
-        (double _X, double _Y) = rd.PlatIDDynamicOffset[PlatID];
-        Transform tt = t * Transform.CreateTranslate(X + _X, Y + _Y);
+        (double _X, double _Y) = data.PlatIDDynamicOffset[PlatID];
+        Transform _trans = trans * Transform.CreateTranslate(X + _X, Y + _Y);
         foreach(T c in Children)
-            c.DrawOn(canvas, rd, rs, tt, time);
+            c.DrawOn(canvas, config, _trans, time, data);
     }
 }

@@ -28,10 +28,10 @@ public class NavNode : IDeserializable, ISerializable, IDrawable
     }
 
     public void DrawOn<TTexture>
-    (ICanvas<TTexture> canvas, GlobalRenderData rd, RenderSettings rs, Transform t, TimeSpan time) 
+    (ICanvas<TTexture> canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data) 
         where TTexture : ITexture
     {
-        if(!rs.ShowNavNode) return;
-        canvas.DrawCircle(X, Y, 10, Color.FromHex(0x0000007F), t, DrawPriorityEnum.NAVNODE);
+        if(!config.ShowNavNode) return;
+        canvas.DrawCircle(X, Y, 10, Color.FromHex(0x0000007F), trans, DrawPriorityEnum.NAVNODE);
     }
 }

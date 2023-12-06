@@ -27,16 +27,15 @@ public class Respawn : IDeserializable, ISerializable, IDrawable
     }
 
     
-    public void DrawOn<TTexture>
-    (ICanvas<TTexture> canvas, GlobalRenderData rd, RenderSettings rs, Transform t, TimeSpan time)
-        where TTexture : ITexture
+    public void DrawOn<T>(ICanvas<T> canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data)
+        where T : ITexture
     {
-        if(!rs.ShowRespawn) return;
+        if(!config.ShowRespawn) return;
         canvas.DrawCircle(
             X, Y,
-            rs.RadiusRespawn,
-            Initial?rs.ColorInitialRespawn:ExpandedInit?rs.ColorExpandedInitRespawn:rs.ColorRespawn,
-            t, DrawPriorityEnum.DATA
+            config.RadiusRespawn,
+            Initial?config.ColorInitialRespawn:ExpandedInit?config.ColorExpandedInitRespawn:config.ColorRespawn,
+            trans, DrawPriorityEnum.DATA
         );
     }
 }

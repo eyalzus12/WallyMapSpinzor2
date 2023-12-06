@@ -35,44 +35,43 @@ public class Background : IDeserializable, ISerializable, IDrawable
         e.SetAttributeValue("W", W.ToString());
     }
 
-    public void ChallengeCurrentBackground(GlobalRenderData rd, RenderSettings rs)
+    public void ChallengeCurrentBackground(RenderData data, RenderConfig config)
     {
-        if(rd.CurrentBackground is null)
+        if(data.CurrentBackground is null)
         {
-            rd.CurrentBackground = this;
+            data.CurrentBackground = this;
         }
-        else if(HasSkulls != rd.CurrentBackground.HasSkulls)
+        else if(HasSkulls != data.CurrentBackground.HasSkulls)
         {
-            if(rs.NoSkulls == rd.CurrentBackground.HasSkulls)
-                rd.CurrentBackground = this;
+            if(config.NoSkulls == data.CurrentBackground.HasSkulls)
+                data.CurrentBackground = this;
         }
         else
         {
-            int matchCount1 = Theme?.Count(t => t == rs.Theme) ?? 0;
-            int matchCount2 = rd.CurrentBackground.Theme?.Count(t => t == rs.Theme) ?? 0;
+            int matchCount1 = Theme?.Count(t => t == config.Theme) ?? 0;
+            int matchCount2 = data.CurrentBackground.Theme?.Count(t => t == config.Theme) ?? 0;
             int themeCount1 = Theme?.Count ?? 0;
-            int themeCount2 = rd.CurrentBackground.Theme?.Count ?? 0;
+            int themeCount2 = data.CurrentBackground.Theme?.Count ?? 0;
             if(matchCount1 > matchCount2 || (matchCount1 == matchCount2 && themeCount1 < themeCount2))
-                rd.CurrentBackground = this;
+                data.CurrentBackground = this;
         }
     }
 
-    public void DrawOn<TTexture>
-    (ICanvas<TTexture> canvas, GlobalRenderData rd, RenderSettings rs, Transform t, TimeSpan time) 
-        where TTexture : ITexture
+    public void DrawOn<T>(ICanvas<T> canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data)
+        where T : ITexture
     {
-        if(!rs.ShowBackground) return;
-        if(rd.CurrentBackground != this) return;
+        if(!config.ShowBackground) return;
+        if(data.CurrentBackground != this) return;
 
-        if(rd.BackgroundRect_H is null || rd.BackgroundRect_W is null || rd.BackgroundRect_X is null || rd.BackgroundRect_Y is null)
+        if(data.BackgroundRect_H is null || data.BackgroundRect_W is null || data.BackgroundRect_X is null || data.BackgroundRect_Y is null)
             throw new InvalidOperationException("Attempting to draw background, but global data is missing the background rect. Make sure the camera bounds are drawn before the background.");
         
-        string assetName = ((rs.AnimatedBackgrounds ? AnimatedAssetName : null) ?? AssetName)!;
+        string assetName = ((config.AnimatedBackgrounds ? AnimatedAssetName : null) ?? AssetName)!;
         string path = Path.Join("Backgrounds", assetName).ToString();
-        TTexture texture = canvas.LoadTextureFromPath(path);
+        T texture = canvas.LoadTextureFromPath(path);
         canvas.DrawTextureRect(
-            rd.BackgroundRect_X??0, rd.BackgroundRect_Y??0, rd.BackgroundRect_W??0, rd.BackgroundRect_H??0,
-            texture, t, DrawPriorityEnum.BACKGROUND
+            data.BackgroundRect_X??0, data.BackgroundRect_Y??0, data.BackgroundRect_W??0, data.BackgroundRect_H??0,
+            texture, trans, DrawPriorityEnum.BACKGROUND
         );
     }
 }

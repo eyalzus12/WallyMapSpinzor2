@@ -49,18 +49,17 @@ public class Level : IDeserializable, ISerializable, IDrawable
         e.Add(new XElement("Playlists", string.Join(",", Playlists)));
     }
 
-    public void DrawOn<TTexture>
-    (ICanvas<TTexture> c, GlobalRenderData rd, RenderSettings rs, Transform t, TimeSpan time) 
-        where TTexture : ITexture
+    public void DrawOn<T>(ICanvas<T> canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data) 
+        where T : ITexture
     {
-        Desc.DrawOn(c, rd, rs, t, time);
+        Desc.DrawOn(canvas, config, trans, time, data);
 
-        if(!rs.ShowKillBounds) return;
+        if(!config.ShowKillBounds) return;
         double killX = Desc.CameraBounds.X - Type.LeftKill ?? 0;
         double killY = Desc.CameraBounds.Y - Type.TopKill ?? 0;
         double killW = Desc.CameraBounds.W + Desc.CameraBounds.X + Type.RightKill + Type.LeftKill ?? 0;
         double killH = Desc.CameraBounds.H + Desc.CameraBounds.Y + Type.BottomKill + Type.TopKill ?? 0;
         
-        c.DrawRect(killX, killY, killW, killH, false, rs.ColorKillBounds, t, DrawPriorityEnum.DATA);
+        canvas.DrawRect(killX, killY, killW, killH, false, config.ColorKillBounds, trans, DrawPriorityEnum.DATA);
     }
 }

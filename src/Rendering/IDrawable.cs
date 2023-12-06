@@ -2,7 +2,6 @@ namespace WallyMapSpinzor2;
 
 public interface IDrawable
 {
-    void DrawOn<TTexture>
-    (ICanvas<TTexture> canvas, GlobalRenderData rd, RenderSettings rs, Transform t, TimeSpan time)
-        where TTexture : ITexture;
+    void DrawOn<T>(ICanvas<T> canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data)
+        where T : ITexture;
 }

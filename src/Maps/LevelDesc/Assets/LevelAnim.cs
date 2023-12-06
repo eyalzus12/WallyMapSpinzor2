@@ -41,18 +41,17 @@ public class LevelAnim : IDeserializable, ISerializable, IDrawable
     }
 
     #pragma warning disable 0162 //unreachable code warning
-    public void DrawOn<TTexture>
-    (ICanvas<TTexture> canvas, GlobalRenderData rd, RenderSettings rs, Transform t, TimeSpan time)
-        where TTexture : ITexture
+    public void DrawOn<T>(ICanvas<T> canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data)
+        where T : ITexture
     {
         //LevelAnim requires more than one swf shape to be rendered.
         //it's more work to get working, so for now im commenting it out
         return;
 
-        if(!rs.ShowAssets) return;
+        if(!config.ShowAssets) return;
         //NOTE: there may be some extra logic needed here. need to get renderer impl working to figure out.
-        TTexture texture = canvas.LoadTextureFromSWF("SFX_Level.swf", AssetName);
-        canvas.DrawTexture(X, Y, texture, t, DrawPriorityEnum.MIDGROUND);
+        T texture = canvas.LoadTextureFromSWF("SFX_Level.swf", AssetName);
+        canvas.DrawTexture(X, Y, texture, trans, DrawPriorityEnum.MIDGROUND);
     }
     #pragma warning restore 0162 //unreachable code warning
 }

@@ -46,53 +46,52 @@ public class Platform : AbstractAsset
     }
 
     
-    public override void DrawOn<TTexture>
-    (ICanvas<TTexture> canvas, GlobalRenderData rd, RenderSettings rs, Transform t, TimeSpan time)
+    public override void DrawOn<T>(ICanvas<T> canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data)
     {
         //checks for showing assets. logic follows the game's code.
-        if(!rs.ShowAssets)
+        if(!config.ShowAssets)
             return;
         
         if(NoSkulls)
         {
-            if(!rs.NoSkulls)
+            if(!config.NoSkulls)
                 return;
         }
         else if(Hotkey is not null)
         {
-            if(Hotkey != rs.Hotkey)
+            if(Hotkey != config.Hotkey)
                 return;
         }
         else if(Theme is not null || ScoringType is not null)
         {
-            bool themeMatches = Theme?.Contains(rs.Theme) ?? false;
-            bool scoringTypeMatches = ScoringType is not null && (ScoringType == rs.ScoringType);
+            bool themeMatches = Theme?.Contains(config.Theme) ?? false;
+            bool scoringTypeMatches = ScoringType is not null && (ScoringType == config.ScoringType);
             if(!themeMatches && !scoringTypeMatches)
                 return;
         }
         else if(PlatformAssetSwap is not null)
         {
-            if(PlatformAssetSwap == "simple" && rs.AnimatedBackgrounds)
+            if(PlatformAssetSwap == "simple" && config.AnimatedBackgrounds)
                 return;
-            if(PlatformAssetSwap == "animated" && !rs.AnimatedBackgrounds)
+            if(PlatformAssetSwap == "animated" && !config.AnimatedBackgrounds)
                 return;
         }
-        if(Blue is not null && Blue == rs.PickedPlatform)
+        if(Blue is not null && Blue == config.PickedPlatform)
             return;
-        else if(Red is not null && Red != rs.PickedPlatform)
+        else if(Red is not null && Red != config.PickedPlatform)
             return;
 
         //normal asset
         if(AssetName is not null)
         {
-            base.DrawOn(canvas, rd, rs, t, time);
+            base.DrawOn(canvas, config, trans, time, data);
         }
         //not a normal asset
         else
         {
-            Transform tt = t * Transform;
+            Transform tt = trans * Transform;
             foreach(AbstractAsset a in AssetChildren)
-                a.DrawOn(canvas, rd, rs, tt, time);
+                a.DrawOn(canvas, config, tt, time, data);
         }
     }
 }

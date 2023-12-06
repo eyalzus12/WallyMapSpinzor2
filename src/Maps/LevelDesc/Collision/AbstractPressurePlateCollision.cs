@@ -48,13 +48,12 @@ public abstract class AbstractPressurePlateCollision : AbstractCollision
         base.Serialize(e);
     }
 
-    public override void DrawOn<TTexture>
-    (ICanvas<TTexture> canvas, GlobalRenderData rd, RenderSettings rs, Transform t, TimeSpan time)
+    public override void DrawOn<T>(ICanvas<T> canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data)
     {
-        base.DrawOn(canvas, rd, rs, t, time);
-        if(rs.ShowAssets)
+        base.DrawOn(canvas, config, trans, time, data);
+        if(config.ShowAssets)
         {
-            if(PlatID is not null && !rd.PlatIDMovingPlatformOffset.ContainsKey(PlatID))
+            if(PlatID is not null && !data.PlatIDMovingPlatformOffset.ContainsKey(PlatID))
                 throw new InvalidOperationException($"Plat ID dictionary did not contain plat id {PlatID} when attempting to draw pressure plate. Make sure to call StoreOffset beforehand.");
             
             string finalAssetName = AssetName;
@@ -62,18 +61,18 @@ public abstract class AbstractPressurePlateCollision : AbstractCollision
             if(finalAssetName.Length > "a__AnimationPressurePlate".Length + 1)
                 finalAssetName = finalAssetName["a__AnimationPressurePlate".Length..];
             
-            TTexture texture = canvas.LoadTextureFromSWF("bones/Bones_GameModes.swf", finalAssetName);
+            T texture = canvas.LoadTextureFromSWF("bones/Bones_GameModes.swf", finalAssetName);
 
             //replace the dynamic transform with the moving platform's transform
-            (double DynX, double DynY) = (PlatID is null)?(0, 0):rd.PlatIDDynamicOffset[PlatID];
-            (double _X, double _Y) = (PlatID is null)?(0, 0):rd.PlatIDMovingPlatformOffset[PlatID];
+            (double DynX, double DynY) = (PlatID is null)?(0, 0):data.PlatIDDynamicOffset[PlatID];
+            (double _X, double _Y) = (PlatID is null)?(0, 0):data.PlatIDMovingPlatformOffset[PlatID];
             _X -= DynX; _Y -= DynY;
             
             _X += AnimOffsetX; _Y += AnimOffsetY;
             //for some reason brawlhalla further offsets the sprite by half its size
             _X -= texture.W / 2.0; _Y -= texture.H / 2.0;
             
-            Transform tt = t * Transform.CreateFrom(x : _X, y : _Y, rot : AnimRotation);
+            Transform tt = trans * Transform.CreateFrom(x : _X, y : _Y, rot : AnimRotation);
             canvas.DrawTexture(0, 0, texture, tt, DrawPriorityEnum.MIDGROUND);
         }
     }

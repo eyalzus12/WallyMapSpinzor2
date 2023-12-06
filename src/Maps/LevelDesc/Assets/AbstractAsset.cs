@@ -58,22 +58,21 @@ public abstract class AbstractAsset : ISerializable, IDeserializable, IDrawable
     }
 
     
-    public virtual void DrawOn<TTexture>
-    (ICanvas<TTexture> canvas, GlobalRenderData rd, RenderSettings rs, Transform t, TimeSpan time)
-        where TTexture : ITexture
+    public virtual void DrawOn<T>(ICanvas<T> canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data)
+        where T : ITexture
     {
-        if(!rs.ShowAssets)
+        if(!config.ShowAssets)
             return;
 
         if(AssetName is null) return;
 
-        if(rd.AssetDir is null)
+        if(data.AssetDir is null)
             throw new InvalidOperationException("Attempting to draw an asset, but global data is missing the AssetDir.");
-        string path = Path.Join(rd.AssetDir, AssetName).ToString();
-        TTexture texture = canvas.LoadTextureFromPath(path);
-        Transform tt = t * Transform * Transform.CreateScale(W/texture.W, H/texture.H);
+        string path = Path.Join(data.AssetDir, AssetName).ToString();
+        T texture = canvas.LoadTextureFromPath(path);
+        Transform _trans = trans * Transform * Transform.CreateScale(W/texture.W, H/texture.H);
         
-        canvas.DrawTexture(0, 0, texture, tt, DrawPriorityEnum.MIDGROUND);
+        canvas.DrawTexture(0, 0, texture, _trans, DrawPriorityEnum.MIDGROUND);
     }
 
     public Transform Transform =>

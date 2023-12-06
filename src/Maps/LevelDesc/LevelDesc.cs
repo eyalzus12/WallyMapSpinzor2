@@ -101,100 +101,101 @@ public class LevelDesc : IDeserializable, ISerializable, IDrawable
     }
 
     
-    public void DrawOn<TTexture>
-    (ICanvas<TTexture> canvas, GlobalRenderData rd, RenderSettings rs, Transform t, TimeSpan time)
-        where TTexture : ITexture
+    public void DrawOn<T>(ICanvas<T> canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data = null!)
+        where T : ITexture
     {
-        rd.AssetDir = AssetDir;
-        rd.DefaultNumFrames = NumFrames;
-        rd.DefaultSlowMult = SlowMult;
+        data ??= new();
+
+        data.AssetDir = AssetDir;
+        data.DefaultNumFrames = NumFrames;
+        data.DefaultSlowMult = SlowMult;
         foreach(Background b in Backgrounds)
-            b.ChallengeCurrentBackground(rd, rs);
-        rd.PlatIDDynamicOffset = new();
-        rd.PlatIDMovingPlatformOffset = new();
+            b.ChallengeCurrentBackground(data, config);
+        data.PlatIDDynamicOffset = new();
+        data.PlatIDMovingPlatformOffset = new();
         foreach(AbstractAsset a in Assets) if(a is MovingPlatform mp)
-            mp.StoreOffset(rd, time);
+            mp.StoreOffset(data, time);
         foreach(AbstractCollision c in Collisions)
             c.CalculateCurve(0, 0);
 
-        CameraBounds.DrawOn(canvas, rd, rs, t, time);
-        SpawnBotBounds.DrawOn(canvas, rd, rs, t, time);
+        CameraBounds.DrawOn(canvas, config, trans, time, data);
+        SpawnBotBounds.DrawOn(canvas, config, trans, time, data);
         foreach(Background b in Backgrounds)
-            b.DrawOn(canvas, rd, rs, t, time);
+            b.DrawOn(canvas, config, trans, time, data);
         //foreach(LevelSound ls in LevelSounds)
-        TeamScoreboard?.DrawOn(canvas, rd, rs, t, time);
+        TeamScoreboard?.DrawOn(canvas, config, trans, time, data);
         foreach(AbstractAsset a in Assets)
-            a.DrawOn(canvas, rd, rs, t, time);
+            a.DrawOn(canvas, config, trans, time, data);
         foreach(LevelAnim la in LevelAnims)
-            la.DrawOn(canvas, rd, rs, t, time);
+            la.DrawOn(canvas, config, trans, time, data);
         foreach(AbstractVolume v in Volumes)
-            v.DrawOn(canvas, rd, rs, t, time);
+            v.DrawOn(canvas, config, trans, time, data);
         foreach(AbstractCollision c in Collisions)
-            c.DrawOn(canvas, rd, rs, t, time);
+            c.DrawOn(canvas, config, trans, time, data);
         foreach(DynamicCollision dc in DynamicCollisions)
-            dc.DrawOn(canvas, rd, rs, t, time);
+            dc.DrawOn(canvas, config, trans, time, data);
         foreach(Respawn r in Respawns)
-            r.DrawOn(canvas, rd, rs, t, time);
+            r.DrawOn(canvas, config, trans, time, data);
         foreach(DynamicRespawn dr in DynamicRespawns)
-            dr.DrawOn(canvas, rd, rs, t, time);
+            dr.DrawOn(canvas, config, trans, time, data);
         foreach(AbstractItemSpawn i in ItemSpawns)
-            i.DrawOn(canvas, rd, rs, t, time);
+            i.DrawOn(canvas, config, trans, time, data);
         foreach(DynamicItemSpawn di in DynamicItemSpawns)
-            di.DrawOn(canvas, rd, rs, t, time);
+            di.DrawOn(canvas, config, trans, time, data);
         foreach(NavNode n in NavNodes)
-            n.DrawOn(canvas, rd, rs, t, time);
+            n.DrawOn(canvas, config, trans, time, data);
         foreach(DynamicNavNode dn in DynamicNavNodes)
-            dn.DrawOn(canvas, rd, rs, t, time);
+            dn.DrawOn(canvas, config, trans, time, data);
         //foreach(WaveData wd in WaveDatas)
         //foreach(AnimatedBackground ab in AnimatedBackgrounds)
 
 
         //Gamemode stuff
-        if(rs.ScoringType == Enum.GetName(ScoringTypeEnum.RING))
+        if(config.ScoringType == Enum.GetName(ScoringTypeEnum.RING))
         {
-            if(rs.ShowRingRopes)
+            if(config.ShowRingRopes)
             {
-                TTexture rope = canvas.LoadTextureFromSWF("bones/Bones_GameModes.swf", "a_DefaultRopes");
-                canvas.DrawTexture(521, 1293, rope, t, DrawPriorityEnum.FOREGROUND);
-                canvas.DrawTexture(2934, 1293, rope, t * Transform.CreateScale(-1, 1), DrawPriorityEnum.FOREGROUND);
+                T rope = canvas.LoadTextureFromSWF("bones/Bones_GameModes.swf", "a_DefaultRopes");
+                canvas.DrawTexture(521, 1293, rope, trans, DrawPriorityEnum.FOREGROUND);
+                canvas.DrawTexture(2934, 1293, rope, trans * Transform.CreateScale(-1, 1), DrawPriorityEnum.FOREGROUND);
             }
         }
-        if(rs.ScoringType == Enum.GetName(ScoringTypeEnum.ZOMBIE))
+        if(config.ScoringType == Enum.GetName(ScoringTypeEnum.ZOMBIE))
         {
-            if(rs.ShowZombieSpawns)
+            if(config.ShowZombieSpawns)
             {
-                canvas.DrawCircle(230, 390, rs.RadiusZombieSpawn, rs.ColorZombieSpawns, t, DrawPriorityEnum.DATA);
-                canvas.DrawCircle(180, 900, rs.RadiusZombieSpawn, rs.ColorZombieSpawns, t, DrawPriorityEnum.DATA);
-                canvas.DrawCircle(-1160, 900, rs.RadiusZombieSpawn, rs.ColorZombieSpawns, t, DrawPriorityEnum.DATA);
-                canvas.DrawCircle(-1990, 390, rs.RadiusZombieSpawn, rs.ColorZombieSpawns, t, DrawPriorityEnum.DATA);
+                canvas.DrawCircle(230, 390, config.RadiusZombieSpawn, config.ColorZombieSpawns, trans, DrawPriorityEnum.DATA);
+                canvas.DrawCircle(180, 900, config.RadiusZombieSpawn, config.ColorZombieSpawns, trans, DrawPriorityEnum.DATA);
+                canvas.DrawCircle(-1160, 900, config.RadiusZombieSpawn, config.ColorZombieSpawns, trans, DrawPriorityEnum.DATA);
+                canvas.DrawCircle(-1990, 390, config.RadiusZombieSpawn, config.ColorZombieSpawns, trans, DrawPriorityEnum.DATA);
             }
         }
-        if(rs.ScoringType == Enum.GetName(ScoringTypeEnum.BOMBSKETBALL))
+        if(config.ScoringType == Enum.GetName(ScoringTypeEnum.BOMBSKETBALL))
         {
-            if(rs.ShowBombsketballTargets)
+            if(config.ShowBombsketballTargets)
             {
-                TTexture red = canvas.LoadTextureFromSWF("bones/Bones_GameModes.swf", "a_TargetAnchoredRed");
-                TTexture blue = canvas.LoadTextureFromSWF("bones/Bones_GameModes.swf", "a_TargetAnchoredBlue");
+                T red = canvas.LoadTextureFromSWF("bones/Bones_GameModes.swf", "a_TargetAnchoredRed");
+                T blue = canvas.LoadTextureFromSWF("bones/Bones_GameModes.swf", "a_TargetAnchoredBlue");
                 Goal? goalred = Volumes.OfType<Goal>().Where(g => g.Team == 2).FirstOrDefault();
                 Goal? goalblue = Volumes.OfType<Goal>().Where(g => g.Team == 1).FirstOrDefault();
                 if(goalred is not null)
-                    canvas.DrawTexture((goalred.X+goalred.W)/2, (goalred.Y+goalred.H)/2, red, t, DrawPriorityEnum.FOREGROUND);
+                    canvas.DrawTexture((goalred.X+goalred.W)/2, (goalred.Y+goalred.H)/2, red, trans, DrawPriorityEnum.FOREGROUND);
                 if(goalblue is not null)
-                    canvas.DrawTexture((goalblue.X+goalblue.W)/2, (goalblue.Y+goalblue.H)/2, blue, t, DrawPriorityEnum.FOREGROUND);
+                    canvas.DrawTexture((goalblue.X+goalblue.W)/2, (goalblue.Y+goalblue.H)/2, blue, trans, DrawPriorityEnum.FOREGROUND);
             }
         }
-        if(rs.ScoringType == Enum.GetName(ScoringTypeEnum.HORDE))
+        if(config.ScoringType == Enum.GetName(ScoringTypeEnum.HORDE))
         {
-            if(rs.ShowHordeDoors)
+            if(config.ShowHordeDoors)
             {
                 int i = 0;
                 foreach(Goal g in Volumes.OfType<Goal>())
                 {
-                    int hits = (i >= rs.DamageHordeDoors.Length)?0:rs.DamageHordeDoors[i];
+                    int hits = (i >= config.DamageHordeDoors.Length)?0:config.DamageHordeDoors[i];
 
                     if(hits < 24)
                     {
-                        TTexture door = hits switch
+                        T door = hits switch
                         {
                             <= 6 => canvas.LoadTextureFromSWF("bones/Bones_GameModes.swf", "a_ValhallaDoor_000"),
                             <= 12 => canvas.LoadTextureFromSWF("bones/Bones_GameModes.swf", "a_ValhallaDoor_025"),
@@ -202,7 +203,7 @@ public class LevelDesc : IDeserializable, ISerializable, IDrawable
                             _ => canvas.LoadTextureFromSWF("bones/Bones_GameModes.swf", "a_ValhallaDoor_050"),
                         };
 
-                        canvas.DrawTexture((g.X+g.W)/2, (g.Y+g.H)/2, door, t, DrawPriorityEnum.FOREGROUND);
+                        canvas.DrawTexture((g.X+g.W)/2, (g.Y+g.H)/2, door, trans, DrawPriorityEnum.FOREGROUND);
                     }
 
                     ++i;

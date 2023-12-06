@@ -33,16 +33,16 @@ public abstract class AbstractVolume : IDeserializable, ISerializable, IDrawable
     }
 
     public virtual void DrawOn<TTexture>
-    (ICanvas<TTexture> canvas, GlobalRenderData rd, RenderSettings rs, Transform t, TimeSpan time)
+    (ICanvas<TTexture> canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data)
         where TTexture : ITexture
     {
-        if(!ShouldShow(rs)) return;
+        if(!ShouldShow(config)) return;
 
-        if(Team >= rs.ColorVolumeTeam.Length)
-            throw new ArgumentOutOfRangeException($"Volume has team {Team}, which is larger than max available volume team color {rs.ColorVolumeTeam.Length-1}");
+        if(Team >= config.ColorVolumeTeam.Length)
+            throw new ArgumentOutOfRangeException($"Volume has team {Team}, which is larger than max available volume team color {config.ColorVolumeTeam.Length-1}");
 
-        canvas.DrawRect((int)X, (int)Y, (int)W, (int)H, true, rs.ColorVolumeTeam[Team], t, DrawPriorityEnum.VOLUMES);
+        canvas.DrawRect((int)X, (int)Y, (int)W, (int)H, true, config.ColorVolumeTeam[Team], trans, DrawPriorityEnum.VOLUMES);
     }
 
-    public abstract bool ShouldShow(RenderSettings rs);
+    public abstract bool ShouldShow(RenderConfig config);
 }
