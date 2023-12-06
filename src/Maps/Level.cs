@@ -4,17 +4,12 @@ namespace WallyMapSpinzor2;
 
 public class Level : IDeserializable, ISerializable, IDrawable
 {
-    //saved so we can update the playlists
-    private LevelSetTypes _types;
-
     public LevelDesc Desc{get; set;}
     public LevelType Type{get; set;}
     public HashSet<string> Playlists{get; set;} = null!;
 
     public Level(LevelDesc ld, LevelTypes lt, LevelSetTypes lst)
     {
-        _types = lst;
-
         Desc = ld;
         Type = lt.Levels
             .Where(l => l.LevelName == Desc.LevelName)
@@ -25,10 +20,10 @@ public class Level : IDeserializable, ISerializable, IDrawable
             .ToHashSet();
     }
 
-    public void SetLevelName(string name)
+    public void SetLevelName(LevelSetTypes types, string name)
     {
         //update in playlists
-        foreach(LevelSetType lst in _types.Playlists)
+        foreach(LevelSetType lst in types.Playlists)
         {
             if(!Playlists.Contains(lst.LevelSetName))
                 continue;
