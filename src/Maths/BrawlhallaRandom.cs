@@ -2,32 +2,43 @@ namespace WallyMapSpinzor2;
 
 public class BrawlhallaRandom
 {
-    public int StateIndex{get; set;} = 0;
-    public List<uint> State{get; set;} = new(16);
+    public int Index{get; private set;}
+    public uint[] State{get; private set;} = new uint[16];
     
-    public BrawlhallaRandom() {}
-    public BrawlhallaRandom(uint seed) {Init(seed);}
+    public BrawlhallaRandom()
+    {
+        uint seed = Convert.ToUInt32(new Random().Next());
+        Init(seed);
+    }
+
+    public BrawlhallaRandom(uint seed)
+    {
+        Init(seed);
+    }
     
     public void Init(uint seed)
     {
-        StateIndex = 0;
-        State = new(16){seed};
-        for(int i=1;i<16;++i) State.Add((uint)(1812433253u*(State[i-1]^(State[i-1]>>30))+i));
+        Index = 0;
+        State[0] = seed;
+        for(uint i = 1; i < 16; ++i) State[i] = i + 0x6C078965u * (State[i-1] ^ (State[i-1] >> 30));
     }
     
     public uint Next()
     {
-        uint seed0 = State[StateIndex];
-        uint seed1 = State[(StateIndex+13)&15];
-        uint seed2 = seed0^seed1^(seed0<<16)^(seed1<<15);
-        seed1 = State[(StateIndex+9)&15];
-        seed1 ^= seed1>>11;
-        State[StateIndex] = seed2^seed1;
-        seed0 = State[StateIndex];
-        uint seed3 = seed0^(seed0<<5)&3661901092u;
-        StateIndex = (StateIndex+15)&15;
-        seed0 = State[StateIndex];
-        State[StateIndex] = seed0^seed2^seed3^(seed0<<2)^(seed2<<18)^(seed1<<28);
-        return State[StateIndex];
+        uint a, b, c, d;
+
+        a = State[Index];
+        b = State[(Index + 13) & 15];
+        c = a ^ (a << 16) ^ b ^ (b << 15);
+        b = State[(Index + 9) & 15];
+        b ^= b >> 11;
+        State[Index] = c ^ b;
+        a = State[Index];
+        d = a ^ ((a << 5) & 0xDA442D24u);
+        Index = (Index + 15) & 15;
+        a = State[Index];
+        State[Index] = a ^ (a << 2) ^ c ^ (c << 18) ^ d ^ (b << 28);
+
+        return State[Index];
     }
 }

@@ -84,7 +84,7 @@ public static class BrawlhallaMath
     
     public static (double, double) Rotated(double X, double Y, double t)
     {
-        double sine = Math.Sin(t), cosi = Math.Cos(t);
+        (double sine, double cosi) = Math.SinCos(t);
         return (X*cosi - Y*sine, X*sine + Y*cosi);
     }
 
