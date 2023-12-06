@@ -1,4 +1,3 @@
-using System.Diagnostics.CodeAnalysis;
 using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
