@@ -22,5 +22,5 @@ public static class MapUtils
     public static bool IsSharedPath(PathEnum p) => p < (PathEnum)1048575; //numeric path
 
     public static string FixBmg(string s) => s
-        .Replace("PlatID=\"3\"X", "PlatID=\"3\" X"); //OneUpOneDownFFA3
+        .Replace("""PlatID="3"X""", """PlatID="3" X"""); //OneUpOneDownFFA3. PlatID="3"X -> PlatID="3" X
 }

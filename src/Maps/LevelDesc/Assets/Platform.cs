@@ -41,8 +41,7 @@ public class Platform : AbstractAsset
         
         base.Serialize(e);
 
-        foreach(AbstractAsset a in AssetChildren)
-            e.Add(a.SerializeToXElement());
+        e.AddManySerialized(AssetChildren);
     }
 
     

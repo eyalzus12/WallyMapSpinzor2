@@ -94,9 +94,7 @@ public class Gfx : IDeserializable, ISerializable
             e.Add(new XElement("Tint", Tint));
         if(AsymmetrySwapFlags.Count != 0)
             e.Add(new XElement("AsymmetrySwapFlags", string.Join(',', AsymmetrySwapFlags)));
-        foreach(CustomArt ca in CustomArts)
-            e.Add(ca.SerializeToXElement());
-        foreach(ColorSwap cs in ColorSwaps)
-            e.Add(cs.SerializeToXElement());
+        e.AddManySerialized(CustomArts);
+        e.AddManySerialized(ColorSwaps);
     }
 }

@@ -28,7 +28,10 @@ public class Level : IDeserializable, ISerializable, IDrawable
             if(!Playlists.Contains(lst.LevelSetName))
                 continue;
             int idx = lst.LevelTypes.IndexOf(Desc.LevelName);
-            lst.LevelTypes[idx] = name;
+            if(idx != -1)
+                lst.LevelTypes[idx] = name;
+            else
+                lst.LevelTypes.Add(name);
         }
         //update desc and type
         Desc.LevelName = name; 
@@ -44,8 +47,8 @@ public class Level : IDeserializable, ISerializable, IDrawable
 
     public void Serialize(XElement e)
     {
-        e.Add(Desc.SerializeToXElement());
-        e.Add(Type.SerializeToXElement());
+        e.AddSerialized(Desc);
+        e.AddSerialized(Type);
         e.Add(new XElement("Playlists", string.Join(",", Playlists)));
     }
 

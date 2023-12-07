@@ -71,4 +71,28 @@ public class Group : IDeserializable, ISerializable
         if(!MapUtils.IsSharedPath(Path) && SharedPath)
             e.SetAttributeValue("SharedPath", SharedPath.ToString().ToUpper());
     }
+
+    public int GetCount(int players) => players switch
+    {
+        >= 4 when Count4 is not null => (int)Count4,
+        >= 3 when Count3 is not null => (int)Count3,
+        _ when Count is not null => (int)Count,
+        _ => 1
+    };
+
+    public int GetDelay(int players) => players switch
+    {
+        >= 4 when Delay4 is not null => 100 * (int)Math.Ceiling((int)Delay4 / 100.0),
+        >= 3 when Delay3 is not null => 100 * (int)Math.Ceiling((int)Delay3 / 100.0),
+        _ when Delay is not null => 100 * (int)Math.Ceiling((int)Delay / 100.0),
+        _ => 0
+    };
+
+    public int GetStagger(int players) => players switch
+    {
+        >= 4 when Stagger4 is not null => 100 * (int)Math.Ceiling((int)Stagger4 / 100.0),
+        >= 3 when Stagger3 is not null => 100 * (int)Math.Ceiling((int)Stagger3 / 100.0),
+        _ when Stagger is not null => 100 * (int)Math.Ceiling((int)Stagger / 100.0),
+        _ => 500
+    };
 }

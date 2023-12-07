@@ -13,7 +13,6 @@ public class LevelTypes : IDeserializable, ISerializable
 
     public void Serialize(XElement e)
     {
-        foreach(LevelType lt in Levels)
-            e.Add(lt.SerializeToXElement());
+        e.AddManySerialized(Levels);
     }
 }

@@ -64,48 +64,31 @@ public class LevelDesc : IDeserializable, ISerializable, IDrawable
             e.SetAttributeValue("NumFrames", NumFrames.ToString());
         if(SlowMult != 1)
             e.SetAttributeValue("SlowMult", SlowMult.ToString());
-        e.Add(CameraBounds.SerializeToXElement());
-        e.Add(SpawnBotBounds.SerializeToXElement());
-        foreach(Background b in Backgrounds)
-            e.Add(b.SerializeToXElement());
-        foreach(LevelSound ls in LevelSounds)
-            e.Add(ls.SerializeToXElement());
-        if(TeamScoreboard is not null)
-            e.Add(TeamScoreboard.SerializeToXElement());
-        foreach(AbstractAsset a in Assets)
-            e.Add(a.SerializeToXElement());
-        foreach(LevelAnim la in LevelAnims)
-            e.Add(la.SerializeToXElement());
-        foreach(AbstractVolume v in Volumes)
-            e.Add(v.SerializeToXElement());
-        foreach(AbstractCollision c in Collisions)
-            e.Add(c.SerializeToXElement());
-        foreach(DynamicCollision dc in DynamicCollisions)
-            e.Add(dc.SerializeToXElement());
-        foreach(Respawn r in Respawns)
-            e.Add(r.SerializeToXElement());
-        foreach(DynamicRespawn dr in DynamicRespawns)
-            e.Add(dr.SerializeToXElement());
-        foreach(AbstractItemSpawn i in ItemSpawns)
-            e.Add(i.SerializeToXElement());
-        foreach(DynamicItemSpawn di in DynamicItemSpawns)
-            e.Add(di.SerializeToXElement());
-        foreach(NavNode n in NavNodes)
-            e.Add(n.SerializeToXElement());
-        foreach(DynamicNavNode dn in DynamicNavNodes)
-            e.Add(dn.SerializeToXElement());
-        foreach(WaveData wd in WaveDatas)
-            e.Add(wd.SerializeToXElement());
-        foreach(AnimatedBackground ab in AnimatedBackgrounds)
-            e.Add(ab.SerializeToXElement());
+        
+        e.AddSerialized(CameraBounds);
+        e.AddSerialized(SpawnBotBounds);
+        e.AddManySerialized(Backgrounds);
+        e.AddManySerialized(LevelSounds);
+        e.AddSerializedIfNotNull(TeamScoreboard);
+        e.AddManySerialized(Assets);
+        e.AddManySerialized(LevelAnims);
+        e.AddManySerialized(Volumes);
+        e.AddManySerialized(Collisions);
+        e.AddManySerialized(DynamicCollisions);
+        e.AddManySerialized(Respawns);
+        e.AddManySerialized(DynamicRespawns);
+        e.AddManySerialized(ItemSpawns);
+        e.AddManySerialized(DynamicItemSpawns);
+        e.AddManySerialized(NavNodes);
+        e.AddManySerialized(DynamicNavNodes);
+        e.AddManySerialized(WaveDatas);
+        e.AddManySerialized(AnimatedBackgrounds);
     }
 
     
-    public void DrawOn<T>(ICanvas<T> canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data = null!)
+    public void DrawOn<T>(ICanvas<T> canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data)
         where T : ITexture
     {
-        data ??= new();
-
         data.AssetDir = AssetDir;
         data.DefaultNumFrames = NumFrames;
         data.DefaultSlowMult = SlowMult;

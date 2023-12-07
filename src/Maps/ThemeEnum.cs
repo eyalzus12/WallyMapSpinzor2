@@ -5,7 +5,11 @@ namespace WallyMapSpinzor2;
 public enum ThemeEnum
 {
     //use 0 for none
+
+    //Christmas (snow)
     Christmas = 1,
+    //Halloween (pumpkins)
     Halloween,
+    //The walking dead crossover (pumpkins)
     TWDHalloween
 }

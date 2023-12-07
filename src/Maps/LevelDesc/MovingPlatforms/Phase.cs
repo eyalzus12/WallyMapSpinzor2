@@ -17,8 +17,7 @@ public class Phase : AbstractKeyFrame
     public override void Serialize(XElement e)
     {
         e.SetAttributeValue("StartFrame", StartFrame);
-        foreach(AbstractKeyFrame k in KeyFrames)
-            e.Add(k.SerializeToXElement());
+        e.AddManySerialized(KeyFrames);
     }
 
     public override double GetStartFrame() => StartFrame + KeyFrames[0].GetStartFrame();

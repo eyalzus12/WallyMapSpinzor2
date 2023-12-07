@@ -32,9 +32,8 @@ public abstract class AbstractVolume : IDeserializable, ISerializable, IDrawable
             e.SetAttributeValue("ID", ID.ToString());
     }
 
-    public virtual void DrawOn<TTexture>
-    (ICanvas<TTexture> canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data)
-        where TTexture : ITexture
+    public virtual void DrawOn<T>(ICanvas<T> canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data)
+        where T : ITexture
     {
         if(!ShouldShow(config)) return;
 

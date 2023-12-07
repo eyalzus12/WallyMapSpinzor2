@@ -25,8 +25,7 @@ public abstract class AbstractDynamic<T> : ISerializable, IDeserializable, IDraw
         e.SetAttributeValue("PlatID", PlatID);
         e.SetAttributeValue("X", X.ToString());
         e.SetAttributeValue("Y", Y.ToString());
-        foreach(T c in Children)
-            e.Add(c.SerializeToXElement());
+        e.AddManySerialized(Children);
     }
 
     public virtual void DrawOn<E>(ICanvas<E> canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data) 

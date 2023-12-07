@@ -13,7 +13,6 @@ public class LevelSetTypes : IDeserializable, ISerializable
 
     public void Serialize(XElement e)
     {
-        foreach(LevelSetType lst in Playlists)
-            e.Add(lst.SerializeToXElement());
+        e.AddManySerialized(Playlists);
     }
 }

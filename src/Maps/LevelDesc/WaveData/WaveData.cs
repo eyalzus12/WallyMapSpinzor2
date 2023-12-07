@@ -37,9 +37,15 @@ public class WaveData : IDeserializable, ISerializable
         if(LoopIdx != 0)
             e.SetAttributeValue("LoopIdx", LoopIdx.ToString());
         
-        foreach(CustomPath c in CustomPaths)
-            e.Add(c.SerializeToXElement());
-        foreach(Group g in Groups)
-            e.Add(g.SerializeToXElement());
+        e.AddManySerialized(CustomPaths);
+        e.AddManySerialized(Groups);
     }
+
+    public double GetSpeed(int players) => players switch
+    {
+        >= 4 when Speed4 is not null => (double)Speed4,
+        >= 3 when Speed3 is not null => (double)Speed3,
+        _ when Speed is not null => (double)Speed,
+        _ => 8
+    };
 }

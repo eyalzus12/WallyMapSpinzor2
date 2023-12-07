@@ -49,7 +49,7 @@ public class AnimatedBackground : IDeserializable, ISerializable
         if(Midground)
             e.SetAttributeValue("Midground", Midground.ToString().ToLower());
         
-        e.Add(Gfx.SerializeToXElement());
+        e.AddSerialized(Gfx);
 
         e.Add(new XElement("Position", $"{Position_X},{Position_Y}"));
         

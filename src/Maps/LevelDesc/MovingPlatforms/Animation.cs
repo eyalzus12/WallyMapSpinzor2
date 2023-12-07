@@ -53,8 +53,8 @@ public class Animation : IDeserializable, ISerializable
             e.SetAttributeValue("EasePower", EasePower.ToString());
         if(StartFrame != 0)
             e.SetAttributeValue("StartFrame", StartFrame.ToString());
-        foreach(AbstractKeyFrame k in KeyFrames)
-            e.Add(k.SerializeToXElement());
+        
+        e.AddManySerialized(KeyFrames);
     }
 
     public readonly record struct AnimationDefaultValues(double? CenterX, double? CenterY, bool EaseIn, bool EaseOut, int EasePower)

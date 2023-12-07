@@ -12,7 +12,6 @@ public class CustomPath : IDeserializable, ISerializable
 
     public void Serialize(XElement e)
     {
-        foreach(Point p in Points)
-            e.Add(p.SerializeToXElement());
+        e.AddManySerialized(Points);
     }
 }

@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
@@ -60,8 +61,7 @@ public static class MapXmlExtensions
     };
 
     public static List<AbstractKeyFrame> DeserializeKeyFrameChildren(this XElement e) =>
-        e.Elements().Select(DeserializeKeyFrame).Where(k => k is not null)
-        .ToList()!;
+        e.Elements().Select(DeserializeKeyFrame).Where(k => k is not null).ToList()!;
 
     public static AbstractKeyFrame? DeserializeKeyFrame(this XElement e) => e.Name.LocalName switch
     {
@@ -84,5 +84,19 @@ public static class MapXmlExtensions
     public static XElement SerializeToXElement<T>(this T t) where T : ISerializable
     {
         XElement e = new(t.GetType().Name); t.Serialize(e); return e;
+    }
+
+    public static void AddSerialized<T>(this XElement e, T t) where T : ISerializable
+        => e.Add(t.SerializeToXElement());
+    
+    public static void AddManySerialized<T>(this XElement e, IEnumerable<T> et) where T : ISerializable
+    {
+        foreach(T t in et)
+            e.AddSerialized(t);
+    }
+
+    public static void AddSerializedIfNotNull<T>(this XElement e, T? t) where T : ISerializable
+    {
+        if(t is not null) e.AddSerialized(t);
     }
 }
