@@ -50,8 +50,6 @@ public abstract class AbstractCollision : IDeserializable, ISerializable, IDrawa
             AnchorY = e.GetFloatAttribute("AnchorY");
         }
 
-        //a collision with an anchor can't be a pressure plate or have a normal
-        //but we don't bother implementing that
         NormalX = e.GetFloatAttribute("NormalX", 0);
         NormalY = e.GetFloatAttribute("NormalY", 0);
 
@@ -153,7 +151,9 @@ public abstract class AbstractCollision : IDeserializable, ISerializable, IDrawa
         if(_curve is not null)
             return;
         
-        _curve = BrawlhallaMath.CollisionQuad(X1, Y1, X2, Y2, (AnchorX??0) - XOff, (AnchorY??0) - YOff).ToList();
+        _curve = BrawlhallaMath.CollisionQuad(X1, Y1, X2, Y2, (AnchorX??0) - XOff, (AnchorY??0) - YOff)
+            .Prepend((X1, Y1)) //to start the curve from X1,Y1
+            .ToList();
     }
 
     public virtual void DrawOn<T>(ICanvas<T> canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data)
@@ -166,38 +166,36 @@ public abstract class AbstractCollision : IDeserializable, ISerializable, IDrawa
         if((AnchorX is null || AnchorY is null) && _curve is not null)
             throw new InvalidOperationException("Collision has null anchor, but cached curve is non null. Make sure CalculateCurve is called.");
 
-        (double startX, double startY) = (X1, Y1);
+        //if no curve, make curve just one line
+        _curve ??= new(){(X1, Y1), (X2, Y2)};
 
-        IEnumerator<(double,double)>? enumer = _curve?.GetEnumerator();
-        
-        bool finished = false;
-        //we use a hack here to get anchors to work
-        while((enumer?.MoveNext() ?? false) || !finished)
+        for(int i = 0; i < _curve.Count - 1; ++i)
         {
-            (double nextX, double nextY) = enumer?.Current ?? (X2, Y2);
+            (double prevX, double prevY) = _curve[i];
+            (double nextX, double nextY) = _curve[i+1];
             //draw current line
             if(Team == 0)
-                canvas.DrawLine(startX, startY, nextX, nextY, GetColor(config), trans, DrawPriorityEnum.DATA);
+                canvas.DrawLine(prevX, prevY, nextX, nextY, GetColor(config), trans, DrawPriorityEnum.DATA);
             else
             {
                 if(Team-1 >= config.ColorCollisionTeam.Length)
                     throw new ArgumentOutOfRangeException($"Collision has team {Team} which is larger than max available collision team color {config.ColorCollisionTeam.Length}");
                 canvas.DrawLineMultiColor(
-                        startX, startY, nextX, nextY,
+                        prevX, prevY, nextX, nextY,
                         new[]{config.ColorCollisionTeam[Team-1], GetColor(config), config.ColorCollisionTeam[Team-1]},
                         trans, DrawPriorityEnum.DATA
                     );
             }
             
-            //draw normal line
-            if(config.ShowCollisionNormalOverride)
+            //draw normal line (unless there's an Anchor - this follows the game)
+            if(AnchorX is null && AnchorY is null && config.ShowCollisionNormalOverride)
             {
                 if(NormalX != 0 || NormalY != 0)
                 {
                     //Normal overrides are NOT NORMALIZED
                     //This detail only affects SpongebobMap
-                    double normalStartX = (startX+nextX)/2;
-                    double normalStartY = (startY+nextY)/2;
+                    double normalStartX = (prevX + nextX)/2;
+                    double normalStartY = (prevY + nextY)/2;
                     double normalEndX = normalStartX + config.LengthCollisionNormal * NormalX;
                     double normalEndY = normalStartY + config.LengthCollisionNormal * NormalY;
 
@@ -210,9 +208,6 @@ public abstract class AbstractCollision : IDeserializable, ISerializable, IDrawa
                 //However this logic requires raycasting
                 //We'll add this later if we need it
             }
-            
-            (startX, startY) = (nextX, nextY);
-            finished = true;
         }
         
         //mandate calling CalculateCurve

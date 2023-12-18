@@ -51,6 +51,14 @@ public abstract class AbstractPressurePlateCollision : AbstractCollision
     public override void DrawOn<T>(ICanvas<T> canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data)
     {
         base.DrawOn(canvas, config, trans, time, data);
+
+        //if a pressure plate has an Anchor, its
+        //pressureplate-ness is ignored by the game.
+        if(AnchorX is not null || AnchorY is not null)
+            return;
+        
+        //TODO: show fire offset
+
         if(config.ShowAssets)
         {
             if(PlatID is not null && !data.PlatIDMovingPlatformOffset.ContainsKey(PlatID))
