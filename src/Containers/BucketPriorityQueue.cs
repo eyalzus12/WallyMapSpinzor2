@@ -23,7 +23,7 @@ public class BucketPriorityQueue<T>
     public void Push(T element, int priority)
     {
         if(priority < 0) throw new IndexOutOfRangeException($"Priority {priority} is negative");
-        if(priority >= Buckets.Length) throw new IndexOutOfRangeException($"Priority {priority} is bigger than bucket size {Buckets.Length}");
+        if(priority >= Buckets.Length) throw new IndexOutOfRangeException($"Priority {priority} is bigger than bucket count {Buckets.Length}");
         
         if(priority < MinBucket) MinBucket = priority;
         if(priority > MaxBucket) MaxBucket = priority;
