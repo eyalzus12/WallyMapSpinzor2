@@ -65,6 +65,28 @@ public static class BrawlhallaMath
         }
     }
 
+    public static double RoundedCos(double x)
+    {
+        //im not using Math.TAU here because brawlhalla uses Math.PI * 2
+        //which may introduce error. this will probably never matter but eh.
+        x -= Math.Floor(x / (Math.PI * 2)) * (Math.PI * 2);
+        x = Math.Round(x * 1000) / 1000;
+        x = Math.Cos(x);
+        x = Math.Round(x * 1000) / 1000;
+        return x;
+    }
+
+    public static double RoundedSin(double x)
+    {
+        //im not using Math.TAU here because brawlhalla uses Math.PI * 2
+        //which may introduce error. this will probably never matter but eh.
+        x -= Math.Floor(x / (Math.PI * 2)) * (Math.PI * 2);
+        x = Math.Round(x * 1000) / 1000;
+        x = Math.Sin(x);
+        x = Math.Round(x * 1000) / 1000;
+        return x;
+    }
+
     public static double Length(double X, double Y) => Math.Sqrt(X*X + Y*Y);
     public static (double, double) Normalize(double X, double Y)
     {
@@ -74,8 +96,14 @@ public static class BrawlhallaMath
     }
 
     public static (double, double) Lerp(double X1, double Y1, double X2, double Y2, double w) 
-        => (X1 * (1-w) + X2 * w, Y1 * (1-w) + Y2 * w);
+    {
+        //uses the same rounding as brawlhalla
+        double _X = Math.Round((X1 * (1-w) + X2 * w) * 100) / 100;
+        double _Y = Math.Round((Y1 * (1-w) + Y2 * w) * 100) / 100;
+        return (_X, _Y);
+    }
     
+    /*
     public static double Dot(double X1, double Y1, double X2, double Y2) => X1*Y1 + X2*Y2;
     public static double Cross(double X1, double Y1, double X2, double Y2) => X1*Y2 - X2*Y1;
 
@@ -96,11 +124,39 @@ public static class BrawlhallaMath
         (double _X, double _Y) = Rotated(_X1, _Y1, w*t);
         return (_X*Math.Abs(X1-X2), _Y*Math.Abs(Y1-Y2));
     }
+    */
 
     public static (double, double) LerpWithCenter(double X1, double Y1, double X2, double Y2, double XC, double YC, double w)
     {
-        (double _X, double _Y) = Slerp(X1-XC, Y1-YC, X2-XC, Y2-YC, w);
-        return (XC + _X, YC + _Y);
+        //code follows brawlhalla logic. brawlhalla does not do a proper Slerp
+        //but instead assumes center will always be on the same X or Y as one of the keyframes
+
+        double angle1;
+        if(X1 == XC)
+        {
+            if(Y1 > YC) angle1 = Math.PI * 0.5;
+            else angle1 = Math.PI * 1.5;
+        }
+        else if(X1 < XC) angle1 = Math.PI;
+        else angle1 = 0;
+
+        double angle2;
+        if(X2 == XC)
+        {
+            if(Y2 > YC) angle2 = Math.PI * 0.5;
+            else angle2 = Math.PI * 1.5;
+        }
+        else if(X2 < XC) angle2 = Math.PI;
+        else if(angle1 == Math.PI * 1.5) angle2 = Math.PI * 2;
+        else angle2 = 0;
+
+        if(angle1 == 0 && angle2 == Math.PI * 1.5)
+            angle1 = Math.PI * 2;
+        
+        double angle = angle1 * (1-w) + angle2 * w;
+        double _X = Math.Round((XC + Math.Abs(X1 - X2) * RoundedCos(angle)) * 100) / 100;
+        double _Y = Math.Round((YC + Math.Abs(Y1 - Y2) * RoundedSin(angle)) * 100) / 100;
+        return (_X, _Y);
     }
 
     public static double SafeMod(double x, double m)
