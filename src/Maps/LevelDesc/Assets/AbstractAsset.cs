@@ -68,9 +68,13 @@ public abstract class AbstractAsset : ISerializable, IDeserializable, IDrawable
 
         if(data.AssetDir is null)
             throw new InvalidOperationException("Attempting to draw an asset, but global data is missing the AssetDir.");
+
+        
         string path = Path.Join(data.AssetDir, AssetName).ToString();
         T texture = canvas.LoadTextureFromPath(path);
-        Transform _trans = trans * Transform * Transform.CreateScale(W/texture.W, H/texture.H);
+        double _scaleX = (W == 0)?1:W/texture.W;
+        double _scaleY = (H == 0)?1:H/texture.H;
+        Transform _trans = trans * Transform * Transform.CreateScale(_scaleX, _scaleY);
         
         canvas.DrawTexture(0, 0, texture, _trans, DrawPriorityEnum.MIDGROUND);
     }
