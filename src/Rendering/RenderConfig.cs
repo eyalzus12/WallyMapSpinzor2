@@ -57,8 +57,8 @@ public class RenderConfig
 
     //whether to show collision
     public bool ShowCollision{get; set;} = true;
-    //whether to show collision normals
-    public bool ShowCollisionNormal{get; set;} = false;
+    //whether to show collision normal overrides
+    public bool ShowCollisionNormalOverride{get; set;} = true;
 
     //whether to show goals
     public bool ShowGoal{get; set;} = true;
@@ -83,7 +83,7 @@ public class RenderConfig
     //circle radius to use for zombie spawns
     public double RadiusZombieSpawn{get; set;} = 20;
     //length of collision normals
-    public double LengthCollisionNormal{get; set;} = 10;
+    public double LengthCollisionNormal{get; set;} = 50;
 
     //colors
     public Color ColorCameraBounds{get; set;} = Color.FromHex(0xFF00007F);

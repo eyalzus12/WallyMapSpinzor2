@@ -189,41 +189,26 @@ public abstract class AbstractCollision : IDeserializable, ISerializable, IDrawa
                     );
             }
             
-            //draw collision line
-            if(config.ShowCollisionNormal)
+            //draw normal line
+            if(config.ShowCollisionNormalOverride)
             {
-                //swap to ensure normal is correct
-                //brawlhalla does this when creating the collision
-                bool swapped = false;
-                if(startX > nextX)
+                if(NormalX != 0 || NormalY != 0)
                 {
-                    (startX, nextX) = (nextX, startX);
-                    (startY, nextY) = (nextY, startY);
-                    swapped = true;
+                    //Normal overrides are NOT NORMALIZED
+                    //This detail only affects SpongebobMap
+                    double normalStartX = (startX+nextX)/2;
+                    double normalStartY = (startY+nextY)/2;
+                    double normalEndX = normalStartX + config.LengthCollisionNormal * NormalX;
+                    double normalEndY = normalStartY + config.LengthCollisionNormal * NormalY;
+
+                    canvas.DrawLine(
+                        normalStartX, normalStartY, normalEndX, normalEndY,
+                        config.ColorCollisionNormal, trans, DrawPriorityEnum.DATA
+                    );
                 }
-
-                double lenX = nextX - startX;
-                if(NormalX != 0) lenX = NormalX;
-                double lenY = nextY - startY;
-                if(NormalY != 0) lenY = NormalY;
-                double len = Math.Sqrt(lenX*lenX + lenY*lenY);
-                lenX /= len; lenY /= len;
-                double normalStartX = (startX+nextX)/2;
-                double normalStartY = (startY+nextY)/2;
-                double normalEndX = normalStartX - config.LengthCollisionNormal * lenY;
-                double normalEndY = normalStartY + config.LengthCollisionNormal * lenX;
-
-                canvas.DrawLine(
-                    normalStartX, normalStartY, normalEndX, normalEndY,
-                    config.ColorCollisionNormal, trans, DrawPriorityEnum.DATA
-                );
-
-                //swap back
-                if(swapped)
-                {
-                    (startX, nextX) = (nextX, startX);
-                    (startY, nextY) = (nextY, startY);
-                }
+                //Otherwise normals are auto generated
+                //However this logic requires raycasting
+                //We'll add this later if we need it
             }
             
             (startX, startY) = (nextX, nextY);
@@ -235,4 +220,20 @@ public abstract class AbstractCollision : IDeserializable, ISerializable, IDrawa
     }
 
     public abstract Color GetColor(RenderConfig rs);
+
+    [Flags]
+    public enum CollisionTypeEnum
+    {
+        HARD = 1 << 0,
+        SOFT = 1 << 1,
+        TRIGGER = 1 << 2,
+        STICKY = 1 << 3,
+        NO_SLIDE = 1 << 4,
+        ITEM_IGNORE = 1 << 5,
+        BOUNCY = 1 << 6,
+        GAMEMODE = 1 << 7,
+        PRESSURE_PLATE = 1 << 8
+    }
+
+    public abstract CollisionTypeEnum CollisionType{get;}
 }
