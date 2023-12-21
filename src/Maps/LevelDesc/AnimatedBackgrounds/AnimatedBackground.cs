@@ -27,17 +27,17 @@ public class AnimatedBackground : IDeserializable, ISerializable
 
         Gfx = e.DeserializeChildOfType<Gfx>()!;
 
-        string[]? Position = e.Element("Position")?.Value.Split(',', 2);
-        Position_X = Utils.ParseFloatOrNull(Position?[0]) ?? 0;
-        Position_Y = Utils.ParseFloatOrNull(Position?[1]) ?? 0;
+        string[]? position = e.Element("Position")?.Value.Split(',', 2);
+        Position_X = Utils.ParseFloatOrNull(position?[0]) ?? 0;
+        Position_Y = Utils.ParseFloatOrNull(position?[1]) ?? 0;
         
-        string[]? Skew = e.Element("Skew")?.Value.Split(',', 2);
-        Skew_X = Utils.ParseFloatOrNull(Skew?[0]) ?? 0;
-        Skew_Y = Utils.ParseFloatOrNull(Skew?[1]) ?? 0;
+        string[]? skew = e.Element("Skew")?.Value.Split(',', 2);
+        Skew_X = Utils.ParseFloatOrNull(skew?[0]) ?? 0;
+        Skew_Y = Utils.ParseFloatOrNull(skew?[1]) ?? 0;
 
-        string[]? Scale = e.Element("Scale")?.Value.Split(',', 2);
-        Scale_X = Utils.ParseFloatOrNull(Scale?[0]) ?? 1;
-        Scale_Y = Utils.ParseFloatOrNull(Scale?[1]) ?? 1;
+        string[]? scale = e.Element("Scale")?.Value.Split(',', 2);
+        Scale_X = Utils.ParseFloatOrNull(scale?[0]) ?? 1;
+        Scale_Y = Utils.ParseFloatOrNull(scale?[1]) ?? 1;
 
         Rotation = Utils.ParseFloatOrNull(e.Element("Rotation")?.Value) ?? 0;
 

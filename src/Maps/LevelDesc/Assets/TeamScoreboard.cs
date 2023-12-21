@@ -50,7 +50,7 @@ public class TeamScoreboard : IDeserializable, ISerializable, IDrawable
         //red
         if(config.RedScore < 10)
         {
-            string fontName = $"a_Digit{config.RedScore}" + (RedDigitFont==""?"":"_") + RedDigitFont;
+            string fontName = $"a_Digit{config.RedScore}" + (RedDigitFont == "" ? "" : "_") + RedDigitFont;
             T texture = canvas.LoadTextureFromSWF("bones/Bones_GameModes.swf", fontName);
             canvas.DrawTexture(RedTeamX, Y, texture, trans, DrawPriorityEnum.FOREGROUND);
         }
@@ -64,19 +64,19 @@ public class TeamScoreboard : IDeserializable, ISerializable, IDrawable
                 redTen = 9;
             }
 
-            string fontNameOnes = $"a_Digit{redOne}" + (RedDigitFont==""?"":"_") + RedDigitFont;
-            string fontNameTens = $"a_Digit{redTen}" + (RedDigitFont==""?"":"_") + RedDigitFont;
+            string fontNameOnes = $"a_Digit{redOne}" + (RedDigitFont == "" ? "" : "_") + RedDigitFont;
+            string fontNameTens = $"a_Digit{redTen}" + (RedDigitFont == "" ? "" : "_") + RedDigitFont;
             T textureOnes = canvas.LoadTextureFromSWF("bones/Bones_GameModes.swf", fontNameOnes);
             T textureTens = canvas.LoadTextureFromSWF("bones/Bones_GameModes.swf", fontNameTens);
-            Transform _trans = trans * Transform.CreateScale(DoubleDigitsScale, DoubleDigitsScale);
-            canvas.DrawTexture(RedTeamX + DoubleDigitsOnesX, DoubleDigitsY, textureOnes, _trans, DrawPriorityEnum.FOREGROUND);
-            canvas.DrawTexture(RedTeamX + DoubleDigitsTensX, DoubleDigitsY, textureTens, _trans, DrawPriorityEnum.FOREGROUND);
+            Transform childTrans = trans * Transform.CreateScale(DoubleDigitsScale, DoubleDigitsScale);
+            canvas.DrawTexture(RedTeamX + DoubleDigitsOnesX, DoubleDigitsY, textureOnes, childTrans, DrawPriorityEnum.FOREGROUND);
+            canvas.DrawTexture(RedTeamX + DoubleDigitsTensX, DoubleDigitsY, textureTens, childTrans, DrawPriorityEnum.FOREGROUND);
         }
 
         //blue
         if(config.BlueScore < 10)
         {
-            string fontName = $"a_Digit{config.BlueScore}" + (BlueDigitFont ==""?"":"_") + BlueDigitFont;
+            string fontName = $"a_Digit{config.BlueScore}" + (BlueDigitFont == "" ? "" : "_") + BlueDigitFont;
             T texture = canvas.LoadTextureFromSWF("bones/Bones_GameModes.swf", fontName);
             canvas.DrawTexture(BlueTeamX, Y, texture, trans, DrawPriorityEnum.FOREGROUND);
         }
@@ -90,13 +90,13 @@ public class TeamScoreboard : IDeserializable, ISerializable, IDrawable
                 blueTen = 9;
             }
 
-            string fontNameOnes = $"a_Digit{blueOne}" + (BlueDigitFont==""?"":"_") + BlueDigitFont;
-            string fontNameTens = $"a_Digit{blueTen}" + (BlueDigitFont==""?"":"_") + BlueDigitFont;
+            string fontNameOnes = $"a_Digit{blueOne}" + (BlueDigitFont == "" ? "" : "_") + BlueDigitFont;
+            string fontNameTens = $"a_Digit{blueTen}" + (BlueDigitFont == "" ? "" : "_") + BlueDigitFont;
             T textureOnes = canvas.LoadTextureFromSWF("bones/Bones_GameModes.swf", fontNameOnes);
             T textureTens = canvas.LoadTextureFromSWF("bones/Bones_GameModes.swf", fontNameTens);
-            Transform tt = trans * Transform.CreateScale(DoubleDigitsScale, DoubleDigitsScale);
-            canvas.DrawTexture(BlueTeamX + DoubleDigitsOnesX, DoubleDigitsY, textureOnes, tt, DrawPriorityEnum.FOREGROUND);
-            canvas.DrawTexture(BlueTeamX + DoubleDigitsTensX, DoubleDigitsY, textureTens, tt, DrawPriorityEnum.FOREGROUND);
+            Transform childTrans = trans * Transform.CreateScale(DoubleDigitsScale, DoubleDigitsScale);
+            canvas.DrawTexture(BlueTeamX + DoubleDigitsOnesX, DoubleDigitsY, textureOnes, childTrans, DrawPriorityEnum.FOREGROUND);
+            canvas.DrawTexture(BlueTeamX + DoubleDigitsTensX, DoubleDigitsY, textureTens, childTrans, DrawPriorityEnum.FOREGROUND);
         }
     }
 }

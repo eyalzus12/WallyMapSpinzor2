@@ -34,7 +34,7 @@ public class Respawn : IDeserializable, ISerializable, IDrawable
         canvas.DrawCircle(
             X, Y,
             config.RadiusRespawn,
-            Initial?config.ColorInitialRespawn:ExpandedInit?config.ColorExpandedInitRespawn:config.ColorRespawn,
+            Initial ? config.ColorInitialRespawn : (ExpandedInit ? config.ColorExpandedInitRespawn : config.ColorRespawn),
             trans, DrawPriorityEnum.DATA
         );
     }

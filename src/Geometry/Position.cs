@@ -26,17 +26,17 @@ public readonly record struct Position(double X, double Y)
         new(p.X / f, p.Y / f);
     
     public Position DirTo(Position p) => p - this;
-    public Line LineTo(Position p) => new(X,Y,p.X,p.Y);
-    public Rect RectTo(Position p) => new(X,Y,p.X-X,p.Y-Y);
+    public Line LineTo(Position p) => new(X, Y, p.X, p.Y);
+    public Rect RectTo(Position p) => new(X, Y, p.X - X, p.Y - Y);
 
-    public Position Lerp(Position p, double f) => this*(1-f) + p*f;
+    public Position Lerp(Position p, double f) => this * (1 - f) + p * f;
 
-    public double Dot(Position p) => X*p.X + Y*p.Y;
-    public double Cross(Position p) => X*p.Y - Y*p.X;
+    public double Dot(Position p) => X * p.X + Y * p.Y;
+    public double Cross(Position p) => X * p.Y - Y * p.X;
 
     public Position Abs => new(Math.Abs(X), Math.Abs(Y));
 
-    public double LengthSquared => X*X + Y*Y;
+    public double LengthSquared => X * X + Y * Y;
     public double Length => Math.Sqrt(LengthSquared);
     public Position Normalized
     {get
@@ -50,8 +50,8 @@ public readonly record struct Position(double X, double Y)
     public double AngleTo(Position p) => Math.Atan2(this.Cross(p), this.Dot(p));
     public Position Rotated(double f)
     {
-        double sine = Math.Sin(f); double cosi = Math.Cos(f);
-        return new(X*cosi - Y*sine, X*sine + Y*cosi);
+        (double sine, double cosi) = Math.SinCos(f);
+        return new(X * cosi - Y *  sine, X * sine + Y * cosi);
     }
 
     //ASSUMES BOTH VECTORS ARE NORMALIZED
@@ -59,10 +59,10 @@ public readonly record struct Position(double X, double Y)
 
     public Position LerpWithCenter(Position p, Position center, double weight)
     {
-        Position nt = (this-center).Normalized;
-        Position np = (p-center).Normalized;
+        Position nt = (this - center).Normalized;
+        Position np = (p - center).Normalized;
         Position lp = nt.Slerp(np, weight);
-        Position df = (this-p).Abs;
-        return df*lp + center;
+        Position df = (this - p).Abs;
+        return df * lp + center;
     }
 }

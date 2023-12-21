@@ -72,16 +72,14 @@ public abstract class AbstractPressurePlateCollision : AbstractCollision
             T texture = canvas.LoadTextureFromSWF("bones/Bones_GameModes.swf", finalAssetName);
 
             //replace the dynamic transform with the moving platform's transform
-            (double DynX, double DynY) = (PlatID is null)?(0, 0):data.PlatIDDynamicOffset[PlatID];
-            (double _X, double _Y) = (PlatID is null)?(0, 0):data.PlatIDMovingPlatformOffset[PlatID];
-            _X -= DynX; _Y -= DynY;
+            (double dynX, double dynY) = (PlatID is null) ? (0, 0) : data.PlatIDDynamicOffset[PlatID];
+            (double platformX, double platformY) = (PlatID is null) ? (0, 0) : data.PlatIDMovingPlatformOffset[PlatID];
+
+            double assetX = platformX - dynX + AnimOffsetX - texture.W / 2.0;
+            double assetY = platformY - dynY + AnimOffsetY - texture.H / 2.0;
             
-            _X += AnimOffsetX; _Y += AnimOffsetY;
-            //for some reason brawlhalla further offsets the sprite by half its size
-            _X -= texture.W / 2.0; _Y -= texture.H / 2.0;
-            
-            Transform tt = trans * Transform.CreateFrom(x : _X, y : _Y, rot : AnimRotation);
-            canvas.DrawTexture(0, 0, texture, tt, DrawPriorityEnum.MIDGROUND);
+            Transform childTrans = trans * Transform.CreateFrom(x : assetX, y : assetY, rot : AnimRotation);
+            canvas.DrawTexture(0, 0, texture, childTrans, DrawPriorityEnum.MIDGROUND);
         }
     }
 }

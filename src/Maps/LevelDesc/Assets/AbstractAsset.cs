@@ -17,9 +17,9 @@ public abstract class AbstractAsset : ISerializable, IDeserializable, IDrawable
     {
         AssetName = e.GetNullableAttribute("AssetName");
         Rotation = e.GetFloatAttribute("Rotation", 0);
-        double Scale = e.GetFloatAttribute("Scale", 1);
-        ScaleX = e.GetFloatAttribute("ScaleX", Scale);
-        ScaleY = e.GetFloatAttribute("ScaleY", Scale);
+        double scale = e.GetFloatAttribute("Scale", 1);
+        ScaleX = e.GetFloatAttribute("ScaleX", scale);
+        ScaleY = e.GetFloatAttribute("ScaleY", scale);
         H = e.GetFloatAttribute("H", 0);
         W = e.GetFloatAttribute("W", 0);
         X = e.GetFloatAttribute("X", 0);
@@ -56,7 +56,6 @@ public abstract class AbstractAsset : ISerializable, IDeserializable, IDrawable
         if(Y != 0)
             e.SetAttributeValue("Y", Y.ToString());
     }
-
     
     public virtual void DrawOn<T>(ICanvas<T> canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data)
         where T : ITexture
@@ -68,15 +67,14 @@ public abstract class AbstractAsset : ISerializable, IDeserializable, IDrawable
 
         if(data.AssetDir is null)
             throw new InvalidOperationException("Attempting to draw an asset, but global data is missing the AssetDir.");
-
         
         string path = Path.Join(data.AssetDir, AssetName).ToString();
         T texture = canvas.LoadTextureFromPath(path);
-        double _scaleX = (W == 0)?1:W/texture.W;
-        double _scaleY = (H == 0)?1:H/texture.H;
-        Transform _trans = trans * Transform * Transform.CreateScale(_scaleX, _scaleY);
+        double scaleX = (W == 0) ? 1 : W / texture.W;
+        double scaleY = (H == 0) ? 1 : H / texture.H;
+        Transform childTrans = trans * Transform * Transform.CreateScale(scaleX, scaleY);
         
-        canvas.DrawTexture(0, 0, texture, _trans, DrawPriorityEnum.MIDGROUND);
+        canvas.DrawTexture(0, 0, texture, childTrans, DrawPriorityEnum.MIDGROUND);
     }
 
     public Transform Transform =>

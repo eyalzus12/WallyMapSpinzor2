@@ -94,8 +94,8 @@ public class LevelType : IDeserializable, ISerializable
         AIGroundLine = Utils.ParseFloatOrNull(e.Element("AIGroundLine")?.Value);
         ShadowTint = Utils.ParseIntOrNull(e.Element("ShadowTint")?.Value);
 
-        string _itemOverride = string.Join(',', e.Elements("ItemOverride").Select(ee => e.Value));
-        ItemOverride = _itemOverride==""?null:_itemOverride;
+        string itemOverrideString = string.Join(',', e.Elements("ItemOverride").Select(ee => e.Value));
+        ItemOverride = itemOverrideString == "" ? null : itemOverrideString;
     }
 
     public void Serialize(XElement e)
@@ -158,7 +158,7 @@ public class LevelType : IDeserializable, ISerializable
         if(ItemOverride is not null)
         {
             string[] split = ItemOverride.Split(',');
-            for(int i = 0; i < split.Length-1; i += 2)
+            for(int i = 0; i < split.Length - 1; i += 2)
             {
                 e.Add(new XElement("ItemOverride", $"{split[i]},{split[i+1]}"));
             }

@@ -24,19 +24,19 @@ public class Phase : AbstractKeyFrame
     public override (double, double) GetPosition() => KeyFrames[0].GetPosition();
 
     public override (double, double) LerpTo<T>
-    (T kk, Animation.AnimationDefaultValues defaults, double numframes, double frame, double fromTimeOffset, double toTimeOffset)
+    (T kk, Animation.ValueDefaults defaults, double numframes, double frame, double fromTimeOffset, double toTimeOffset)
     {
-        double _frame = BrawlhallaMath.SafeMod(frame, numframes);
+        double frameInRange = BrawlhallaMath.SafeMod(frame, numframes);
         //this happens when the animation resets and the time becomes close to 0
         //so as a hacky fix we readjust the time to match the "future"
-        if(_frame < StartFrame)
-            _frame += numframes;
+        if(frameInRange < StartFrame)
+            frameInRange += numframes;
         
         //find the keyframe pair
         int i = 0;
         for(; i < KeyFrames.Count; ++i)
         {
-            if(StartFrame + KeyFrames[i].GetStartFrame() >= _frame) break;
+            if(StartFrame + KeyFrames[i].GetStartFrame() >= frameInRange) break;
         }
 
         //need to interpolate from phase end

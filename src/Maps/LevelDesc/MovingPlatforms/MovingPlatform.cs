@@ -43,11 +43,11 @@ public class MovingPlatform : AbstractAsset
 
     public void StoreOffset(RenderData rd, TimeSpan time)
     {
-        (double _X, double _Y) = Animation.GetOffset(rd, time);
+        (double offX, double offY) = Animation.GetOffset(rd, time);
         //for some reason, dynamics need the first keyframe position of the animation removed
-        (double _AX, double _AY) = Animation.KeyFrames[0].GetPosition();
-        rd.PlatIDDynamicOffset[PlatID] = (_X - _AX, _Y - _AY);
-        rd.PlatIDMovingPlatformOffset[PlatID] = (_X + X, _Y + Y);
+        (double anmX, double anmY) = Animation.KeyFrames[0].GetPosition();
+        rd.PlatIDDynamicOffset[PlatID] = (offX - anmX, offY - anmY);
+        rd.PlatIDMovingPlatformOffset[PlatID] = (offX + X, offY + Y);
     }
 
     public override void DrawOn<T>(ICanvas<T> canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data) 
@@ -55,9 +55,9 @@ public class MovingPlatform : AbstractAsset
         if(!data.PlatIDMovingPlatformOffset.ContainsKey(PlatID))
             throw new InvalidOperationException($"Plat ID dictionary did not contain plat id {PlatID} when attempting to draw MovingPlatform. Make sure to call StoreOffset beforehand.");
 
-        (double _X, double _Y) = data.PlatIDMovingPlatformOffset[PlatID];
-        Transform tt = trans * Transform.CreateTranslate(_X, _Y);
+        (double offX, double offY) = data.PlatIDMovingPlatformOffset[PlatID];
+        Transform childTrans = trans * Transform.CreateTranslate(offX, offY);
         foreach(AbstractAsset a in Assets)
-            a.DrawOn(canvas, config, tt, time, data);
+            a.DrawOn(canvas, config, childTrans, time, data);
     }
 }

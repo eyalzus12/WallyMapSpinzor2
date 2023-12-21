@@ -35,9 +35,9 @@ public abstract class AbstractDynamic<T> : ISerializable, IDeserializable, IDraw
             throw new InvalidOperationException($"Plat ID dictionary was null when attempting to draw {GetType().Name}");
         if(!data.PlatIDDynamicOffset.ContainsKey(PlatID))
             throw new InvalidOperationException($"Plat ID dictionary did not contain plat id {PlatID} when attempting to draw {GetType().Name}. Make sure to call StoreOffset on all MovingPlatforms.");
-        (double _X, double _Y) = data.PlatIDDynamicOffset[PlatID];
-        Transform _trans = trans * Transform.CreateTranslate(X + _X, Y + _Y);
-        foreach(T c in Children)
-            c.DrawOn(canvas, config, _trans, time, data);
+        (double dynX, double dynY) = data.PlatIDDynamicOffset[PlatID];
+        Transform childTrans = trans * Transform.CreateTranslate(X + dynX, Y + dynY);
+        foreach(T child in Children)
+            child.DrawOn(canvas, config, childTrans, time, data);
     }
 }

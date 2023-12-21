@@ -77,17 +77,17 @@ public abstract class AbstractCollision : IDeserializable, ISerializable, IDrawa
 
         Flag =
             e.HasAttribute("Flag")
-            ?Enum.TryParse(e.GetAttribute("Flag").ToUpper(), out FlagEnum _Flag)
-                    ?_Flag
-                    :FlagEnum.DEFAULT
-            :null;
+            ? Enum.TryParse(e.GetAttribute("Flag").ToUpper(), out FlagEnum flag)
+                    ? flag
+                    : FlagEnum.DEFAULT
+            : null;
         
         ColorFlag  =
             e.HasAttribute("ColorFlag")
-            ?Enum.TryParse(e.GetAttribute("ColorFlag")?.ToUpper(), out ColorFlagEnum _ColorFlag)
-                ?_ColorFlag
-                :ColorFlagEnum.DEFAULT
-            :null;
+            ? Enum.TryParse(e.GetAttribute("ColorFlag")?.ToUpper(), out ColorFlagEnum colorFlag)
+                ? colorFlag
+                : ColorFlagEnum.DEFAULT
+            : null;
     }
 
     public virtual void Serialize(XElement e)
@@ -138,7 +138,7 @@ public abstract class AbstractCollision : IDeserializable, ISerializable, IDrawa
     
     private List<(double, double)>? _curve = null;
     
-    public void CalculateCurve(double XOff, double YOff)
+    public void CalculateCurve(double xOff, double yOff)
     {
         //no anchor
         if(AnchorX is null || AnchorY is null)
@@ -151,7 +151,7 @@ public abstract class AbstractCollision : IDeserializable, ISerializable, IDrawa
         if(_curve is not null)
             return;
         
-        _curve = BrawlhallaMath.CollisionQuad(X1, Y1, X2, Y2, (AnchorX??0) - XOff, (AnchorY??0) - YOff)
+        _curve = BrawlhallaMath.CollisionQuad(X1, Y1, X2, Y2, (AnchorX??0) - xOff, (AnchorY??0) - yOff)
             .Prepend((X1, Y1)) //to start the curve from X1,Y1
             .ToList();
     }
@@ -178,11 +178,11 @@ public abstract class AbstractCollision : IDeserializable, ISerializable, IDrawa
                 canvas.DrawLine(prevX, prevY, nextX, nextY, GetColor(config), trans, DrawPriorityEnum.DATA);
             else
             {
-                if(Team-1 >= config.ColorCollisionTeam.Length)
+                if(Team - 1 >= config.ColorCollisionTeam.Length)
                     throw new ArgumentOutOfRangeException($"Collision has team {Team} which is larger than max available collision team color {config.ColorCollisionTeam.Length}");
                 canvas.DrawLineMultiColor(
                         prevX, prevY, nextX, nextY,
-                        new[]{config.ColorCollisionTeam[Team-1], GetColor(config), config.ColorCollisionTeam[Team-1]},
+                        new[]{config.ColorCollisionTeam[Team - 1], GetColor(config), config.ColorCollisionTeam[Team-1]},
                         trans, DrawPriorityEnum.DATA
                     );
             }
@@ -194,8 +194,8 @@ public abstract class AbstractCollision : IDeserializable, ISerializable, IDrawa
                 {
                     //Normal overrides are NOT NORMALIZED
                     //This detail only affects SpongebobMap
-                    double normalStartX = (prevX + nextX)/2;
-                    double normalStartY = (prevY + nextY)/2;
+                    double normalStartX = (prevX + nextX) / 2;
+                    double normalStartY = (prevY + nextY) / 2;
                     double normalEndX = normalStartX + config.LengthCollisionNormal * NormalX;
                     double normalEndY = normalStartY + config.LengthCollisionNormal * NormalY;
 

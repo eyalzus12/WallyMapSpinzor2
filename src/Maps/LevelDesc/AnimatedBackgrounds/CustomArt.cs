@@ -16,9 +16,9 @@ public class CustomArt : IDeserializable, ISerializable
         string str = e.Value;
 
         Right = str.StartsWith("RIGHT:");
-        Type = Right?0:str.StartsWith("C:")?2:str.StartsWith("W:")?1:0;
+        Type = Right ? 0 : (str.StartsWith("C:") ? 2 : (str.StartsWith("W:") ? 1 : 0));
         
-        str = str[(str.IndexOf(':')+1)..];
+        str = str[(str.IndexOf(':') + 1)..];
         string[] parts = str.Split('/');
         FileName = parts[0];
         Name = parts[1];

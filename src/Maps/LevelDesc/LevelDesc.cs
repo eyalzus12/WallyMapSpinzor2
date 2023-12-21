@@ -162,9 +162,9 @@ public class LevelDesc : IDeserializable, ISerializable, IDrawable
                 Goal? goalred = Volumes.OfType<Goal>().Where(g => g.Team == 2).FirstOrDefault();
                 Goal? goalblue = Volumes.OfType<Goal>().Where(g => g.Team == 1).FirstOrDefault();
                 if(goalred is not null)
-                    canvas.DrawTexture((goalred.X+goalred.W)/2, (goalred.Y+goalred.H)/2, red, trans, DrawPriorityEnum.FOREGROUND);
+                    canvas.DrawTexture((goalred.X + goalred.W) / 2, (goalred.Y + goalred.H) / 2, red, trans, DrawPriorityEnum.FOREGROUND);
                 if(goalblue is not null)
-                    canvas.DrawTexture((goalblue.X+goalblue.W)/2, (goalblue.Y+goalblue.H)/2, blue, trans, DrawPriorityEnum.FOREGROUND);
+                    canvas.DrawTexture((goalblue.X + goalblue.W) / 2, (goalblue.Y + goalblue.H) / 2, blue, trans, DrawPriorityEnum.FOREGROUND);
             }
         }
         if(config.ScoringType == Enum.GetName(ScoringTypeEnum.HORDE))
@@ -174,7 +174,7 @@ public class LevelDesc : IDeserializable, ISerializable, IDrawable
                 int i = 0;
                 foreach(Goal g in Volumes.OfType<Goal>())
                 {
-                    int hits = (i >= config.DamageHordeDoors.Length)?0:config.DamageHordeDoors[i];
+                    int hits = (i >= config.DamageHordeDoors.Length) ? 0 : config.DamageHordeDoors[i];
 
                     if(hits < 24)
                     {
@@ -186,7 +186,7 @@ public class LevelDesc : IDeserializable, ISerializable, IDrawable
                             _ => canvas.LoadTextureFromSWF("bones/Bones_GameModes.swf", "a_ValhallaDoor_050"),
                         };
 
-                        canvas.DrawTexture((g.X+g.W)/2, (g.Y+g.H)/2, door, trans, DrawPriorityEnum.FOREGROUND);
+                        canvas.DrawTexture((g.X + g.W) / 2, (g.Y + g.H) / 2, door, trans, DrawPriorityEnum.FOREGROUND);
                     }
 
                     ++i;

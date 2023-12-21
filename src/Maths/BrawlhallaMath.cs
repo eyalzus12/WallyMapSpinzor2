@@ -9,7 +9,7 @@ public static class BrawlhallaMath
         if(!easeIn && !easeOut) return weight;
         
         if(easeIn && easeOut) weight *= 2;
-        int num1 = easePower == 2?0:1;
+        int num1 = easePower == 2 ? 0 : 1;
         double num2 = 1;
         if(easeIn && easeOut)
         {
@@ -26,11 +26,11 @@ public static class BrawlhallaMath
         {
             if(easePower == 2)
             {
-                weight = (weight-num1)*(weight-num1-2)-num1;
+                weight = (weight - num1) * (weight - num1 - 2) - num1;
             }
             else if(easePower > 2)
             {
-                weight = ((easePower&1)<<num1) + Math.Pow(weight - num1, easePower) - num1;
+                weight = ((easePower & 1) << num1) + Math.Pow(weight - num1, easePower) - num1;
             }
 
             if((easePower&1) == 0)
@@ -46,20 +46,20 @@ public static class BrawlhallaMath
     //does not include the starting point
     //when rendering pairs of points as a line, make sure to flip them so the first has a lower X
     //to get the correct collision normal
-    public static IEnumerable<(double, double)> CollisionQuad(double X1, double Y1, double X2, double Y2, double XA, double YA)
+    public static IEnumerable<(double, double)> CollisionQuad(double x1, double y1, double x2, double y2, double xa, double ya)
     {
-        int segments = (int)Math.Round((Math.Abs(X2-XA) + Math.Abs(X1-XA) + Math.Abs(Y2-YA) + Math.Abs(Y1-YA))/125);
+        int segments = (int)Math.Round((Math.Abs(x2 - xa) + Math.Abs(x1 - xa) + Math.Abs(y2 - ya) + Math.Abs(y1 - ya))/125);
         if(segments < 4) segments = 4;
         if(segments > 10) segments = 10;
         for(int i = 1; i <= segments; ++i)
         {
             double fraction = i / (double)segments;
-            double offsetX0 = (XA - X1) * fraction;
-            double offsetX1 = (XA - X2) * (1-fraction);
-            double newX = (X1 + offsetX0) * (1-fraction) + (X2 + offsetX1) * fraction;
-            double offsetY0 = (YA - Y1) * fraction;
-            double offsetY1 = (YA - Y2) * (1-fraction);
-            double newY = (Y1 + offsetY0) * (1-fraction) + (Y2 + offsetY1) * fraction;
+            double offsetX0 = (xa - x1) * fraction;
+            double offsetX1 = (xa - x2) * (1 - fraction);
+            double newX = (x1 + offsetX0) * (1 - fraction) + (x2 + offsetX1) * fraction;
+            double offsetY0 = (ya - y1) * fraction;
+            double offsetY1 = (ya - y2) * (1 - fraction);
+            double newY = (y1 + offsetY0) * (1 - fraction) + (y2 + offsetY1) * fraction;
             
             yield return (newX, newY);
         }
@@ -87,20 +87,20 @@ public static class BrawlhallaMath
         return x;
     }
 
-    public static double Length(double X, double Y) => Math.Sqrt(X*X + Y*Y);
-    public static (double, double) Normalize(double X, double Y)
+    public static double Length(double x, double y) => Math.Sqrt(x * x + y * y);
+    public static (double, double) Normalize(double x, double y)
     {
-        double len = Length(X,Y);
-        if(len == 0) return (0,0);
-        return (X/len, Y/len);
+        double len = Length(x, y);
+        if(len == 0) return (0, 0);
+        return (x / len, y / len);
     }
 
-    public static (double, double) Lerp(double X1, double Y1, double X2, double Y2, double w) 
+    public static (double, double) Lerp(double x1, double y1, double x2, double y2, double w) 
     {
         //uses the same rounding as brawlhalla
-        double _X = Math.Round((X1 * (1-w) + X2 * w) * 100) / 100;
-        double _Y = Math.Round((Y1 * (1-w) + Y2 * w) * 100) / 100;
-        return (_X, _Y);
+        double x = Math.Round((x1 * (1 - w) + x2 * w) * 100) / 100;
+        double y = Math.Round((y1 * (1 - w) + y2 * w) * 100) / 100;
+        return (x, y);
     }
     
     /*
@@ -126,27 +126,27 @@ public static class BrawlhallaMath
     }
     */
 
-    public static (double, double) LerpWithCenter(double X1, double Y1, double X2, double Y2, double XC, double YC, double w)
+    public static (double, double) LerpWithCenter(double x1, double y1, double x2, double y2, double xc, double yc, double w)
     {
         //code follows brawlhalla logic. brawlhalla does not do a proper Slerp
         //but instead assumes center will always be on the same X or Y as one of the keyframes
 
         double angle1;
-        if(X1 == XC)
+        if(x1 == xc)
         {
-            if(Y1 > YC) angle1 = Math.PI * 0.5;
+            if(y1 > yc) angle1 = Math.PI * 0.5;
             else angle1 = Math.PI * 1.5;
         }
-        else if(X1 < XC) angle1 = Math.PI;
+        else if(x1 < xc) angle1 = Math.PI;
         else angle1 = 0;
 
         double angle2;
-        if(X2 == XC)
+        if(x2 == xc)
         {
-            if(Y2 > YC) angle2 = Math.PI * 0.5;
+            if(y2 > yc) angle2 = Math.PI * 0.5;
             else angle2 = Math.PI * 1.5;
         }
-        else if(X2 < XC) angle2 = Math.PI;
+        else if(x2 < xc) angle2 = Math.PI;
         else if(angle1 == Math.PI * 1.5) angle2 = Math.PI * 2;
         else angle2 = 0;
 
@@ -154,9 +154,9 @@ public static class BrawlhallaMath
             angle1 = Math.PI * 2;
         
         double angle = angle1 * (1-w) + angle2 * w;
-        double _X = Math.Round((XC + Math.Abs(X1 - X2) * RoundedCos(angle)) * 100) / 100;
-        double _Y = Math.Round((YC + Math.Abs(Y1 - Y2) * RoundedSin(angle)) * 100) / 100;
-        return (_X, _Y);
+        double x = Math.Round((xc + Math.Abs(x1 - x2) * RoundedCos(angle)) * 100) / 100;
+        double y = Math.Round((yc + Math.Abs(y1 - y2) * RoundedSin(angle)) * 100) / 100;
+        return (x, y);
     }
 
     public static double SafeMod(double x, double m)
@@ -190,11 +190,11 @@ public static class BrawlhallaMath
                 {
                     double jump = boundW / 10;
                     (double fromX, double fromY) = (boundX + idx * jump, boundY);
-                    (double doorX, double doorY) = PickDoor(path, fromX < boundW/2)?(door1X,door1Y):(door2X,door2Y);
+                    (double doorX, double doorY) = PickDoor(path, fromX < boundW / 2) ? (door1X, door1Y) : (door2X, door2Y);
                     if(rand.Next() % 4 == 0)
                     {
-                        bool idfk = Math.Abs(doorX - fromX) >= boundW/3;
-                        (double midX, double midY) = (doorX + (((fromX > doorX)==idfk)?1:-1)*jump, 1000);
+                        bool idfk = Math.Abs(doorX - fromX) >= boundW / 3;
+                        (double midX, double midY) = (doorX + (((fromX > doorX) == idfk) ? 1 : -1) * jump, 1000);
                         yield return GeneratePathSegment(fromX, fromY, midX, midY, 2, true, true);
                         yield return GeneratePathSegment(midX, midY, doorX, doorY, 2, false, false);
                     }
@@ -208,7 +208,7 @@ public static class BrawlhallaMath
                 {
                     double jump = boundH / 10;
                     (double fromX, double fromY) = (boundX + boundW, boundY + idx * jump);
-                    (double doorX, double doorY) = PickDoor(path, false)?(door1X,door1Y):(door2X,door2Y);
+                    (double doorX, double doorY) = PickDoor(path, false) ? (door1X, door1Y) : (door2X, door2Y);
                     if(path == PathEnum.FAR && rand.Next() % 3 == 0)
                     {
                         (double midX1, double midY1) = (3220, 1050);
@@ -232,32 +232,32 @@ public static class BrawlhallaMath
                     double doorX, doorY;
                     double midX1, midY1 = 2800;
                     double midX2, midY2 = 1600;
-                    if(fromX < boundX + boundW/3)
+                    if(fromX < boundX + boundW / 3)
                     {
-                        (doorX, doorY) = PickDoor(PathEnum.CLOSE, true)?(door1X,door1Y):(door2X,door2Y);
+                        (doorX, doorY) = PickDoor(PathEnum.CLOSE, true) ? (door1X, door1Y) : (door2X, door2Y);
                         midX1 = -650;
                         midX2 = -550;
                     }
-                    else if(fromX > boundX + 2*boundW/3)
+                    else if(fromX > boundX + 2 * boundW / 3)
                     {
-                        (doorX, doorY) = PickDoor(PathEnum.CLOSE, false)?(door1X,door1Y):(door2X,door2Y);
+                        (doorX, doorY) = PickDoor(PathEnum.CLOSE, false) ? (door1X, door1Y) : (door2X, door2Y);
                         midX1 = 3320;
                         midX2 = 3220;
                     }
                     else
                     {
-                        (doorX, doorY) = PickDoor(PathEnum.CLOSE, fromX < boundX + boundW/2)?(door1X,door1Y):(door2X,door2Y);
-                        bool chance50 = rand.Next()%2 == 0;
-                        bool chance25 = rand.Next()%4 == 0;
+                        (doorX, doorY) = PickDoor(PathEnum.CLOSE, fromX < boundX + boundW / 2) ? (door1X, door1Y) : (door2X, door2Y);
+                        bool chance50 = rand.Next() % 2 == 0;
+                        bool chance25 = rand.Next() % 4 == 0;
                         if(chance50)
                         {
                             midX1 = 1201;
-                            midX2 = chance25?1461:1201;
+                            midX2 = chance25 ? 1461 : 1201;
                         }
                         else
                         {
                             midX1 = 1461;
-                            midX2 = chance25?1201:1461;
+                            midX2 = chance25 ? 1201 : 1461;
                         }
                     }
 
@@ -270,7 +270,7 @@ public static class BrawlhallaMath
                 {
                     double jump = boundH / 10;
                     (double fromX, double fromY) = (boundX, boundY + idx * jump);
-                    (double doorX, double doorY) = PickDoor(path, true)?(door1X,door1Y):(door2X,door2Y);
+                    (double doorX, double doorY) = PickDoor(path, true) ? (door1X, door1Y) : (door2X, door2Y);
                     if(path == PathEnum.FAR && rand.Next() % 3 == 0)
                     {
                         (double midX1, double midY1) = (-550, 1050);
@@ -292,36 +292,34 @@ public static class BrawlhallaMath
         }
 
         bool PickDoor(PathEnum path, bool left) =>
-            (path == PathEnum.ANY)
-                ?(rand.Next()%2 == 0)
-                :(left == (path == PathEnum.CLOSE));
+            (path == PathEnum.ANY) ? (rand.Next() % 2 == 0) : (left == (path == PathEnum.CLOSE));
 
-        IEnumerable<(double, double)> GeneratePathSegment(double X1, double Y1, double X2, double Y2, int parts, bool first, bool middle)
+        IEnumerable<(double, double)> GeneratePathSegment(double x1, double y1, double x2, double y2, int parts, bool first, bool middle)
         {
             if(first)
-                yield return (X1, Y1);
+                yield return (x1, y1);
 
             for(int i = 0; i < parts; ++i)
             {
                 if(i == parts-1 && !middle)
-                    yield return (X2, Y2);
+                    yield return (x2, y2);
                 else
                 {
-                    double _X1 = (X2 - X1)/(parts - i);
-                    double _Y1 = (Y2 - Y1)/(parts - i);
-                    double _X2 = _X1 + X1;
-                    double _Y2 = _Y1 + Y1;
-                    double signX = _X1>=0?1:-1;
-                    double signY = _Y1>=0?1:-1;
-                    _X1 = Math.Abs(_X1);
-                    _Y1 = Math.Abs(_Y1);
-                    _X1 = (_X1 < 15)?15:(150 < _X1)?150:_X1;
-                    _Y1 = (_Y1 < 15)?15:(150 < _Y1)?150:_Y1;
-                    _X1 *= signX;
-                    _Y1 *= signY;
-                    double RX = _X2 - _X1 + (rand.Next() % (2*_X1));
-                    double RY = _Y2 - _Y1 + (rand.Next() % (2*_Y1));
-                    yield return (RX, RY);
+                    double xseg1 = (x2 - x1) / (parts - i);
+                    double yseg1 = (y2 - y1) / (parts - i);
+                    double xseg2 = xseg1 + x1;
+                    double yseg2 = yseg1 + y1;
+                    double xSign = xseg1 >= 0 ? 1 : -1;
+                    double ySign = yseg1 >= 0 ? 1 : -1;
+                    xseg1 = Math.Abs(xseg1);
+                    yseg1 = Math.Abs(yseg1);
+                    xseg1 = (xseg1 < 15) ? 15 : ((150 < xseg1) ? 150 : xseg1);
+                    yseg1 = (yseg1 < 15) ? 15 : ((150 < yseg1) ? 150 : yseg1);
+                    xseg1 *= xSign;
+                    yseg1 *= ySign;
+                    double xResult = xseg2 - xseg1 + (rand.Next() % (2 * xseg1));
+                    double yResult = yseg2 - yseg1 + (rand.Next() % (2 * yseg1));
+                    yield return (xResult, yResult);
                 }
             }
         }

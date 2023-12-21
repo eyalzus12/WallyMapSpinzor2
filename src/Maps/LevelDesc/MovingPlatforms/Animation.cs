@@ -57,7 +57,7 @@ public class Animation : IDeserializable, ISerializable
         e.AddManySerialized(KeyFrames);
     }
 
-    public readonly record struct AnimationDefaultValues(double? CenterX, double? CenterY, bool EaseIn, bool EaseOut, int EasePower)
+    public readonly record struct ValueDefaults(double? CenterX, double? CenterY, bool EaseIn, bool EaseOut, int EasePower)
     {
 
     }
@@ -75,12 +75,12 @@ public class Animation : IDeserializable, ISerializable
         frame /= slowmult; //slow mult
         frame += StartFrame; //apply start frame
         frame += 1; //frames start at 1
-        double _frame = BrawlhallaMath.SafeMod(frame, numframes);
+        double frameInRange = BrawlhallaMath.SafeMod(frame, numframes);
         //find the keyframe pair
         int i = 0;
         for(; i < KeyFrames.Count; ++i)
         {
-            if(KeyFrames[i].GetStartFrame() >= _frame) break;
+            if(KeyFrames[i].GetStartFrame() >= frameInRange) break;
         }
 
         if(i == KeyFrames.Count) i = 0;

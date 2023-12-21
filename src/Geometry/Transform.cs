@@ -9,10 +9,10 @@ SkewY       ScaleY      TranslateY
 
 public readonly record struct Transform(double ScaleX, double SkewX, double SkewY, double ScaleY, double TranslateX, double TranslateY)
 {
-    public static readonly Transform IDENTITY = new(1,0,0,1,0,0);
-    public static readonly Transform ZERO = new(0,0,0,0,0,0);
-    public static readonly Transform FLIP_X = new(-1,0,0,1,0,0);
-    public static readonly Transform FLIP_Y = new(1,0,0,-1,0,0);
+    public static readonly Transform IDENTITY = new(1, 0, 0, 1, 0, 0);
+    public static readonly Transform ZERO = new(0, 0, 0, 0, 0, 0);
+    public static readonly Transform FLIP_X = new(-1, 0, 0, 1, 0, 0);
+    public static readonly Transform FLIP_Y = new(1, 0, 0, -1, 0, 0);
     
     public static Transform CreateTranslate(double x, double y) => IDENTITY with {TranslateX = x, TranslateY = y};
     public static Transform CreateScale(double scaleX, double scaleY) => IDENTITY with {ScaleX = scaleX, ScaleY = scaleY};
@@ -41,9 +41,9 @@ public readonly record struct Transform(double ScaleX, double SkewX, double Skew
 
     public static Transform operator *(Transform t, double f) => new
     (
-        t.ScaleX*f, t.SkewX*f,
-        t.SkewY*f, t.ScaleY*f,
-        t.TranslateX*f, t.TranslateY*f
+        t.ScaleX * f, t.SkewX * f,
+        t.SkewY * f, t.ScaleY * f,
+        t.TranslateX * f, t.TranslateY * f
     );
 
     public double Determinant => ScaleX * ScaleY - SkewX * SkewY;

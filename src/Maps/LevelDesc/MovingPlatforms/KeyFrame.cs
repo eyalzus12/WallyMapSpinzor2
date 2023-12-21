@@ -61,7 +61,7 @@ public class KeyFrame : AbstractKeyFrame
     public override (double, double) GetPosition() => (X, Y);
 
     public override (double, double) LerpTo<T>
-    (T kk, Animation.AnimationDefaultValues defaults, double numframes, double frame, double fromTimeOffset, double toTimeOffset)
+    (T kk, Animation.ValueDefaults defaults, double numframes, double frame, double fromTimeOffset, double toTimeOffset)
     {
         if(kk is KeyFrame k)
         {
@@ -79,7 +79,7 @@ public class KeyFrame : AbstractKeyFrame
                 throw new InvalidOperationException($"Invalid weight {w} during keyframe interpolation. From: {FrameNum}(+{fromTimeOffset}) To: {k.FrameNum}(+{toTimeOffset}). Keyframe time: {frame}. Frame diff: {fdiff}. Time diff: {tdiff}.");
             
             if(CenterX is not null || CenterY is not null || defaults.CenterX is not null || defaults.CenterY is not null)
-                return BrawlhallaMath.LerpWithCenter(X, Y, k.X, k.Y, CenterX??defaults.CenterX??0, CenterY??defaults.CenterY??0, w);
+                return BrawlhallaMath.LerpWithCenter(X, Y, k.X, k.Y, CenterX ?? defaults.CenterX ?? 0, CenterY ?? defaults.CenterY ?? 0, w);
             else
                 return BrawlhallaMath.Lerp(X, Y, k.X, k.Y, w);
         }
