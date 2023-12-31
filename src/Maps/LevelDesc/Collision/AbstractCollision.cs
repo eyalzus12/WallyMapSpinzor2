@@ -78,8 +78,8 @@ public abstract class AbstractCollision : IDeserializable, ISerializable, IDrawa
         Flag =
             e.HasAttribute("Flag")
             ? Enum.TryParse(e.GetAttribute("Flag").ToUpper(), out FlagEnum flag)
-                    ? flag
-                    : FlagEnum.DEFAULT
+                ? flag
+                : FlagEnum.DEFAULT
             : null;
         
         ColorFlag  =
