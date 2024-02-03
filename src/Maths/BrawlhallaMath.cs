@@ -103,17 +103,16 @@ public static class BrawlhallaMath
         return (x, y);
     }
 
-    /*
-    public static double Dot(double X1, double Y1, double X2, double Y2) => X1*Y1 + X2*Y2;
-    public static double Cross(double X1, double Y1, double X2, double Y2) => X1*Y2 - X2*Y1;
+    public static double Dot(double X1, double Y1, double X2, double Y2) => X1 * Y1 + X2 * Y2;
+    public static double Cross(double X1, double Y1, double X2, double Y2) => X1 * Y2 - X2 * Y1;
 
     public static double AngleBetween(double X1, double Y1, double X2, double Y2) =>
-        Math.Atan2(Cross(X1,Y1,X2,Y2), Dot(X1,Y1,X2,Y2));
-    
+        Math.Atan2(Cross(X1, Y1, X2, Y2), Dot(X1, Y1, X2, Y2));
+
     public static (double, double) Rotated(double X, double Y, double t)
     {
         (double sine, double cosi) = Math.SinCos(t);
-        return (X*cosi - Y*sine, X*sine + Y*cosi);
+        return (X * cosi - Y * sine, X * sine + Y * cosi);
     }
 
     public static (double, double) Slerp(double X1, double Y1, double X2, double Y2, double w)
@@ -121,10 +120,9 @@ public static class BrawlhallaMath
         (double _X1, double _Y1) = Normalize(X1, Y1);
         (double _X2, double _Y2) = Normalize(X2, Y2);
         double t = AngleBetween(_X1, _Y1, _X2, _Y2);
-        (double _X, double _Y) = Rotated(_X1, _Y1, w*t);
-        return (_X*Math.Abs(X1-X2), _Y*Math.Abs(Y1-Y2));
+        (double _X, double _Y) = Rotated(_X1, _Y1, w * t);
+        return (_X * Math.Abs(X1 - X2), _Y * Math.Abs(Y1 - Y2));
     }
-    */
 
     public static (double, double) LerpWithCenter(double x1, double y1, double x2, double y2, double xc, double yc, double w)
     {
