@@ -78,8 +78,8 @@ public abstract class AbstractCollision : IDeserializable, ISerializable, IDrawa
         Flag =
             e.HasAttribute("Flag")
             ? Enum.TryParse(e.GetAttribute("Flag").ToUpper(), out FlagEnum flag)
-                    ? flag
-                    : FlagEnum.DEFAULT
+                ? flag
+                : FlagEnum.DEFAULT
             : null;
         
         ColorFlag  =
@@ -192,12 +192,12 @@ public abstract class AbstractCollision : IDeserializable, ISerializable, IDrawa
             {
                 if(NormalX != 0 || NormalY != 0)
                 {
-                    //Normal overrides are NOT NORMALIZED
-                    //This detail only affects SpongebobMap
+                    //normals are auto-normalized since patch 8.03
+                    (double normalX, double normalY) = BrawlhallaMath.Normalize(NormalX, NormalY);
                     double normalStartX = (prevX + nextX) / 2;
                     double normalStartY = (prevY + nextY) / 2;
-                    double normalEndX = normalStartX + config.LengthCollisionNormal * NormalX;
-                    double normalEndY = normalStartY + config.LengthCollisionNormal * NormalY;
+                    double normalEndX = normalStartX + config.LengthCollisionNormal * normalX;
+                    double normalEndY = normalStartY + config.LengthCollisionNormal * normalY;
 
                     canvas.DrawLine(
                         normalStartX, normalStartY, normalEndX, normalEndY,
