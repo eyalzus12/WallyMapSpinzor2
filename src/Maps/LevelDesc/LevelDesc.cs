@@ -105,7 +105,7 @@ public class LevelDesc : IDeserializable, ISerializable, IDrawable
         where T : ITexture
     {
         if(trans != Transform.IDENTITY)
-            throw new ArgumentException("Initial non-camera transform must be the identity transform");
+            throw new ArgumentException("Initial transform must be the identity transformation. Do not pass the camera transformation inside. Instead, handle it on the rendering side.");
         // setup
         data.AssetDir = AssetDir;
         data.DefaultNumFrames = NumFrames;
