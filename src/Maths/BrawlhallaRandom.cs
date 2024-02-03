@@ -2,9 +2,9 @@ namespace WallyMapSpinzor2;
 
 public class BrawlhallaRandom
 {
-    public int Index{get; private set;}
-    public uint[] State{get; private set;} = new uint[16];
-    
+    public int Index { get; private set; }
+    public uint[] State { get; private set; } = new uint[16];
+
     public BrawlhallaRandom()
     {
         uint seed = Convert.ToUInt32(new Random().Next());
@@ -15,14 +15,14 @@ public class BrawlhallaRandom
     {
         Init(seed);
     }
-    
+
     public void Init(uint seed)
     {
         Index = 0;
         State[0] = seed;
-        for(uint i = 1; i < 16; ++i) State[i] = i + 0x6C078965u * (State[i-1] ^ (State[i-1] >> 30));
+        for (uint i = 1; i < 16; ++i) State[i] = i + 0x6c078965u * (State[i - 1] ^ (State[i - 1] >> 30));
     }
-    
+
     public uint Next()
     {
         uint a, b, c, d;
@@ -34,7 +34,7 @@ public class BrawlhallaRandom
         b ^= b >> 11;
         State[Index] = c ^ b;
         a = State[Index];
-        d = a ^ ((a << 5) & 0xDA442D24u);
+        d = a ^ ((a << 5) & 0xda442d24u);
         Index = (Index + 15) & 15;
         a = State[Index];
         State[Index] = a ^ (a << 2) ^ c ^ (c << 18) ^ d ^ (b << 28);

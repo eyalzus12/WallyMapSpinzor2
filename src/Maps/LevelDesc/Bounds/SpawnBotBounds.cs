@@ -4,10 +4,10 @@ namespace WallyMapSpinzor2;
 
 public class SpawnBotBounds : IDeserializable, ISerializable, IDrawable
 {
-    public double H{get; set;}
-    public double W{get; set;}
-    public double X{get; set;}
-    public double Y{get; set;}
+    public double H { get; set; }
+    public double W { get; set; }
+    public double X { get; set; }
+    public double Y { get; set; }
     public void Deserialize(XElement e)
     {
         H = e.GetFloatAttribute("H");
@@ -28,7 +28,7 @@ public class SpawnBotBounds : IDeserializable, ISerializable, IDrawable
     public void DrawOn<T>(ICanvas<T> canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data)
         where T : ITexture
     {
-        if(!config.ShowSpawnBotBounds) return;
+        if (!config.ShowSpawnBotBounds) return;
         canvas.DrawRect(X, Y, W, H, false, config.ColorSpawnBotBounds, trans, DrawPriorityEnum.DATA);
     }
 }

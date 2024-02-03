@@ -4,24 +4,30 @@ namespace WallyMapSpinzor2;
 
 public class LevelAnim : IDeserializable, ISerializable, IDrawable
 {
-    public string InstanceName{get; set;} = null!;
-    public string AssetName{get; set;} = null!;
-    public double X{get; set;}
-    public double Y{get; set;}
-    
+    private const string FOREGROUND = "am_Foreground";
+    private const string BACKGROUND = "am_Background";
+    private const string PLATFORM = "am_Platform";
+    private const string BRAWL_GOAL = "am_BrawlGoal";
+    private const string COLOR_PLATFORM = "am_ColorPlatform";
+
+    public string InstanceName { get; set; } = null!;
+    public string AssetName { get; set; } = null!;
+    public double X { get; set; }
+    public double Y { get; set; }
+
     //never actually used.
-    public bool Foreground => InstanceName.StartsWith("am_Foreground");
+    public bool Foreground => InstanceName.StartsWith(FOREGROUND);
     //never actually used.
-    public bool Background => InstanceName.StartsWith("am_Background");
+    public bool Background => InstanceName.StartsWith(BACKGROUND);
 
     //the next 3 are all added to some list. unclear what the list is relevant for.
 
     //indicates moving platform. format: am_Platform_[PlatID]
-    public bool Platform => InstanceName.StartsWith("am_Platform");
+    public bool Platform => InstanceName.StartsWith(PLATFORM);
     //indicates brawlball goal. if InstanceName contains "1", it is goal 1. otherwise goal 2.
-    public bool BrawlGoal => InstanceName.StartsWith("am_BrawlGoal");
+    public bool BrawlGoal => InstanceName.StartsWith(BRAWL_GOAL);
     //supposedly related to platform king, but code doesn't reveal much.
-    public bool ColorPlatform => InstanceName.StartsWith("am_ColorPlatform");
+    public bool ColorPlatform => InstanceName.StartsWith(COLOR_PLATFORM);
 
 
     public void Deserialize(XElement e)
@@ -40,7 +46,7 @@ public class LevelAnim : IDeserializable, ISerializable, IDrawable
         e.SetAttributeValue("Y", Y.ToString());
     }
 
-    #pragma warning disable 0162 //unreachable code warning
+#pragma warning disable 0162 //unreachable code warning
     public void DrawOn<T>(ICanvas<T> canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data)
         where T : ITexture
     {
@@ -48,10 +54,10 @@ public class LevelAnim : IDeserializable, ISerializable, IDrawable
         //it's more work to get working, so for now im commenting it out
         return;
 
-        if(!config.ShowAssets) return;
+        if (!config.ShowAssets) return;
         //NOTE: there may be some extra logic needed here. need to get renderer impl working to figure out.
         T texture = canvas.LoadTextureFromSWF("SFX_Level.swf", AssetName);
         canvas.DrawTexture(X, Y, texture, trans, DrawPriorityEnum.MIDGROUND);
     }
-    #pragma warning restore 0162 //unreachable code warning
+#pragma warning restore 0162 //unreachable code warning
 }

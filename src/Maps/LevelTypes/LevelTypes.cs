@@ -4,7 +4,7 @@ namespace WallyMapSpinzor2;
 
 public class LevelTypes : IDeserializable, ISerializable
 {
-    public List<LevelType> Levels{get; set;} = null!;
+    public List<LevelType> Levels { get; set; } = null!;
 
     public void Deserialize(XElement e)
     {

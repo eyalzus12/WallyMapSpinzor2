@@ -9,17 +9,17 @@ public static class MapXmlExtensions
     {
         T t = new(); t.Deserialize(e); return t;
     }
-    
+
     public static List<T> DeserializeChildrenOfType<T>(this XElement e) where T : IDeserializable, new()
         => e.Elements(typeof(T).Name).Select(DeserializeTo<T>).ToList();
-    
+
     //thanks to lazy evaluation, this won't go over everything
     public static T? DeserializeChildOfType<T>(this XElement e) where T : IDeserializable, new()
         => e.Elements(typeof(T).Name).Select(DeserializeTo<T>).FirstOrDefault();
-    
+
     public static List<AbstractCollision> DeserializeCollisionChildren(this XElement e) =>
         e.Elements().Select(DeserializeCollision).Where(c => c is not null).ToList()!;
-    
+
     public static AbstractCollision? DeserializeCollision(this XElement e) => e.Name.LocalName switch
     {
         nameof(HardCollision) => e.DeserializeTo<HardCollision>(),
@@ -88,15 +88,15 @@ public static class MapXmlExtensions
 
     public static void AddSerialized<T>(this XElement e, T t) where T : ISerializable
         => e.Add(t.SerializeToXElement());
-    
+
     public static void AddManySerialized<T>(this XElement e, IEnumerable<T> et) where T : ISerializable
     {
-        foreach(T t in et)
+        foreach (T t in et)
             e.AddSerialized(t);
     }
 
     public static void AddSerializedIfNotNull<T>(this XElement e, T? t) where T : ISerializable
     {
-        if(t is not null) e.AddSerialized(t);
+        if (t is not null) e.AddSerialized(t);
     }
 }

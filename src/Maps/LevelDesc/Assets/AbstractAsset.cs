@@ -4,18 +4,18 @@ namespace WallyMapSpinzor2;
 
 public abstract class AbstractAsset : ISerializable, IDeserializable, IDrawable
 {
-    public string? AssetName{get; set;}
-    public double Rotation{get; set;}
-    public double ScaleX{get; set;}
-    public double ScaleY{get; set;}
-    public double H{get; set;}
-    public double W{get; set;}
-    public double X{get; set;}
-    public double Y{get; set;}
+    public string? AssetName { get; set; }
+    public double Rotation { get; set; }
+    public double ScaleX { get; set; }
+    public double ScaleY { get; set; }
+    public double H { get; set; }
+    public double W { get; set; }
+    public double X { get; set; }
+    public double Y { get; set; }
 
     public virtual void Deserialize(XElement e)
     {
-        AssetName = e.GetNullableAttribute("AssetName");
+        AssetName = e.GetAttributeOrNull("AssetName");
         Rotation = e.GetFloatAttribute("Rotation", 0);
         double scale = e.GetFloatAttribute("Scale", 1);
         ScaleX = e.GetFloatAttribute("ScaleX", scale);
@@ -28,61 +28,61 @@ public abstract class AbstractAsset : ISerializable, IDeserializable, IDrawable
 
     public virtual void Serialize(XElement e)
     {
-        if(AssetName is not null)
+        if (AssetName is not null)
             e.SetAttributeValue("AssetName", AssetName);
 
-        if(Rotation != 0)
+        if (Rotation != 0)
             e.SetAttributeValue("Rotation", Rotation.ToString());
 
-        if(ScaleX == ScaleY)
+        if (ScaleX == ScaleY)
         {
-            if(ScaleX != 1)
+            if (ScaleX != 1)
                 e.SetAttributeValue("Scale", ScaleX.ToString());
         }
         else
         {
-            if(ScaleX != 1)
+            if (ScaleX != 1)
                 e.SetAttributeValue("ScaleX", ScaleX.ToString());
-            if(ScaleY != 1)
+            if (ScaleY != 1)
                 e.SetAttributeValue("ScaleY", ScaleY.ToString());
         }
-        
-        if(H != 0)
+
+        if (H != 0)
             e.SetAttributeValue("H", H.ToString());
-        if(W != 0)
+        if (W != 0)
             e.SetAttributeValue("W", W.ToString());
-        if(X != 0)
+        if (X != 0)
             e.SetAttributeValue("X", X.ToString());
-        if(Y != 0)
+        if (Y != 0)
             e.SetAttributeValue("Y", Y.ToString());
     }
-    
+
     public virtual void DrawOn<T>(ICanvas<T> canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data)
         where T : ITexture
     {
-        if(!config.ShowAssets)
+        if (!config.ShowAssets)
             return;
 
-        if(AssetName is null) return;
+        if (AssetName is null) return;
 
-        if(data.AssetDir is null)
+        if (data.AssetDir is null)
             throw new InvalidOperationException("Attempting to draw an asset, but global data is missing the AssetDir.");
-        
+
         string path = Path.Join(data.AssetDir, AssetName).ToString();
         T texture = canvas.LoadTextureFromPath(path);
         double scaleX = (W == 0) ? 1 : W / texture.W;
         double scaleY = (H == 0) ? 1 : H / texture.H;
         Transform childTrans = trans * Transform * Transform.CreateScale(scaleX, scaleY);
-        
+
         canvas.DrawTexture(0, 0, texture, childTrans, DrawPriorityEnum.MIDGROUND);
     }
 
     public Transform Transform =>
         Transform.CreateFrom(
-            x : X,
-            y : Y, 
-            rot : Rotation * Math.PI / 180,
-            scaleX : ScaleX,
-            scaleY : ScaleY
+            x: X,
+            y: Y,
+            rot: Rotation * Math.PI / 180,
+            scaleX: ScaleX,
+            scaleY: ScaleY
         );
 }

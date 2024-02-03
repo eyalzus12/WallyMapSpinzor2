@@ -2,12 +2,12 @@ using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
 
-public abstract class AbstractItemSpawn: IDeserializable, ISerializable, IDrawable
+public abstract class AbstractItemSpawn : IDeserializable, ISerializable, IDrawable
 {
-    public double H{get; set;}
-    public double W{get; set;}
-    public double X{get; set;}
-    public double Y{get; set;}
+    public double H { get; set; }
+    public double W { get; set; }
+    public double X { get; set; }
+    public double Y { get; set; }
 
     public void Deserialize(XElement e)
     {
@@ -19,24 +19,24 @@ public abstract class AbstractItemSpawn: IDeserializable, ISerializable, IDrawab
 
     public void Serialize(XElement e)
     {
-        if(H != DefaultH)
+        if (H != DefaultH)
             e.SetAttributeValue("H", H.ToString());
-        if(W != DefaultW)
+        if (W != DefaultW)
             e.SetAttributeValue("W", W.ToString());
 
         e.SetAttributeValue("X", X.ToString());
         e.SetAttributeValue("Y", Y.ToString());
     }
 
-    public abstract double DefaultX{get;}
-    public abstract double DefaultY{get;}
-    public abstract double DefaultW{get;}
-    public abstract double DefaultH{get;}
+    public abstract double DefaultX { get; }
+    public abstract double DefaultY { get; }
+    public abstract double DefaultW { get; }
+    public abstract double DefaultH { get; }
 
     public virtual void DrawOn<T>(ICanvas<T> canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data)
         where T : ITexture
     {
-        if(!config.ShowItemSpawn) return;
+        if (!config.ShowItemSpawn) return;
         canvas.DrawRect(X, Y, W, H, true, GetColor(config), trans, DrawPriorityEnum.DATA);
     }
 

@@ -5,10 +5,10 @@ namespace WallyMapSpinzor2;
 public abstract class AbstractDynamic<T> : ISerializable, IDeserializable, IDrawable
     where T : ISerializable, IDeserializable, IDrawable
 {
-    public string PlatID{get; set;} = null!;
-    public double X{get; set;}
-    public double Y{get; set;}
-    public List<T> Children{get; set;} = null!;
+    public string PlatID { get; set; } = null!;
+    public double X { get; set; }
+    public double Y { get; set; }
+    public List<T> Children { get; set; } = null!;
 
     public abstract void DeserializeChildren(XElement element);
 
@@ -28,16 +28,16 @@ public abstract class AbstractDynamic<T> : ISerializable, IDeserializable, IDraw
         e.AddManySerialized(Children);
     }
 
-    public virtual void DrawOn<E>(ICanvas<E> canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data) 
+    public virtual void DrawOn<E>(ICanvas<E> canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data)
         where E : ITexture
     {
-        if(data.PlatIDDynamicOffset is null)
+        if (data.PlatIDDynamicOffset is null)
             throw new InvalidOperationException($"Plat ID dictionary was null when attempting to draw {GetType().Name}");
-        if(!data.PlatIDDynamicOffset.ContainsKey(PlatID))
+        if (!data.PlatIDDynamicOffset.ContainsKey(PlatID))
             throw new InvalidOperationException($"Plat ID dictionary did not contain plat id {PlatID} when attempting to draw {GetType().Name}. Make sure to call StoreOffset on all MovingPlatforms.");
         (double dynX, double dynY) = data.PlatIDDynamicOffset[PlatID];
         Transform childTrans = trans * Transform.CreateTranslate(X + dynX, Y + dynY);
-        foreach(T child in Children)
+        foreach (T child in Children)
             child.DrawOn(canvas, config, childTrans, time, data);
     }
 }

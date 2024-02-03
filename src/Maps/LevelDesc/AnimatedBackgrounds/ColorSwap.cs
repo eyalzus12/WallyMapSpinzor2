@@ -4,20 +4,20 @@ namespace WallyMapSpinzor2;
 
 public class ColorSwap : IDeserializable, ISerializable
 {
-    public int OldColor{get; set;}
-    public int NewColor{get; set;}
+    public int OldColor { get; set; }
+    public int NewColor { get; set; }
 
     public void Deserialize(XElement e)
     {
         string str = e.Value;
         string[] parts = str.Split('=');
-        if(parts.Length != 2)
+        if (parts.Length != 2)
         {
             //TODO: log error
         }
 
         string oldColor = parts[0];
-        if(oldColor[0] != '0')
+        if (oldColor[0] != '0')
         {
             //this lookups into a map of GfxType, but that map is never given values?
         }
@@ -27,7 +27,7 @@ public class ColorSwap : IDeserializable, ISerializable
         }
 
         string newColor = parts[1];
-        if(newColor[0] != '0')
+        if (newColor[0] != '0')
         {
             //this lookups into a map of GfxType, but that map is never given values?
         }

@@ -2,11 +2,12 @@ using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
 
+// Not a real brawlhalla object. Just a way for us to store all of the data in the same place.
 public class Level : IDeserializable, ISerializable, IDrawable
 {
-    public LevelDesc Desc{get; set;}
-    public LevelType Type{get; set;}
-    public HashSet<string> Playlists{get; set;} = null!;
+    public LevelDesc Desc { get; set; }
+    public LevelType Type { get; set; }
+    public HashSet<string> Playlists { get; set; } = null!;
 
     public Level(LevelDesc ld, LevelTypes lt, LevelSetTypes lst)
     {
@@ -23,18 +24,18 @@ public class Level : IDeserializable, ISerializable, IDrawable
     public void SetLevelName(LevelSetTypes types, string name)
     {
         //update in playlists
-        foreach(LevelSetType lst in types.Playlists)
+        foreach (LevelSetType lst in types.Playlists)
         {
-            if(!Playlists.Contains(lst.LevelSetName))
+            if (!Playlists.Contains(lst.LevelSetName))
                 continue;
             int idx = lst.LevelTypes.IndexOf(Desc.LevelName);
-            if(idx != -1)
+            if (idx != -1)
                 lst.LevelTypes[idx] = name;
             else
                 lst.LevelTypes.Add(name);
         }
         //update desc and type
-        Desc.LevelName = name; 
+        Desc.LevelName = name;
         Type.LevelName = name;
     }
 
@@ -42,7 +43,7 @@ public class Level : IDeserializable, ISerializable, IDrawable
     {
         Desc = e.DeserializeChildOfType<LevelDesc>() ?? throw new ArgumentException("Given XML file does not contain a LevelDesc element. Invalid save format.");
         Type = e.DeserializeChildOfType<LevelType>() ?? throw new ArgumentException("Given XML file does not contain a LevelType element. Invalid save format.");
-        Playlists = e.Element("Playlists")?.Value.Split(",").ToHashSet() ?? throw new ArgumentException("Given XML file does not contain a Playlists element. Invalid save format.");
+        Playlists = e.GetElementValue("Playlists")?.Split(",").ToHashSet() ?? throw new ArgumentException("Given XML file does not contain a Playlists element. Invalid save format.");
     }
 
     public void Serialize(XElement e)
@@ -52,17 +53,17 @@ public class Level : IDeserializable, ISerializable, IDrawable
         e.Add(new XElement("Playlists", string.Join(",", Playlists)));
     }
 
-    public void DrawOn<T>(ICanvas<T> canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data) 
+    public void DrawOn<T>(ICanvas<T> canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data)
         where T : ITexture
     {
         Desc.DrawOn(canvas, config, trans, time, data);
 
-        if(!config.ShowKillBounds) return;
+        if (!config.ShowKillBounds) return;
         double killX = Desc.CameraBounds.X - Type.LeftKill ?? 0;
         double killY = Desc.CameraBounds.Y - Type.TopKill ?? 0;
         double killW = Desc.CameraBounds.W + Type.RightKill + Type.LeftKill ?? 0;
         double killH = Desc.CameraBounds.H + Type.BottomKill + Type.TopKill ?? 0;
-        
+
         canvas.DrawRect(killX, killY, killW, killH, false, config.ColorKillBounds, trans, DrawPriorityEnum.DATA);
     }
 }

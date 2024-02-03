@@ -4,10 +4,10 @@ namespace WallyMapSpinzor2;
 
 public class CameraBounds : IDeserializable, ISerializable, IDrawable
 {
-    public double H{get; set;}
-    public double W{get; set;}
-    public double X{get; set;}
-    public double Y{get; set;}
+    public double H { get; set; }
+    public double W { get; set; }
+    public double X { get; set; }
+    public double Y { get; set; }
     public void Deserialize(XElement e)
     {
         H = e.GetFloatAttribute("H", 0);
@@ -32,7 +32,7 @@ public class CameraBounds : IDeserializable, ISerializable, IDrawable
         data.BackgroundRect_W = W;
         data.BackgroundRect_H = H;
 
-        if(!config.ShowCameraBounds) return;
+        if (!config.ShowCameraBounds) return;
         canvas.DrawRect(X, Y, W, H, false, config.ColorCameraBounds, trans, DrawPriorityEnum.DATA);
     }
 }

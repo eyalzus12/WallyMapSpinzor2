@@ -4,15 +4,15 @@ namespace WallyMapSpinzor2;
 
 public class KeyFrame : AbstractKeyFrame
 {
-    public int FrameNum{get; set;}
-    public double Rotation{get; set;}
-    public double? CenterX{get; set;}
-    public double? CenterY{get; set;}
-    public bool EaseIn{get; set;}
-    public bool EaseOut{get; set;}
-    public int EasePower{get; set;}
-    public double X{get; set;}
-    public double Y{get; set;}
+    public int FrameNum { get; set; }
+    public double Rotation { get; set; }
+    public double? CenterX { get; set; }
+    public double? CenterY { get; set; }
+    public bool EaseIn { get; set; }
+    public bool EaseOut { get; set; }
+    public int EasePower { get; set; }
+    public double X { get; set; }
+    public double Y { get; set; }
 
     public bool HasCenter => CenterX is not null || CenterY is not null;
 
@@ -21,7 +21,7 @@ public class KeyFrame : AbstractKeyFrame
         FrameNum = e.GetIntAttribute("FrameNum", 0);
         //Unlike other rotations, this one doesn't get translated to radians.
         Rotation = e.GetFloatAttribute("Rotation", 0);
-        if(e.HasAttribute("CenterX") || e.HasAttribute("CenterY"))
+        if (e.HasAttribute("CenterX") || e.HasAttribute("CenterY"))
         {
             CenterX = e.GetFloatAttribute("CenterX", 0);
             CenterY = e.GetFloatAttribute("CenterY", 0);
@@ -36,57 +36,56 @@ public class KeyFrame : AbstractKeyFrame
     public override void Serialize(XElement e)
     {
         e.SetAttributeValue("FrameNum", FrameNum.ToString());
-        if(Rotation != 0)
+        if (Rotation != 0)
             e.SetAttributeValue("Rotation", Rotation.ToString());
-        if(HasCenter)
+        if (HasCenter)
         {
-            if(CenterX != 0 || CenterY == 0)
-                e.SetAttributeValue("CenterX", (CenterX??0).ToString());
-            if(CenterY != 0 || CenterX == 0)
-                e.SetAttributeValue("CenterY", (CenterY??0).ToString());
+            if (CenterX != 0 || CenterY == 0)
+                e.SetAttributeValue("CenterX", (CenterX ?? 0).ToString());
+            if (CenterY != 0 || CenterX == 0)
+                e.SetAttributeValue("CenterY", (CenterY ?? 0).ToString());
         }
-        if(EaseIn)
+        if (EaseIn)
             e.SetAttributeValue("EaseIn", EaseIn.ToString().ToLower());
-        if(EaseOut)
+        if (EaseOut)
             e.SetAttributeValue("EaseOut", EaseOut.ToString().ToLower());
-        if(EasePower != 2)
+        if (EasePower != 2)
             e.SetAttributeValue("EasePower", EasePower.ToString());
-        if(X != 0)
+        if (X != 0)
             e.SetAttributeValue("X", X.ToString());
-        if(Y != 0)
+        if (Y != 0)
             e.SetAttributeValue("Y", Y.ToString());
     }
 
     public override double GetStartFrame() => FrameNum;
     public override (double, double) GetPosition() => (X, Y);
 
-    public override (double, double) LerpTo<T>
-    (T kk, Animation.ValueDefaults defaults, double numframes, double frame, double fromTimeOffset, double toTimeOffset)
+    public override (double, double) LerpTo(AbstractKeyFrame keyFrame, Animation.ValueDefaults defaults, double numframes, double frame, double fromTimeOffset, double toTimeOffset)
     {
-        if(kk is KeyFrame k)
+        if (keyFrame is KeyFrame k)
         {
             double fdiff = (k.FrameNum + toTimeOffset) - (FrameNum + fromTimeOffset);
             fdiff = BrawlhallaMath.SafeMod(fdiff, numframes);
             double tdiff = (frame) - (FrameNum + fromTimeOffset);
             tdiff = BrawlhallaMath.SafeMod(tdiff, numframes);
-            double w = tdiff/fdiff;
+            double w = tdiff / fdiff;
             w = BrawlhallaMath.EaseWeight(w,
                 EaseIn || defaults.EaseIn,
                 EaseOut || defaults.EaseOut,
                 EasePower == 2 ? defaults.EasePower : EasePower
             );
-            if(w < 0 || 1 < w)
+            if (w < 0 || 1 < w)
                 throw new InvalidOperationException($"Invalid weight {w} during keyframe interpolation. From: {FrameNum}(+{fromTimeOffset}) To: {k.FrameNum}(+{toTimeOffset}). Keyframe time: {frame}. Frame diff: {fdiff}. Time diff: {tdiff}.");
-            
-            if(CenterX is not null || CenterY is not null || defaults.CenterX is not null || defaults.CenterY is not null)
+
+            if (CenterX is not null || CenterY is not null || defaults.CenterX is not null || defaults.CenterY is not null)
                 return BrawlhallaMath.LerpWithCenter(X, Y, k.X, k.Y, CenterX ?? defaults.CenterX ?? 0, CenterY ?? defaults.CenterY ?? 0, w);
             else
                 return BrawlhallaMath.Lerp(X, Y, k.X, k.Y, w);
         }
-        else if(kk is Phase p)
+        else if (keyFrame is Phase p)
         {
             //has 0 frame num on first keyframe
-            if(p.KeyFrames[0].GetStartFrame() == 0)
+            if (p.KeyFrames[0].GetStartFrame() == 0)
             {
                 return LerpTo(p.KeyFrames[0], defaults, numframes, frame, fromTimeOffset, toTimeOffset + p.StartFrame);
             }
@@ -94,9 +93,9 @@ public class KeyFrame : AbstractKeyFrame
             else
             {
                 //phase hasn't started. remain in position.
-                if(toTimeOffset + p.StartFrame >= BrawlhallaMath.SafeMod(frame, numframes))
+                if (toTimeOffset + p.StartFrame >= BrawlhallaMath.SafeMod(frame, numframes))
                 {
-                    return (X,Y);
+                    return (X, Y);
                 }
                 //phase started
                 else
@@ -110,6 +109,6 @@ public class KeyFrame : AbstractKeyFrame
             }
         }
         else
-            throw new ArgumentException($"Keyframe cannot interpolate to unknown abstract keyframe type {kk.GetType().Name}");
+            throw new ArgumentException($"Keyframe cannot interpolate to unknown abstract keyframe type {keyFrame.GetType().Name}");
     }
 }

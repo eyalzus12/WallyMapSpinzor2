@@ -18,9 +18,11 @@ public static class Sample
             //write to file.
             LevelDesc levelDesc = element.DeserializeTo<LevelDesc>();
             using FileStream toFile = new(ldDestPath, FileMode.Create, FileAccess.Write);
-            using XmlWriter xmlw = XmlWriter.Create(toFile, new(){
+            using XmlWriter xmlw = XmlWriter.Create(toFile, new()
+            {
                 OmitXmlDeclaration = true, //no xml header
-                IndentChars = "    ", Indent = true, //indent with four spaces
+                IndentChars = "    ",
+                Indent = true, //indent with four spaces
                 NewLineChars = "\n", //use UNIX line endings
                 Encoding = new UTF8Encoding(false) //use UTF8 (no BOM) encoding
             });
@@ -36,9 +38,11 @@ public static class Sample
 
             LevelTypes levelTypes = element.DeserializeTo<LevelTypes>();
             using FileStream toFile = new(ltDestPath, FileMode.Create, FileAccess.Write);
-            using XmlWriter xmlw = XmlWriter.Create(toFile, new(){
+            using XmlWriter xmlw = XmlWriter.Create(toFile, new()
+            {
                 OmitXmlDeclaration = true,
-                IndentChars = "    ", Indent = true,
+                IndentChars = "    ",
+                Indent = true,
                 NewLineChars = "\n",
                 Encoding = new UTF8Encoding(false)
             });

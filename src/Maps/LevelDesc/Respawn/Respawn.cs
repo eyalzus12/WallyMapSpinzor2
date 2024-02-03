@@ -4,10 +4,11 @@ namespace WallyMapSpinzor2;
 
 public class Respawn : IDeserializable, ISerializable, IDrawable
 {
-    public bool Initial{get; set;}
-    public bool ExpandedInit{get; set;}
-    public double X{get; set;}
-    public double Y{get; set;}
+    public bool Initial { get; set; }
+    public bool ExpandedInit { get; set; }
+    public double X { get; set; }
+    public double Y { get; set; }
+
     public void Deserialize(XElement e)
     {
         Initial = e.GetBoolAttribute("Initial", false);
@@ -18,19 +19,19 @@ public class Respawn : IDeserializable, ISerializable, IDrawable
 
     public void Serialize(XElement e)
     {
-        if(Initial)
+        if (Initial)
             e.SetAttributeValue("Initial", Initial);
-        if(ExpandedInit)
+        if (ExpandedInit)
             e.SetAttributeValue("ExpandedInit", ExpandedInit);
         e.SetAttributeValue("X", X.ToString());
         e.SetAttributeValue("Y", Y.ToString());
     }
 
-    
+
     public void DrawOn<T>(ICanvas<T> canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data)
         where T : ITexture
     {
-        if(!config.ShowRespawn) return;
+        if (!config.ShowRespawn) return;
         canvas.DrawCircle(
             X, Y,
             config.RadiusRespawn,

@@ -4,9 +4,9 @@ namespace WallyMapSpinzor2;
 
 public class Phase : AbstractKeyFrame
 {
-    public int StartFrame{get; set;}
+    public int StartFrame { get; set; }
 
-    public List<AbstractKeyFrame> KeyFrames{get; set;} = null!;
+    public List<AbstractKeyFrame> KeyFrames { get; set; } = null!;
 
     public override void Deserialize(XElement e)
     {
@@ -23,31 +23,30 @@ public class Phase : AbstractKeyFrame
     public override double GetStartFrame() => StartFrame + KeyFrames[0].GetStartFrame();
     public override (double, double) GetPosition() => KeyFrames[0].GetPosition();
 
-    public override (double, double) LerpTo<T>
-    (T kk, Animation.ValueDefaults defaults, double numframes, double frame, double fromTimeOffset, double toTimeOffset)
+    public override (double, double) LerpTo(AbstractKeyFrame keyFrame, Animation.ValueDefaults defaults, double numframes, double frame, double fromTimeOffset, double toTimeOffset)
     {
         double frameInRange = BrawlhallaMath.SafeMod(frame, numframes);
         //this happens when the animation resets and the time becomes close to 0
         //so as a hacky fix we readjust the time to match the "future"
-        if(frameInRange < StartFrame)
+        if (frameInRange < StartFrame)
             frameInRange += numframes;
-        
+
         //find the keyframe pair
         int i = 0;
-        for(; i < KeyFrames.Count; ++i)
+        for (; i < KeyFrames.Count; ++i)
         {
-            if(StartFrame + KeyFrames[i].GetStartFrame() >= frameInRange) break;
+            if (StartFrame + KeyFrames[i].GetStartFrame() >= frameInRange) break;
         }
 
         //need to interpolate from phase end
-        if(i == KeyFrames.Count)
+        if (i == KeyFrames.Count)
         {
-            return KeyFrames.Last().LerpTo(kk, defaults, numframes, frame, fromTimeOffset + StartFrame, toTimeOffset);
+            return KeyFrames.Last().LerpTo(keyFrame, defaults, numframes, frame, fromTimeOffset + StartFrame, toTimeOffset);
         }
         //interpolation is inside phase
         else
         {
-            return KeyFrames[i-1].LerpTo(KeyFrames[i], defaults, numframes, frame, fromTimeOffset + StartFrame, toTimeOffset + StartFrame);
+            return KeyFrames[i - 1].LerpTo(KeyFrames[i], defaults, numframes, frame, fromTimeOffset + StartFrame, toTimeOffset + StartFrame);
         }
     }
 }

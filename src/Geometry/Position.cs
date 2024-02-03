@@ -2,7 +2,7 @@ namespace WallyMapSpinzor2;
 
 public readonly record struct Position(double X, double Y)
 {
-    public static readonly Position ZERO = new(0,0);
+    public static readonly Position ZERO = new(0, 0);
 
     public override string ToString() => $"({X}, {Y})";
 
@@ -24,7 +24,7 @@ public readonly record struct Position(double X, double Y)
         new(f * p.X, f * p.Y);
     public static Position operator /(Position p, double f) =>
         new(p.X / f, p.Y / f);
-    
+
     public Position DirTo(Position p) => p - this;
     public Line LineTo(Position p) => new(X, Y, p.X, p.Y);
     public Rect RectTo(Position p) => new(X, Y, p.X - X, p.Y - Y);
@@ -39,19 +39,21 @@ public readonly record struct Position(double X, double Y)
     public double LengthSquared => X * X + Y * Y;
     public double Length => Math.Sqrt(LengthSquared);
     public Position Normalized
-    {get
     {
-        double len = Length;
-        if(len == 0) return ZERO;
-        return this / len;
-    }}
+        get
+        {
+            double len = Length;
+            if (len == 0) return ZERO;
+            return this / len;
+        }
+    }
 
     public double DistanceTo(Position p) => DirTo(p).Length;
     public double AngleTo(Position p) => Math.Atan2(this.Cross(p), this.Dot(p));
     public Position Rotated(double f)
     {
         (double sine, double cosi) = Math.SinCos(f);
-        return new(X * cosi - Y *  sine, X * sine + Y * cosi);
+        return new(X * cosi - Y * sine, X * sine + Y * cosi);
     }
 
     //ASSUMES BOTH VECTORS ARE NORMALIZED

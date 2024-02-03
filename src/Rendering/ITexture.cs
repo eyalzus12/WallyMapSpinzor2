@@ -2,6 +2,6 @@ namespace WallyMapSpinzor2;
 
 public interface ITexture
 {
-    int W{get;}
-    int H{get;}
+    int W { get; }
+    int H { get; }
 }

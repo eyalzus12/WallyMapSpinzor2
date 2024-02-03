@@ -10,7 +10,5 @@ public abstract class AbstractKeyFrame : IDeserializable, ISerializable
     public abstract double GetStartFrame();
     public abstract (double, double) GetPosition();
 
-    public abstract (double, double) LerpTo<T>
-    (T kk, Animation.ValueDefaults defaults, double numframes, double frame, double fromTimeOffset, double toTimeOffset)
-    where T : AbstractKeyFrame;
+    public abstract (double, double) LerpTo(AbstractKeyFrame keyframe, Animation.ValueDefaults defaults, double numframes, double frame, double fromTimeOffset, double toTimeOffset);
 }

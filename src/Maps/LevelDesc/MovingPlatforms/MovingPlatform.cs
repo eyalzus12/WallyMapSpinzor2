@@ -17,9 +17,9 @@ thanks bmg.
 */
 public class MovingPlatform : AbstractAsset
 {
-    public string PlatID{get; set;} = null!;
-    public Animation Animation{get; set;} = null!;
-    public List<AbstractAsset> Assets{get; set;} = null!;
+    public string PlatID { get; set; } = null!;
+    public Animation Animation { get; set; } = null!;
+    public List<AbstractAsset> Assets { get; set; } = null!;
 
     public override void Deserialize(XElement e)
     {
@@ -37,7 +37,7 @@ public class MovingPlatform : AbstractAsset
         e.SetAttributeValue("PlatID", PlatID);
         base.Serialize(e);
         e.Add(Animation.SerializeToXElement());
-        foreach(AbstractAsset a in Assets)
+        foreach (AbstractAsset a in Assets)
             e.Add(a.SerializeToXElement());
     }
 
@@ -50,14 +50,14 @@ public class MovingPlatform : AbstractAsset
         rd.PlatIDMovingPlatformOffset[PlatID] = (offX + X, offY + Y);
     }
 
-    public override void DrawOn<T>(ICanvas<T> canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data) 
+    public override void DrawOn<T>(ICanvas<T> canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data)
     {
-        if(!data.PlatIDMovingPlatformOffset.ContainsKey(PlatID))
+        if (!data.PlatIDMovingPlatformOffset.ContainsKey(PlatID))
             throw new InvalidOperationException($"Plat ID dictionary did not contain plat id {PlatID} when attempting to draw MovingPlatform. Make sure to call StoreOffset beforehand.");
 
         (double offX, double offY) = data.PlatIDMovingPlatformOffset[PlatID];
         Transform childTrans = trans * Transform.CreateTranslate(offX, offY);
-        foreach(AbstractAsset a in Assets)
+        foreach (AbstractAsset a in Assets)
             a.DrawOn(canvas, config, childTrans, time, data);
     }
 }

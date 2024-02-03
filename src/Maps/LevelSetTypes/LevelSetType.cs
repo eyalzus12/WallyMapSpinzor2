@@ -4,20 +4,22 @@ namespace WallyMapSpinzor2;
 
 public class LevelSetType : IDeserializable, ISerializable
 {
-    public string LevelSetName{get; set;} = null!;
+    private const string SKIP_ORDER_VALIDATION_TEMPLATE_STRING = "Don't abuse this to be lazy. It's for special cases like Bubble Tag where we explicitly want the order to be different.";
 
-    public string DisplayNameKey{get; set;} = null!;
-    public uint LevelSetID{get; set;}
-    public List<string> LevelTypes{get; set;} = null!;
-    public bool? SkipOrderValidation{get; set;}
+    public string LevelSetName { get; set; } = null!;
+
+    public string DisplayNameKey { get; set; } = null!;
+    public uint LevelSetID { get; set; }
+    public List<string> LevelTypes { get; set; } = null!;
+    public bool? SkipOrderValidation { get; set; }
 
     public void Deserialize(XElement e)
     {
         LevelSetName = e.GetAttribute("LevelSetName");
-        DisplayNameKey = e.Element("DisplayNameKey")!.Value;
-        LevelSetID = Utils.ParseUIntOrNull(e.Element("LevelSetID")?.Value) ?? 0;
-        LevelTypes = e.Element("LevelTypes")?.Value.Split(",").ToList() ?? new();
-        SkipOrderValidation = Utils.ParseBoolOrNull(e.Element("SkipOrderValidation")?.Value);
+        DisplayNameKey = e.GetElementValue("DisplayNameKey")!;
+        LevelSetID = Utils.ParseUIntOrNull(e.GetElementValue("LevelSetID")) ?? 0;
+        LevelTypes = e.GetElementValue("LevelTypes")?.Split(",").ToList() ?? new();
+        SkipOrderValidation = Utils.ParseBoolOrNull(e.GetElementValue("SkipOrderValidation"));
     }
 
     public void Serialize(XElement e)
@@ -29,7 +31,7 @@ public class LevelSetType : IDeserializable, ISerializable
 
         if (LevelSetName == "Auto")
         {
-            e.Add(new XElement("SkipOrderValidation", "Don't abuse this to be lazy. It's for special cases like Bubble Tag where we explicitly want the order to be different."));
+            e.Add(new XElement("SkipOrderValidation", SKIP_ORDER_VALIDATION_TEMPLATE_STRING));
             return;
         }
 

@@ -4,22 +4,22 @@ namespace WallyMapSpinzor2;
 
 public class AnimatedBackground : IDeserializable, ISerializable
 {
-    public bool Midground{get; set;}
+    public bool Midground { get; set; }
 
-    public Gfx Gfx{get; set;} = null!;
+    public Gfx Gfx { get; set; } = null!;
 
-    public double Position_X{get; set;}
-    public double Position_Y{get; set;}
+    public double Position_X { get; set; }
+    public double Position_Y { get; set; }
 
-    public double Skew_X{get; set;}
-    public double Skew_Y{get; set;}
+    public double Skew_X { get; set; }
+    public double Skew_Y { get; set; }
 
-    public double Scale_X{get; set;}
-    public double Scale_Y{get; set;}
+    public double Scale_X { get; set; }
+    public double Scale_Y { get; set; }
 
-    public double Rotation{get; set;}
+    public double Rotation { get; set; }
 
-    public int FrameOffset{get; set;}
+    public int FrameOffset { get; set; }
 
     public void Deserialize(XElement e)
     {
@@ -27,41 +27,41 @@ public class AnimatedBackground : IDeserializable, ISerializable
 
         Gfx = e.DeserializeChildOfType<Gfx>()!;
 
-        string[]? position = e.Element("Position")?.Value.Split(',', 2);
+        string[]? position = e.GetElementValue("Position")?.Split(',', 2);
         Position_X = Utils.ParseFloatOrNull(position?[0]) ?? 0;
         Position_Y = Utils.ParseFloatOrNull(position?[1]) ?? 0;
-        
-        string[]? skew = e.Element("Skew")?.Value.Split(',', 2);
+
+        string[]? skew = e.GetElementValue("Skew")?.Split(',', 2);
         Skew_X = Utils.ParseFloatOrNull(skew?[0]) ?? 0;
         Skew_Y = Utils.ParseFloatOrNull(skew?[1]) ?? 0;
 
-        string[]? scale = e.Element("Scale")?.Value.Split(',', 2);
+        string[]? scale = e.GetElementValue("Scale")?.Split(',', 2);
         Scale_X = Utils.ParseFloatOrNull(scale?[0]) ?? 1;
         Scale_Y = Utils.ParseFloatOrNull(scale?[1]) ?? 1;
 
-        Rotation = Utils.ParseFloatOrNull(e.Element("Rotation")?.Value) ?? 0;
+        Rotation = Utils.ParseFloatOrNull(e.GetElementValue("Rotation")) ?? 0;
 
-        FrameOffset = Utils.ParseIntOrNull(e.Element("FrameOffset")?.Value) ?? 0;
+        FrameOffset = Utils.ParseIntOrNull(e.GetElementValue("FrameOffset")) ?? 0;
     }
 
     public void Serialize(XElement e)
     {
-        if(Midground)
+        if (Midground)
             e.SetAttributeValue("Midground", Midground.ToString().ToLower());
-        
+
         e.AddSerialized(Gfx);
 
         e.Add(new XElement("Position", $"{Position_X},{Position_Y}"));
-        
-        if(Rotation == 0 || Skew_X != 0 || Skew_Y != 0)
+
+        if (Rotation == 0 || Skew_X != 0 || Skew_Y != 0)
             e.Add(new XElement("Skew", $"{Skew_X},{Skew_Y}"));
 
         e.Add(new XElement("Scale", $"{Scale_X},{Scale_Y}"));
-        
-        if(Rotation != 0)
+
+        if (Rotation != 0)
             e.Add(new XElement("Rotation", Rotation.ToString()));
 
-        if(FrameOffset != 0)
+        if (FrameOffset != 0)
             e.Add(new XElement("FrameOffset", FrameOffset));
     }
 }
