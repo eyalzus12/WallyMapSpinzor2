@@ -64,9 +64,9 @@ public class KeyFrame : AbstractKeyFrame
     {
         if (keyFrame is KeyFrame k)
         {
-            double fdiff = (k.FrameNum + toTimeOffset) - (FrameNum + fromTimeOffset);
+            double fdiff = k.FrameNum + toTimeOffset - FrameNum - fromTimeOffset;
             fdiff = BrawlhallaMath.SafeMod(fdiff, numframes);
-            double tdiff = (frame) - (FrameNum + fromTimeOffset);
+            double tdiff = frame - FrameNum - fromTimeOffset;
             tdiff = BrawlhallaMath.SafeMod(tdiff, numframes);
             double w = tdiff / fdiff;
             w = BrawlhallaMath.EaseWeight(w,
@@ -75,12 +75,12 @@ public class KeyFrame : AbstractKeyFrame
                 EasePower == 2 ? defaults.EasePower : EasePower
             );
             if (w < 0 || 1 < w)
-                throw new InvalidOperationException($"Invalid weight {w} during keyframe interpolation. From: {FrameNum}(+{fromTimeOffset}) To: {k.FrameNum}(+{toTimeOffset}). Keyframe time: {frame}. Frame diff: {fdiff}. Time diff: {tdiff}.");
+                throw new InvalidOperationException($"RENDERER BUG. PLEASE REPORT. Invalid weight {w} during keyframe interpolation. From: {FrameNum}(+{fromTimeOffset}) To: {k.FrameNum}(+{toTimeOffset}). Keyframe time: {frame}. Frame diff: {fdiff}. Time diff: {tdiff}.");
 
             if (CenterX is not null || CenterY is not null || defaults.CenterX is not null || defaults.CenterY is not null)
-                return BrawlhallaMath.LerpWithCenter(X, Y, k.X, k.Y, CenterX ?? defaults.CenterX ?? 0, CenterY ?? defaults.CenterY ?? 0, w);
+                return BrawlhallaMath.BrawlhallaLerpWithCenter(X, Y, k.X, k.Y, CenterX ?? defaults.CenterX ?? 0, CenterY ?? defaults.CenterY ?? 0, w);
             else
-                return BrawlhallaMath.Lerp(X, Y, k.X, k.Y, w);
+                return BrawlhallaMath.BrawlhallaLerp(X, Y, k.X, k.Y, w);
         }
         else if (keyFrame is Phase p)
         {

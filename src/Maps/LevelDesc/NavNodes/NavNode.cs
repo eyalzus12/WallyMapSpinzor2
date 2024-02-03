@@ -15,7 +15,8 @@ public class NavNode : IDeserializable, ISerializable, IDrawable
     public void Deserialize(XElement e)
     {
         (NavID, Type) = ParseNavID(e.GetAttribute("NavID"));
-        Path = e.GetAttribute("Path").Split(',').Select(ParseNavID).ToArray();
+        //the "not empty" is a guard against an empty path, where an empty string would be passed to ParseNavID
+        Path = e.GetAttribute("Path").Split(',').Where(s => s != "").Select(ParseNavID).ToArray();
         X = e.GetFloatAttribute("X");
         Y = e.GetFloatAttribute("Y");
     }
@@ -59,32 +60,36 @@ public class NavNode : IDeserializable, ISerializable, IDrawable
             e.SetAttributeValue("Y", Y.ToString());
     }
 
-    public void RegisterNavNode(RenderData data)
+    public void RegisterNavNode(RenderData data, double xOff = 0, double yOff = 0)
     {
-        data.NavIDDictionary[NavID] = (X, Y);
+        data.NavIDDictionary[NavID] = (X + xOff, Y + yOff);
     }
 
     public void DrawOn<T>
-    (ICanvas<T> canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data)
+    (ICanvas<T> canvas, RenderConfig config, Transform cameraTrans, Transform trans, TimeSpan time, RenderData data)
         where T : ITexture
     {
         if (!config.ShowNavNode) return;
-        canvas.DrawCircle(X, Y, config.RadiusNavNode, GetNavIDColor(Type, config), trans, DrawPriorityEnum.NAVNODE);
+        (double x, double y) = trans * (X, Y);
+        canvas.DrawCircle(x, y, config.RadiusNavNode, GetNavIDColor(Type, config), cameraTrans, DrawPriorityEnum.NAVNODE);
         foreach ((int id, _) in Path)
         {
             if (data.NavIDDictionary.TryGetValue(id, out (double, double) pos))
             {
-                (double x, double y) = pos;
-                canvas.DrawLine(X, Y, x, y, config.ColorNavPath, trans, DrawPriorityEnum.NAVNODE);
-                //draw arrow parts
-                //we start with a right arrow ->
-                //and we rotate it to match
-                double length = BrawlhallaMath.Length(x - X, y - Y); // arrow length
-                double angle = BrawlhallaMath.AngleBetween(length, 0, x - X, y - Y); // angle from right arrow to desired arrow
-                Transform arrowTransform = trans * Transform.CreateFrom(rot: angle); //matching transformation
-                //draw the lines
-                canvas.DrawLine(x, y, x + config.OffsetArrowBack, y + config.OffsetArrowSide, config.ColorNavPath, arrowTransform, DrawPriorityEnum.NAVNODE);
-                canvas.DrawLine(x, y, x + config.OffsetArrowBack, y - config.OffsetArrowSide, config.ColorNavPath, arrowTransform, DrawPriorityEnum.NAVNODE);
+                (double targetX, double targetY) = pos;
+                canvas.DrawLine(x, y, targetX, targetY, config.ColorNavPath, cameraTrans, DrawPriorityEnum.NAVNODE);
+                // draw arrow parts
+                // we start with an arrow pointing right
+                // and we rotate it to match
+                double length = BrawlhallaMath.Length(targetX - x, targetY - y); // arrow length
+                (double dirX, double dirY) = BrawlhallaMath.Normalize(targetX - x, targetY - y); // arrow direction
+                double angle = Math.Atan2(dirY, dirX); // arrow angle
+                // calculate end points by applying the rotation to the arrow
+                (double arrowEndX1, double arrowEndY1) = BrawlhallaMath.Rotated(length - config.OffsetNavLineArrowBack, config.OffsetNavLineArrowSide, angle);
+                (double arrowEndX2, double arrowEndY2) = BrawlhallaMath.Rotated(length - config.OffsetNavLineArrowBack, -config.OffsetNavLineArrowSide, angle);
+                // draw the lines
+                canvas.DrawLine(targetX, targetY, x + arrowEndX1, y + arrowEndY1, config.ColorNavPath, cameraTrans, DrawPriorityEnum.NAVLINE);
+                canvas.DrawLine(targetX, targetY, x + arrowEndX2, y + arrowEndY2, config.ColorNavPath, cameraTrans, DrawPriorityEnum.NAVLINE);
             }
         }
     }

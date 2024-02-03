@@ -33,11 +33,11 @@ public abstract class AbstractItemSpawn : IDeserializable, ISerializable, IDrawa
     public abstract double DefaultW { get; }
     public abstract double DefaultH { get; }
 
-    public virtual void DrawOn<T>(ICanvas<T> canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data)
+    public virtual void DrawOn<T>(ICanvas<T> canvas, RenderConfig config, Transform cameraTrans, Transform trans, TimeSpan time, RenderData data)
         where T : ITexture
     {
         if (!config.ShowItemSpawn) return;
-        canvas.DrawRect(X, Y, W, H, true, GetColor(config), trans, DrawPriorityEnum.DATA);
+        canvas.DrawRect(X, Y, W, H, true, GetColor(config), cameraTrans * trans, DrawPriorityEnum.DATA);
     }
 
     public abstract Color GetColor(RenderConfig config);

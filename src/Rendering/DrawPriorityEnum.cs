@@ -10,6 +10,7 @@ public enum DrawPriorityEnum
     VOLUMES,
     DATA,
     NAVNODE,
+    NAVLINE,
     //text
     TEXT
 }

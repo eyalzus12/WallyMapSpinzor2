@@ -76,21 +76,18 @@ public class RenderConfig
     //whether to show navnodes
     public bool ShowNavNode { get; set; } = false;
 
-    //circle radius to use for drawing points
-    public double RadiusPointDraw { get; set; } = 10;
     //circle radius to use for respawns
-    public double RadiusRespawn { get; set; } = 20;
+    public double RadiusRespawn { get; set; } = 10;
     //circle radius to use for zombie spawns
     public double RadiusZombieSpawn { get; set; } = 20;
     //circle radius to use for navnodes
     public double RadiusNavNode { get; set; } = 5;
     //length of collision normals
     public double LengthCollisionNormal { get; set; } = 50;
-    //when drawing arrows, sideways offset of arrow sides
-    public double OffsetArrowSide { get; set; } = 10;
-    //when drawing arrows, backwards offset of arrow sides
-    public double OffsetArrowBack { get; set; } = 10;
-
+    //when drawing navline arrows, sideways offset of arrow sides
+    public double OffsetNavLineArrowSide { get; set; } = 7;
+    //when drawing navline arrows, backwards offset of arrow sides
+    public double OffsetNavLineArrowBack { get; set; } = 7;
 
     //colors
     public Color ColorCameraBounds { get; set; } = Color.FromHex(0xFF00007F);
@@ -112,14 +109,14 @@ public class RenderConfig
 
     public Color ColorCollisionNormal { get; set; } = Color.FromHex(0xFFFFFF7F);
 
-    public Color ColorRespawn { get; set; } = Color.FromHex(0xFF7F007F);
-    public Color ColorInitialRespawn { get; set; } = Color.FromHex(0xFF00007F);
-    public Color ColorExpandedInitRespawn { get; set; } = Color.FromHex(0xFF00FF7F);
+    public Color ColorRespawn { get; set; } = Color.FromHex(0xFF7F0060);
+    public Color ColorInitialRespawn { get; set; } = Color.FromHex(0xFF000060);
+    public Color ColorExpandedInitRespawn { get; set; } = Color.FromHex(0xFF00FF60);
 
-    public Color ColorItemSpawn { get; set; } = Color.FromHex(0x007FFF7F);
-    public Color ColorItemInitSpawn { get; set; } = Color.FromHex(0x7F007F7F);
-    public Color ColorItemSet { get; set; } = Color.FromHex(0x007F7F7F);
-    public Color ColorTeamItemInitSpawn { get; set; } = Color.FromHex(0x7F7F007F);
+    public Color ColorItemSpawn { get; set; } = Color.FromHex(0x007FFF60);
+    public Color ColorItemInitSpawn { get; set; } = Color.FromHex(0x7F007F60);
+    public Color ColorItemSet { get; set; } = Color.FromHex(0x007F7F60);
+    public Color ColorTeamItemInitSpawn { get; set; } = Color.FromHex(0x7F7F0060);
 
     //1 indexed
     public Color[] ColorCollisionTeam { get; set; } = new[]
@@ -144,13 +141,13 @@ public class RenderConfig
 
     public Color ColorZombieSpawns { get; set; } = Color.FromHex(0xFFFFFF7F);
 
-    public Color ColorNavNode { get; set; } = Color.FromHex(0x7F7F7F7F);
-    public Color ColorNavNodeW { get; set; } = Color.FromHex(0x7F700F7F);
-    public Color ColorNavNodeL { get; set; } = Color.FromHex(0x7F007F7F);
-    public Color ColorNavNodeA { get; set; } = Color.FromHex(0x007F7F7F);
-    public Color ColorNavNodeG { get; set; } = Color.FromHex(0x007F007F);
-    public Color ColorNavNodeT { get; set; } = Color.FromHex(0x00007F7F);
-    public Color ColorNavNodeS { get; set; } = Color.FromHex(0x7F00007F);
+    public Color ColorNavNode { get; set; } = Color.FromHex(0x7F7F7F90);
+    public Color ColorNavNodeW { get; set; } = Color.FromHex(0x7F700F90);
+    public Color ColorNavNodeL { get; set; } = Color.FromHex(0x7F007F90);
+    public Color ColorNavNodeA { get; set; } = Color.FromHex(0x007F7F90);
+    public Color ColorNavNodeG { get; set; } = Color.FromHex(0x007F0090);
+    public Color ColorNavNodeT { get; set; } = Color.FromHex(0x00007F90);
+    public Color ColorNavNodeS { get; set; } = Color.FromHex(0x7F000090);
 
-    public Color ColorNavPath { get; set; } = Color.FromHex(0x60606060);
+    public Color ColorNavPath { get; set; } = Color.FromHex(0x8060607F);
 }

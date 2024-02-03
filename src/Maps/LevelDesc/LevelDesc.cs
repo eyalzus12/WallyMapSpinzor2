@@ -5,11 +5,11 @@ namespace WallyMapSpinzor2;
 
 public class LevelDesc : IDeserializable, ISerializable, IDrawable
 {
-    private const  int LEFT_ROPE_X = 521;
+    private const int LEFT_ROPE_X = 521;
     private const int LEFT_ROPE_Y = 1293;
-    private const  int RIGHT_ROPE_X = 2934;
+    private const int RIGHT_ROPE_X = 2934;
     private const int RIGHT_ROPE_Y = 1293;
-    private static readonly (int, int)[] ZOMBIE_SPAWNS = new[]{(230, 390), (180, 900), (-1160, 900), (-1990, 390)};
+    private static readonly (int, int)[] ZOMBIE_SPAWNS = new[] { (230, 390), (180, 900), (-1160, 900), (-1990, 390) };
 
     private const string ROPE_SPRITE = "a_DefaultRopes";
     private const string RED_TARGET_SPRITE = "a_TargetAnchoredRed";
@@ -101,51 +101,59 @@ public class LevelDesc : IDeserializable, ISerializable, IDrawable
     }
 
 
-    public void DrawOn<T>(ICanvas<T> canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data)
+    public void DrawOn<T>(ICanvas<T> canvas, RenderConfig config, Transform cameraTrans, Transform trans, TimeSpan time, RenderData data)
         where T : ITexture
     {
+        if(trans != Transform.IDENTITY)
+            throw new ArgumentException("Initial non-camera transform must be the identity transform");
+        // setup
         data.AssetDir = AssetDir;
         data.DefaultNumFrames = NumFrames;
         data.DefaultSlowMult = SlowMult;
         foreach (Background b in Backgrounds)
-            b.ChallengeCurrentBackground(data, config);
-        data.PlatIDDynamicOffset = new();
-        data.PlatIDMovingPlatformOffset = new();
+            b.UpdateBackground(data, config);
+        data.PlatIDDynamicOffset.Clear();
+        data.PlatIDMovingPlatformOffset.Clear();
         foreach (AbstractAsset a in Assets) if (a is MovingPlatform mp)
-                mp.StoreOffset(data, time);
+                mp.StoreMovingPlatformOffset(data, time);
         foreach (AbstractCollision c in Collisions)
             c.CalculateCurve(0, 0);
+        data.NavIDDictionary.Clear();
+        foreach (NavNode n in NavNodes)
+            n.RegisterNavNode(data);
+        foreach (DynamicNavNode dn in DynamicNavNodes)
+            dn.RegisterNavNodes(data);
 
-        CameraBounds.DrawOn(canvas, config, trans, time, data);
-        SpawnBotBounds.DrawOn(canvas, config, trans, time, data);
+        // drawing
+        CameraBounds.DrawOn(canvas, config, cameraTrans, trans, time, data);
+        SpawnBotBounds.DrawOn(canvas, config, cameraTrans, trans, time, data);
         foreach (Background b in Backgrounds)
-            b.DrawOn(canvas, config, trans, time, data);
+            b.DrawOn(canvas, config, cameraTrans, trans, time, data);
         //foreach(LevelSound ls in LevelSounds)
-        TeamScoreboard?.DrawOn(canvas, config, trans, time, data);
+        TeamScoreboard?.DrawOn(canvas, config, cameraTrans, trans, time, data);
         foreach (AbstractAsset a in Assets)
-            a.DrawOn(canvas, config, trans, time, data);
-        foreach (LevelAnim la in LevelAnims)
-            la.DrawOn(canvas, config, trans, time, data);
+            a.DrawOn(canvas, config, cameraTrans, trans, time, data);
+        //foreach (LevelAnim la in LevelAnims)
         foreach (AbstractVolume v in Volumes)
-            v.DrawOn(canvas, config, trans, time, data);
+            v.DrawOn(canvas, config, cameraTrans, trans, time, data);
         foreach (AbstractCollision c in Collisions)
-            c.DrawOn(canvas, config, trans, time, data);
+            c.DrawOn(canvas, config, cameraTrans, trans, time, data);
         foreach (DynamicCollision dc in DynamicCollisions)
-            dc.DrawOn(canvas, config, trans, time, data);
+            dc.DrawOn(canvas, config, cameraTrans, trans, time, data);
         foreach (Respawn r in Respawns)
-            r.DrawOn(canvas, config, trans, time, data);
+            r.DrawOn(canvas, config, cameraTrans, trans, time, data);
         foreach (DynamicRespawn dr in DynamicRespawns)
-            dr.DrawOn(canvas, config, trans, time, data);
+            dr.DrawOn(canvas, config, cameraTrans, trans, time, data);
         foreach (AbstractItemSpawn i in ItemSpawns)
-            i.DrawOn(canvas, config, trans, time, data);
+            i.DrawOn(canvas, config, cameraTrans, trans, time, data);
         foreach (DynamicItemSpawn di in DynamicItemSpawns)
-            di.DrawOn(canvas, config, trans, time, data);
+            di.DrawOn(canvas, config, cameraTrans, trans, time, data);
         //foreach(WaveData wd in WaveDatas)
         //foreach(AnimatedBackground ab in AnimatedBackgrounds)
         foreach (NavNode n in NavNodes)
-            n.DrawOn(canvas, config, trans, time, data);
+            n.DrawOn(canvas, config, cameraTrans, trans, time, data);
         foreach (DynamicNavNode dn in DynamicNavNodes)
-            dn.DrawOn(canvas, config, trans, time, data);
+            dn.DrawOn(canvas, config, cameraTrans, trans, time, data);
 
 
         //Gamemode stuff
@@ -162,7 +170,7 @@ public class LevelDesc : IDeserializable, ISerializable, IDrawable
         {
             if (config.ShowZombieSpawns)
             {
-                foreach((int x, int y) in ZOMBIE_SPAWNS)
+                foreach ((int x, int y) in ZOMBIE_SPAWNS)
                     canvas.DrawCircle(x, y, config.RadiusZombieSpawn, config.ColorZombieSpawns, trans, DrawPriorityEnum.DATA);
             }
         }

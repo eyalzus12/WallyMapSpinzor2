@@ -65,7 +65,7 @@ public static class BrawlhallaMath
         }
     }
 
-    public static double RoundedCos(double x)
+    public static double BrawlhallaCos(double x)
     {
         // im not using Math.TAU here because brawlhalla uses Math.PI * 2
         // which may introduce error. this will probably never matter but eh.
@@ -76,7 +76,7 @@ public static class BrawlhallaMath
         return x;
     }
 
-    public static double RoundedSin(double x)
+    public static double BrawlhallaSin(double x)
     {
         // im not using Math.TAU here because brawlhalla uses Math.PI * 2
         // which may introduce error. this will probably never matter but eh.
@@ -95,7 +95,7 @@ public static class BrawlhallaMath
         return (x / len, y / len);
     }
 
-    public static (double, double) Lerp(double x1, double y1, double x2, double y2, double w)
+    public static (double, double) BrawlhallaLerp(double x1, double y1, double x2, double y2, double w)
     {
         // uses the same rounding as brawlhalla
         double x = Math.Round((x1 * (1 - w) + x2 * w) * 100) / 100;
@@ -124,7 +124,7 @@ public static class BrawlhallaMath
         return (_X * Math.Abs(X1 - X2), _Y * Math.Abs(Y1 - Y2));
     }
 
-    public static (double, double) LerpWithCenter(double x1, double y1, double x2, double y2, double xc, double yc, double w)
+    public static (double, double) BrawlhallaLerpWithCenter(double x1, double y1, double x2, double y2, double xc, double yc, double w)
     {
         // code follows brawlhalla logic. brawlhalla does not do a proper Slerp
         // but instead assumes center will always be on the same X or Y as one of the keyframes
@@ -152,8 +152,8 @@ public static class BrawlhallaMath
             angle1 = Math.PI * 2;
 
         double angle = angle1 * (1 - w) + angle2 * w;
-        double x = Math.Round((xc + Math.Abs(x1 - x2) * RoundedCos(angle)) * 100) / 100;
-        double y = Math.Round((yc + Math.Abs(y1 - y2) * RoundedSin(angle)) * 100) / 100;
+        double x = Math.Round((xc + Math.Abs(x1 - x2) * BrawlhallaCos(angle)) * 100) / 100;
+        double y = Math.Round((yc + Math.Abs(y1 - y2) * BrawlhallaSin(angle)) * 100) / 100;
         return (x, y);
     }
 

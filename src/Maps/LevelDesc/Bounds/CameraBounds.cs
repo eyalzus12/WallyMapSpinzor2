@@ -24,7 +24,7 @@ public class CameraBounds : IDeserializable, ISerializable, IDrawable
         e.SetAttributeValue("Y", Y.ToString());
     }
 
-    public void DrawOn<T>(ICanvas<T> canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data)
+    public void DrawOn<T>(ICanvas<T> canvas, RenderConfig config, Transform cameraTrans, Transform trans, TimeSpan time, RenderData data)
         where T : ITexture
     {
         data.BackgroundRect_X = X;
@@ -33,6 +33,6 @@ public class CameraBounds : IDeserializable, ISerializable, IDrawable
         data.BackgroundRect_H = H;
 
         if (!config.ShowCameraBounds) return;
-        canvas.DrawRect(X, Y, W, H, false, config.ColorCameraBounds, trans, DrawPriorityEnum.DATA);
+        canvas.DrawRect(X, Y, W, H, false, config.ColorCameraBounds, cameraTrans * trans, DrawPriorityEnum.DATA);
     }
 }

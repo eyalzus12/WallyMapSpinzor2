@@ -57,7 +57,7 @@ public abstract class AbstractAsset : ISerializable, IDeserializable, IDrawable
             e.SetAttributeValue("Y", Y.ToString());
     }
 
-    public virtual void DrawOn<T>(ICanvas<T> canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data)
+    public virtual void DrawOn<T>(ICanvas<T> canvas, RenderConfig config, Transform cameraTrans, Transform trans, TimeSpan time, RenderData data)
         where T : ITexture
     {
         if (!config.ShowAssets)
@@ -74,7 +74,7 @@ public abstract class AbstractAsset : ISerializable, IDeserializable, IDrawable
         double scaleY = (H == 0) ? 1 : H / texture.H;
         Transform childTrans = trans * Transform * Transform.CreateScale(scaleX, scaleY);
 
-        canvas.DrawTexture(0, 0, texture, childTrans, DrawPriorityEnum.MIDGROUND);
+        canvas.DrawTexture(0, 0, texture, cameraTrans * childTrans, DrawPriorityEnum.MIDGROUND);
     }
 
     public Transform Transform =>

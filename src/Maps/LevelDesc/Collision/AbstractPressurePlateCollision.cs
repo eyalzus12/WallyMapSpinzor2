@@ -50,9 +50,9 @@ public abstract class AbstractPressurePlateCollision : AbstractCollision
         base.Serialize(e);
     }
 
-    public override void DrawOn<T>(ICanvas<T> canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data)
+    public override void DrawOn<T>(ICanvas<T> canvas, RenderConfig config, Transform cameraTrans, Transform trans, TimeSpan time, RenderData data)
     {
-        base.DrawOn(canvas, config, trans, time, data);
+        base.DrawOn(canvas, config, cameraTrans, trans, time, data);
 
         //if a pressure plate has an Anchor, its
         //pressureplate-ness is ignored by the game.

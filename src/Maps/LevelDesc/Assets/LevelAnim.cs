@@ -2,7 +2,7 @@ using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
 
-public class LevelAnim : IDeserializable, ISerializable, IDrawable
+public class LevelAnim : IDeserializable, ISerializable
 {
     private const string FOREGROUND = "am_Foreground";
     private const string BACKGROUND = "am_Background";
@@ -46,8 +46,7 @@ public class LevelAnim : IDeserializable, ISerializable, IDrawable
         e.SetAttributeValue("Y", Y.ToString());
     }
 
-#pragma warning disable 0162 //unreachable code warning
-    public void DrawOn<T>(ICanvas<T> canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data)
+    /*public void DrawOn<T>(ICanvas<T> canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data)
         where T : ITexture
     {
         //LevelAnim requires more than one swf shape to be rendered.
@@ -58,6 +57,5 @@ public class LevelAnim : IDeserializable, ISerializable, IDrawable
         //NOTE: there may be some extra logic needed here. need to get renderer impl working to figure out.
         T texture = canvas.LoadTextureFromSWF("SFX_Level.swf", AssetName);
         canvas.DrawTexture(X, Y, texture, trans, DrawPriorityEnum.MIDGROUND);
-    }
-#pragma warning restore 0162 //unreachable code warning
+    }*/
 }

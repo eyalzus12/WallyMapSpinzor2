@@ -53,7 +53,7 @@ public class Platform : AbstractAsset
     }
 
 
-    public override void DrawOn<T>(ICanvas<T> canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data)
+    public override void DrawOn<T>(ICanvas<T> canvas, RenderConfig config, Transform cameraTrans, Transform trans, TimeSpan time, RenderData data)
     {
         //checks for showing assets. logic follows the game's code.
         if (!config.ShowAssets)
@@ -91,14 +91,14 @@ public class Platform : AbstractAsset
         //normal asset
         if (AssetName is not null)
         {
-            base.DrawOn(canvas, config, trans, time, data);
+            base.DrawOn(canvas, config, cameraTrans, trans, time, data);
         }
         //not a normal asset
         else
         {
             Transform childTrans = trans * Transform;
             foreach (AbstractAsset a in AssetChildren)
-                a.DrawOn(canvas, config, childTrans, time, data);
+                a.DrawOn(canvas, config, cameraTrans, childTrans, time, data);
         }
     }
 }
