@@ -10,8 +10,9 @@ public class LevelType : IDeserializable, ISerializable
 
     public string DisplayName{get; set;} = null!;
     public int LevelID{get; set;} //max 255
-    public string? FileName{get; set;} = null!;
-    public string? AssetName{get; set;} = null!;
+    public string[]? TeamColorOrder{get; set;}
+    public string? FileName{get; set;}
+    public string? AssetName{get; set;}
     public CrateColor? CrateColorA{get; set;}
     public CrateColor? CrateColorB{get; set;} 
 
@@ -59,6 +60,7 @@ public class LevelType : IDeserializable, ISerializable
 
         DisplayName = e.Element("DisplayName")!.Value;
         LevelID = Utils.ParseIntOrNull(e.Element("LevelID")?.Value) ?? 0;
+        TeamColorOrder = e.Element("TeamColorOrder")?.Value?.Split(',');
         FileName = e.Element("FileName")?.Value;
         AssetName = e.Element("AssetName")?.Value;
 
@@ -106,6 +108,8 @@ public class LevelType : IDeserializable, ISerializable
 
         e.Add(new XElement("DisplayName", DisplayName));
         e.Add(new XElement("LevelID", LevelID));
+        if(TeamColorOrder is not null)
+            e.Add(new XElement("TeamColorOrder", string.Join(',', TeamColorOrder)));
         e.AddIfNotNull("FileName", FileName);
         e.AddIfNotNull("AssetName", AssetName);
         e.AddIfNotNull("CrateColorA", CrateColorA?.ToHexString());
@@ -153,8 +157,8 @@ public class LevelType : IDeserializable, ISerializable
         if(ShadowTint is not null)
             e.Add(new XElement("ShadowTint", ShadowTint));
 
-        //it is unclear how ItemOverride would be formatted, but this is my best guess
-        //due to how it works
+        // it is unclear how ItemOverride would be formatted, but this is my best guess
+        // due to how it works
         if(ItemOverride is not null)
         {
             string[] split = ItemOverride.Split(',');
