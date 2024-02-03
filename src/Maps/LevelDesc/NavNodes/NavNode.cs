@@ -66,18 +66,18 @@ public class NavNode : IDeserializable, ISerializable, IDrawable
     }
 
     public void DrawOn<T>
-    (ICanvas<T> canvas, RenderConfig config, Transform cameraTrans, Transform trans, TimeSpan time, RenderData data)
+    (ICanvas<T> canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data)
         where T : ITexture
     {
         if (!config.ShowNavNode) return;
         (double x, double y) = trans * (X, Y);
-        canvas.DrawCircle(x, y, config.RadiusNavNode, GetNavIDColor(Type, config), cameraTrans, DrawPriorityEnum.NAVNODE);
+        canvas.DrawCircle(x, y, config.RadiusNavNode, GetNavIDColor(Type, config), Transform.IDENTITY, DrawPriorityEnum.NAVNODE);
         foreach ((int id, _) in Path)
         {
             if (data.NavIDDictionary.TryGetValue(id, out (double, double) pos))
             {
                 (double targetX, double targetY) = pos;
-                canvas.DrawLine(x, y, targetX, targetY, config.ColorNavPath, cameraTrans, DrawPriorityEnum.NAVNODE);
+                canvas.DrawLine(x, y, targetX, targetY, config.ColorNavPath, Transform.IDENTITY, DrawPriorityEnum.NAVNODE);
                 // draw arrow parts
                 // we start with an arrow pointing right
                 // and we rotate it to match
@@ -88,8 +88,8 @@ public class NavNode : IDeserializable, ISerializable, IDrawable
                 (double arrowEndX1, double arrowEndY1) = BrawlhallaMath.Rotated(length - config.OffsetNavLineArrowBack, config.OffsetNavLineArrowSide, angle);
                 (double arrowEndX2, double arrowEndY2) = BrawlhallaMath.Rotated(length - config.OffsetNavLineArrowBack, -config.OffsetNavLineArrowSide, angle);
                 // draw the lines
-                canvas.DrawLine(targetX, targetY, x + arrowEndX1, y + arrowEndY1, config.ColorNavPath, cameraTrans, DrawPriorityEnum.NAVLINE);
-                canvas.DrawLine(targetX, targetY, x + arrowEndX2, y + arrowEndY2, config.ColorNavPath, cameraTrans, DrawPriorityEnum.NAVLINE);
+                canvas.DrawLine(targetX, targetY, x + arrowEndX1, y + arrowEndY1, config.ColorNavPath, Transform.IDENTITY, DrawPriorityEnum.NAVLINE);
+                canvas.DrawLine(targetX, targetY, x + arrowEndX2, y + arrowEndY2, config.ColorNavPath, Transform.IDENTITY, DrawPriorityEnum.NAVLINE);
             }
         }
     }

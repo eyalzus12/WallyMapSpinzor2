@@ -59,7 +59,7 @@ public class Background : IDeserializable, ISerializable, IDrawable
         }
     }
 
-    public void DrawOn<T>(ICanvas<T> canvas, RenderConfig config, Transform cameraTrans, Transform trans, TimeSpan time, RenderData data)
+    public void DrawOn<T>(ICanvas<T> canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data)
         where T : ITexture
     {
         if (!config.ShowBackground) return;
@@ -72,7 +72,7 @@ public class Background : IDeserializable, ISerializable, IDrawable
         T texture = canvas.LoadTextureFromPath(Path.Join(BACKGROUND_FOLDER, assetName).ToString());
         canvas.DrawTextureRect(
             data.BackgroundRect_X ?? 0, data.BackgroundRect_Y ?? 0, data.BackgroundRect_W ?? 0, data.BackgroundRect_H ?? 0,
-            texture, cameraTrans * trans, DrawPriorityEnum.BACKGROUND
+            texture, trans, DrawPriorityEnum.BACKGROUND
         );
     }
 }

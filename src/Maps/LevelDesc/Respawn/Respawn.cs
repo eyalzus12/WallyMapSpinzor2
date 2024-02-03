@@ -28,7 +28,7 @@ public class Respawn : IDeserializable, ISerializable, IDrawable
     }
 
 
-    public void DrawOn<T>(ICanvas<T> canvas, RenderConfig config, Transform cameraTrans, Transform trans, TimeSpan time, RenderData data)
+    public void DrawOn<T>(ICanvas<T> canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data)
         where T : ITexture
     {
         if (!config.ShowRespawn) return;
@@ -36,7 +36,7 @@ public class Respawn : IDeserializable, ISerializable, IDrawable
             X, Y,
             config.RadiusRespawn,
             Initial ? config.ColorInitialRespawn : (ExpandedInit ? config.ColorExpandedInitRespawn : config.ColorRespawn),
-            cameraTrans * trans, DrawPriorityEnum.DATA
+            trans, DrawPriorityEnum.DATA
         );
     }
 }

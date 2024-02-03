@@ -32,7 +32,7 @@ public abstract class AbstractVolume : IDeserializable, ISerializable, IDrawable
             e.SetAttributeValue("ID", ID.ToString());
     }
 
-    public virtual void DrawOn<T>(ICanvas<T> canvas, RenderConfig config, Transform cameraTrans, Transform trans, TimeSpan time, RenderData data)
+    public virtual void DrawOn<T>(ICanvas<T> canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data)
         where T : ITexture
     {
         if (!ShouldShow(config)) return;
@@ -40,7 +40,7 @@ public abstract class AbstractVolume : IDeserializable, ISerializable, IDrawable
         if (Team >= config.ColorVolumeTeam.Length)
             throw new ArgumentOutOfRangeException($"Volume has team {Team}, which is larger than max available volume team color {config.ColorVolumeTeam.Length - 1}");
 
-        canvas.DrawRect((int)X, (int)Y, (int)W, (int)H, true, config.ColorVolumeTeam[Team], cameraTrans * trans, DrawPriorityEnum.VOLUMES);
+        canvas.DrawRect((int)X, (int)Y, (int)W, (int)H, true, config.ColorVolumeTeam[Team], trans, DrawPriorityEnum.VOLUMES);
     }
 
     public abstract bool ShouldShow(RenderConfig config);

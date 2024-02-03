@@ -156,7 +156,7 @@ public abstract class AbstractCollision : IDeserializable, ISerializable, IDrawa
             .ToList();
     }
 
-    public virtual void DrawOn<T>(ICanvas<T> canvas, RenderConfig config, Transform cameraTrans, Transform trans, TimeSpan time, RenderData data)
+    public virtual void DrawOn<T>(ICanvas<T> canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data)
         where T : ITexture
     {
         if (!config.ShowCollision) return;
@@ -175,7 +175,7 @@ public abstract class AbstractCollision : IDeserializable, ISerializable, IDrawa
             (double nextX, double nextY) = _curve[i + 1];
             //draw current line
             if (Team == 0)
-                canvas.DrawLine(prevX, prevY, nextX, nextY, GetColor(config), cameraTrans * trans, DrawPriorityEnum.DATA);
+                canvas.DrawLine(prevX, prevY, nextX, nextY, GetColor(config), trans, DrawPriorityEnum.DATA);
             else
             {
                 if (Team - 1 >= config.ColorCollisionTeam.Length)
@@ -183,7 +183,7 @@ public abstract class AbstractCollision : IDeserializable, ISerializable, IDrawa
                 canvas.DrawLineMultiColor(
                         prevX, prevY, nextX, nextY,
                         new[] { config.ColorCollisionTeam[Team - 1], GetColor(config), config.ColorCollisionTeam[Team - 1] },
-                        cameraTrans * trans, DrawPriorityEnum.DATA
+                        trans, DrawPriorityEnum.DATA
                     );
             }
 
@@ -201,7 +201,7 @@ public abstract class AbstractCollision : IDeserializable, ISerializable, IDrawa
 
                     canvas.DrawLine(
                         normalStartX, normalStartY, normalEndX, normalEndY,
-                        config.ColorCollisionNormal, cameraTrans * trans, DrawPriorityEnum.DATA
+                        config.ColorCollisionNormal, trans, DrawPriorityEnum.DATA
                     );
                 }
                 //Otherwise normals are auto generated

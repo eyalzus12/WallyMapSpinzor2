@@ -28,7 +28,7 @@ public abstract class AbstractDynamic<T> : ISerializable, IDeserializable, IDraw
         e.AddManySerialized(Children);
     }
 
-    public virtual void DrawOn<E>(ICanvas<E> canvas, RenderConfig config, Transform cameraTrans, Transform trans, TimeSpan time, RenderData data)
+    public virtual void DrawOn<E>(ICanvas<E> canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data)
         where E : ITexture
     {
         if (data.PlatIDDynamicOffset is null)
@@ -38,6 +38,6 @@ public abstract class AbstractDynamic<T> : ISerializable, IDeserializable, IDraw
         (double dynX, double dynY) = data.PlatIDDynamicOffset[PlatID];
         Transform childTrans = trans * Transform.CreateTranslate(X + dynX, Y + dynY);
         foreach (T child in Children)
-            child.DrawOn(canvas, config, cameraTrans, childTrans, time, data);
+            child.DrawOn(canvas, config, childTrans, time, data);
     }
 }

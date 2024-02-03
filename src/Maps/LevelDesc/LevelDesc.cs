@@ -101,7 +101,7 @@ public class LevelDesc : IDeserializable, ISerializable, IDrawable
     }
 
 
-    public void DrawOn<T>(ICanvas<T> canvas, RenderConfig config, Transform cameraTrans, Transform trans, TimeSpan time, RenderData data)
+    public void DrawOn<T>(ICanvas<T> canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data)
         where T : ITexture
     {
         if(trans != Transform.IDENTITY)
@@ -125,35 +125,35 @@ public class LevelDesc : IDeserializable, ISerializable, IDrawable
             dn.RegisterNavNodes(data);
 
         // drawing
-        CameraBounds.DrawOn(canvas, config, cameraTrans, trans, time, data);
-        SpawnBotBounds.DrawOn(canvas, config, cameraTrans, trans, time, data);
+        CameraBounds.DrawOn(canvas, config, trans, time, data);
+        SpawnBotBounds.DrawOn(canvas, config, trans, time, data);
         foreach (Background b in Backgrounds)
-            b.DrawOn(canvas, config, cameraTrans, trans, time, data);
+            b.DrawOn(canvas, config, trans, time, data);
         //foreach(LevelSound ls in LevelSounds)
-        TeamScoreboard?.DrawOn(canvas, config, cameraTrans, trans, time, data);
+        TeamScoreboard?.DrawOn(canvas, config, trans, time, data);
         foreach (AbstractAsset a in Assets)
-            a.DrawOn(canvas, config, cameraTrans, trans, time, data);
+            a.DrawOn(canvas, config, trans, time, data);
         //foreach (LevelAnim la in LevelAnims)
         foreach (AbstractVolume v in Volumes)
-            v.DrawOn(canvas, config, cameraTrans, trans, time, data);
+            v.DrawOn(canvas, config, trans, time, data);
         foreach (AbstractCollision c in Collisions)
-            c.DrawOn(canvas, config, cameraTrans, trans, time, data);
+            c.DrawOn(canvas, config, trans, time, data);
         foreach (DynamicCollision dc in DynamicCollisions)
-            dc.DrawOn(canvas, config, cameraTrans, trans, time, data);
+            dc.DrawOn(canvas, config, trans, time, data);
         foreach (Respawn r in Respawns)
-            r.DrawOn(canvas, config, cameraTrans, trans, time, data);
+            r.DrawOn(canvas, config, trans, time, data);
         foreach (DynamicRespawn dr in DynamicRespawns)
-            dr.DrawOn(canvas, config, cameraTrans, trans, time, data);
+            dr.DrawOn(canvas, config, trans, time, data);
         foreach (AbstractItemSpawn i in ItemSpawns)
-            i.DrawOn(canvas, config, cameraTrans, trans, time, data);
+            i.DrawOn(canvas, config, trans, time, data);
         foreach (DynamicItemSpawn di in DynamicItemSpawns)
-            di.DrawOn(canvas, config, cameraTrans, trans, time, data);
+            di.DrawOn(canvas, config, trans, time, data);
         //foreach(WaveData wd in WaveDatas)
         //foreach(AnimatedBackground ab in AnimatedBackgrounds)
         foreach (NavNode n in NavNodes)
-            n.DrawOn(canvas, config, cameraTrans, trans, time, data);
+            n.DrawOn(canvas, config, trans, time, data);
         foreach (DynamicNavNode dn in DynamicNavNodes)
-            dn.DrawOn(canvas, config, cameraTrans, trans, time, data);
+            dn.DrawOn(canvas, config, trans, time, data);
 
 
         //Gamemode stuff

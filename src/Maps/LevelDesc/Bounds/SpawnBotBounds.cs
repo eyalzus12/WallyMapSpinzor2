@@ -25,10 +25,10 @@ public class SpawnBotBounds : IDeserializable, ISerializable, IDrawable
     }
 
 
-    public void DrawOn<T>(ICanvas<T> canvas, RenderConfig config, Transform cameraTrans, Transform trans, TimeSpan time, RenderData data)
+    public void DrawOn<T>(ICanvas<T> canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data)
         where T : ITexture
     {
         if (!config.ShowSpawnBotBounds) return;
-        canvas.DrawRect(X, Y, W, H, false, config.ColorSpawnBotBounds, cameraTrans * trans, DrawPriorityEnum.DATA);
+        canvas.DrawRect(X, Y, W, H, false, config.ColorSpawnBotBounds, trans, DrawPriorityEnum.DATA);
     }
 }
