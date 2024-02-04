@@ -54,7 +54,7 @@ public class TeamScoreboard : IDeserializable, ISerializable, IDrawable
         {
             string fontName = $"{DIGIT_PREFIX}{config.RedScore}" + (RedDigitFont == "" ? "" : "_") + RedDigitFont;
             T texture = canvas.LoadTextureFromSWF(LevelDesc.GAMEMODE_BONES, fontName);
-            canvas.DrawTexture(RedTeamX, Y, texture, trans, DrawPriorityEnum.FOREGROUND);
+            canvas.DrawTexture(RedTeamX, Y, texture, trans * LevelDesc.SWF_TRANSFORM, DrawPriorityEnum.FOREGROUND);
         }
         else
         {
@@ -70,7 +70,7 @@ public class TeamScoreboard : IDeserializable, ISerializable, IDrawable
             string fontNameTens = $"{DIGIT_PREFIX}{redTen}" + (RedDigitFont == "" ? "" : "_") + RedDigitFont;
             T textureOnes = canvas.LoadTextureFromSWF(LevelDesc.GAMEMODE_BONES, fontNameOnes);
             T textureTens = canvas.LoadTextureFromSWF(LevelDesc.GAMEMODE_BONES, fontNameTens);
-            Transform childTrans = trans * Transform.CreateScale(DoubleDigitsScale, DoubleDigitsScale);
+            Transform childTrans = trans * Transform.CreateScale(DoubleDigitsScale, DoubleDigitsScale) * LevelDesc.SWF_TRANSFORM;
             canvas.DrawTexture(RedTeamX + DoubleDigitsOnesX, DoubleDigitsY, textureOnes, childTrans, DrawPriorityEnum.FOREGROUND);
             canvas.DrawTexture(RedTeamX + DoubleDigitsTensX, DoubleDigitsY, textureTens, childTrans, DrawPriorityEnum.FOREGROUND);
         }
@@ -80,7 +80,7 @@ public class TeamScoreboard : IDeserializable, ISerializable, IDrawable
         {
             string fontName = $"{DIGIT_PREFIX}{config.BlueScore}" + (BlueDigitFont == "" ? "" : "_") + BlueDigitFont;
             T texture = canvas.LoadTextureFromSWF(LevelDesc.GAMEMODE_BONES, fontName);
-            canvas.DrawTexture(BlueTeamX, Y, texture, trans, DrawPriorityEnum.FOREGROUND);
+            canvas.DrawTexture(BlueTeamX, Y, texture, trans * LevelDesc.SWF_TRANSFORM, DrawPriorityEnum.FOREGROUND);
         }
         else
         {
@@ -96,7 +96,7 @@ public class TeamScoreboard : IDeserializable, ISerializable, IDrawable
             string fontNameTens = $"{DIGIT_PREFIX}{blueTen}" + (BlueDigitFont == "" ? "" : "_") + BlueDigitFont;
             T textureOnes = canvas.LoadTextureFromSWF(LevelDesc.GAMEMODE_BONES, fontNameOnes);
             T textureTens = canvas.LoadTextureFromSWF(LevelDesc.GAMEMODE_BONES, fontNameTens);
-            Transform childTrans = trans * Transform.CreateScale(DoubleDigitsScale, DoubleDigitsScale);
+            Transform childTrans = trans * Transform.CreateScale(DoubleDigitsScale, DoubleDigitsScale) * LevelDesc.SWF_TRANSFORM;
             canvas.DrawTexture(BlueTeamX + DoubleDigitsOnesX, DoubleDigitsY, textureOnes, childTrans, DrawPriorityEnum.FOREGROUND);
             canvas.DrawTexture(BlueTeamX + DoubleDigitsTensX, DoubleDigitsY, textureTens, childTrans, DrawPriorityEnum.FOREGROUND);
         }

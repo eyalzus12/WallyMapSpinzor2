@@ -67,21 +67,24 @@ public abstract class AbstractPressurePlateCollision : AbstractCollision
                 throw new InvalidOperationException($"Plat ID dictionary did not contain plat id {PlatID} when attempting to draw pressure plate. Make sure to call StoreOffset beforehand.");
 
             string finalAssetName = AssetName;
-            //that's how the game does this check. don't ask me.
-            if (finalAssetName.Length > ASSET_NAME_PREFIX.Length + 1)
+            //NOTE: this will probably need to change once we have proper anim rendering
+            if (finalAssetName.Length >= ASSET_NAME_PREFIX.Length)
                 finalAssetName = finalAssetName[ASSET_NAME_PREFIX.Length..];
-
+            finalAssetName = "a_ClimbPressurePlate" + (finalAssetName == "" ? "" : "_") + finalAssetName;
             T texture = canvas.LoadTextureFromSWF(LevelDesc.GAMEMODE_BONES, finalAssetName);
 
-            //replace the dynamic transform with the moving platform's transform
-            (double dynX, double dynY) = (PlatID is null) ? (0, 0) : data.PlatIDDynamicOffset[PlatID];
+            //we ignore the dynamic transform, and instead use the moving platform's
             (double platformX, double platformY) = (PlatID is null) ? (0, 0) : data.PlatIDMovingPlatformOffset[PlatID];
 
-            double assetX = platformX - dynX + AnimOffsetX - texture.W / 2.0;
-            double assetY = platformY - dynY + AnimOffsetY - texture.H / 2.0;
-
-            Transform childTrans = trans * Transform.CreateFrom(x: assetX, y: assetY, rot: AnimRotation);
-            canvas.DrawTexture(0, 0, texture, childTrans, DrawPriorityEnum.MIDGROUND);
+            double assetX = platformX + AnimOffsetX;
+            double assetY = platformY + AnimOffsetY;
+            Transform spriteTrans =
+                //swf shapes are stored at 20 times their actual size. so we resize.
+                Transform.CreateFrom(x: assetX, y: assetY, rot: AnimRotation * Math.PI / 180) *
+                LevelDesc.SWF_TRANSFORM *
+                //this is required.
+                Transform.CreateTranslate(x: -texture.W / 2.0, y: -texture.H / 2.0);
+            canvas.DrawTexture(0, 0, texture, spriteTrans, DrawPriorityEnum.MIDGROUND);
         }
     }
 }

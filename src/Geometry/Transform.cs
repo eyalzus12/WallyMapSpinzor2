@@ -39,7 +39,7 @@ public readonly record struct Transform(double ScaleX, double SkewX, double Skew
         t.SkewY * p.X + t.ScaleY * p.Y + t.TranslateY
     );
 
-    public static Position operator *(Transform t, (double, double) p) => new(
+    public static (double, double) operator *(Transform t, (double, double) p) => (
         t.ScaleX * p.Item1 + t.SkewX * p.Item2 + t.TranslateX,
         t.SkewY * p.Item1 + t.ScaleY * p.Item2 + t.TranslateY
     );
