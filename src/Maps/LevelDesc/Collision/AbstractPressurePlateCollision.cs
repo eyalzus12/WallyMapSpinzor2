@@ -78,12 +78,7 @@ public abstract class AbstractPressurePlateCollision : AbstractCollision
 
             double assetX = platformX + AnimOffsetX;
             double assetY = platformY + AnimOffsetY;
-            Transform spriteTrans =
-                //swf shapes are stored at 20 times their actual size. so we resize.
-                Transform.CreateFrom(x: assetX, y: assetY, rot: AnimRotation * Math.PI / 180) *
-                LevelDesc.SWF_TRANSFORM *
-                //this is required.
-                Transform.CreateTranslate(x: -texture.W / 2.0, y: -texture.H / 2.0);
+            Transform spriteTrans = Transform.CreateFrom(x: assetX, y: assetY, rot: AnimRotation * Math.PI / 180);
             canvas.DrawTexture(0, 0, texture, spriteTrans, DrawPriorityEnum.MIDGROUND);
         }
     }
