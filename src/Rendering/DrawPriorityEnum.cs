@@ -7,8 +7,8 @@ public enum DrawPriorityEnum
     MIDGROUND,
     FOREGROUND,
     //technical stuff
-    VOLUMES,
     DATA,
+    VOLUMES,
     NAVNODE,
     NAVLINE,
     //text

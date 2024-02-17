@@ -17,7 +17,7 @@ public class BucketPriorityQueue<T>
     {
         _count = 0;
         Buckets = new Queue<T>[bucketCount]; for (int i = 0; i < bucketCount; ++i) Buckets[i] = new();
-        MinBucket = bucketCount; MaxBucket = 0;
+        MinBucket = bucketCount; MaxBucket = -1;
     }
 
     public void Push(T element, int priority)
