@@ -16,9 +16,10 @@ public class RenderConfig
     public string Hotkey { get; set; } = Enum.GetName(HotkeyEnum.Keyboard) ?? "";
     //Whether to act as if -noskulls is on
     public bool NoSkulls { get; set; } = false;
+    //Disables PickedPlatform display
+    public bool ShowPickedPlatform { get; set; } = false;
     //In platform king, which of the platforms is the red one
-    //Set to -1 to make them all blue
-    public int PickedPlatform { get; set; } = -1;
+    public int PickedPlatform { get; set; } = 0;
     //Scores of team Blue and team Red
     //used for TeamScoreboard
     public int BlueScore { get; set; } = 0;

@@ -83,9 +83,9 @@ public class Platform : AbstractAsset
             if (PlatformAssetSwap == ANIMTED_ASSET_SWAP && !config.AnimatedBackgrounds)
                 return;
         }
-        if (Blue is not null && Blue == config.PickedPlatform)
+        if (Blue is not null && config.ShowPickedPlatform && Blue == config.PickedPlatform)
             return;
-        else if (Red is not null && Red != config.PickedPlatform)
+        else if (Red is not null && config.ShowPickedPlatform && Red != config.PickedPlatform)
             return;
 
         //normal asset
