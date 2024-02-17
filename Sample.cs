@@ -11,10 +11,13 @@ public static class Sample
         //LevelDesc
         {
             //read. use MapUtils.FixBmg on the content to fix xml non-compliances on a few maps
-            using FileStream fromFile = new(ldFromPath, FileMode.Open, FileAccess.Read);
-            using StreamReader fsr = new(fromFile);
-            XDocument document = XDocument.Parse(MapUtils.FixBmg(fsr.ReadToEnd()));
-            if (document.FirstNode is not XElement element) return;
+            XElement element;
+            using(FileStream fromFile = new(ldFromPath, FileMode.Open, FileAccess.Read))
+            using(StreamReader fsr = new(fromFile))
+            {
+                element = XElement.Parse(MapUtils.FixBmg(fsr.ReadToEnd()));
+            }
+            
             //write to file.
             LevelDesc levelDesc = element.DeserializeTo<LevelDesc>();
             using FileStream toFile = new(ldDestPath, FileMode.Create, FileAccess.Write);
@@ -31,10 +34,12 @@ public static class Sample
 
         //LevelTypes
         {
-            using FileStream fromFile = new(ltFromPath, FileMode.Open, FileAccess.Read);
-            using StreamReader fsr = new(fromFile);
-            XDocument doc = XDocument.Parse(fsr.ReadToEnd());
-            if (doc.FirstNode is not XElement element) return;
+            XElement element;
+            using(FileStream fromFile = new(ltFromPath, FileMode.Open, FileAccess.Read))
+            using(StreamReader fsr = new(fromFile))
+            {
+                element = XElement.Parse(fsr.ReadToEnd());
+            }
 
             LevelTypes levelTypes = element.DeserializeTo<LevelTypes>();
             using FileStream toFile = new(ltDestPath, FileMode.Create, FileAccess.Write);
