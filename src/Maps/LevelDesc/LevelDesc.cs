@@ -103,7 +103,7 @@ public class LevelDesc : IDeserializable, ISerializable, IDrawable
     public void DrawOn<T>(ICanvas<T> canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data)
         where T : ITexture
     {
-        if(trans != Transform.IDENTITY)
+        if (trans != Transform.IDENTITY)
             throw new ArgumentException("Initial transform must be the identity transformation. Do not pass the camera transformation inside. Instead, handle it on the rendering side.");
         // setup
         data.AssetDir = AssetDir;
@@ -155,61 +155,52 @@ public class LevelDesc : IDeserializable, ISerializable, IDrawable
             dn.DrawOn(canvas, config, trans, time, data);
 
         //Gamemode stuff
-        if (config.ScoringType == Enum.GetName(ScoringTypeEnum.RING))
+        if (config.ShowRingRopes)
         {
-            if (config.ShowRingRopes)
-            {
-                T rope = canvas.LoadTextureFromSWF(GAMEMODE_BONES, ROPE_SPRITE);
-                canvas.DrawTexture(LEFT_ROPE_X, LEFT_ROPE_Y, rope, trans, DrawPriorityEnum.FOREGROUND);
-                canvas.DrawTexture(RIGHT_ROPE_X, RIGHT_ROPE_Y, rope, trans * Transform.CreateScale(-1, 1), DrawPriorityEnum.FOREGROUND);
-            }
+            T rope = canvas.LoadTextureFromSWF(GAMEMODE_BONES, ROPE_SPRITE);
+            canvas.DrawTexture(LEFT_ROPE_X, LEFT_ROPE_Y, rope, trans, DrawPriorityEnum.FOREGROUND);
+            canvas.DrawTexture(RIGHT_ROPE_X, RIGHT_ROPE_Y, rope, trans * Transform.CreateScale(-1, 1), DrawPriorityEnum.FOREGROUND);
         }
-        if (config.ScoringType == Enum.GetName(ScoringTypeEnum.ZOMBIE))
+
+        if (config.ShowZombieSpawns)
         {
-            if (config.ShowZombieSpawns)
-            {
-                foreach ((int x, int y) in ZOMBIE_SPAWNS)
-                    canvas.DrawCircle(x, y, config.RadiusZombieSpawn, config.ColorZombieSpawns, trans, DrawPriorityEnum.DATA);
-            }
+            foreach ((int x, int y) in ZOMBIE_SPAWNS)
+                canvas.DrawCircle(x, y, config.RadiusZombieSpawn, config.ColorZombieSpawns, trans, DrawPriorityEnum.DATA);
         }
-        if (config.ScoringType == Enum.GetName(ScoringTypeEnum.BOMBSKETBALL))
+
+        if (config.ShowBombsketballTargets)
         {
-            if (config.ShowBombsketballTargets)
-            {
-                T red = canvas.LoadTextureFromSWF(GAMEMODE_BONES, RED_TARGET_SPRITE);
-                T blue = canvas.LoadTextureFromSWF(GAMEMODE_BONES, BLUE_TARGET_SPRITE);
-                Goal? goalred = Volumes.OfType<Goal>().Where(g => g.Team == 2).FirstOrDefault();
-                Goal? goalblue = Volumes.OfType<Goal>().Where(g => g.Team == 1).FirstOrDefault();
-                if (goalred is not null)
-                    canvas.DrawTexture(goalred.X + goalred.W / 2, goalred.Y + goalred.H / 2, red, trans, DrawPriorityEnum.FOREGROUND);
-                if (goalblue is not null)
-                    canvas.DrawTexture(goalblue.X + goalblue.W / 2, goalblue.Y + goalblue.H / 2, blue, trans, DrawPriorityEnum.FOREGROUND);
-            }
+            T blue = canvas.LoadTextureFromSWF(GAMEMODE_BONES, BLUE_TARGET_SPRITE);
+            Goal? goalblue = Volumes.OfType<Goal>().Where(g => g.Team == 1).FirstOrDefault();
+            if (goalblue is not null)
+                canvas.DrawTexture(goalblue.X + goalblue.W / 2.0, goalblue.Y + goalblue.H / 2.0, blue, trans, DrawPriorityEnum.FOREGROUND);
+            T red = canvas.LoadTextureFromSWF(GAMEMODE_BONES, RED_TARGET_SPRITE);
+            Goal? goalred = Volumes.OfType<Goal>().Where(g => g.Team == 2).FirstOrDefault();
+            if (goalred is not null)
+                canvas.DrawTexture(goalred.X + goalred.W / 2.0, goalred.Y + goalred.H / 2.0, red, trans, DrawPriorityEnum.FOREGROUND);
         }
-        if (config.ScoringType == Enum.GetName(ScoringTypeEnum.HORDE))
+
+        if (config.ShowHordeDoors)
         {
-            if (config.ShowHordeDoors)
+            int i = 0;
+            foreach (Goal g in Volumes.OfType<Goal>())
             {
-                int i = 0;
-                foreach (Goal g in Volumes.OfType<Goal>())
+                int hits = (i >= config.DamageHordeDoors.Length) ? 0 : config.DamageHordeDoors[i];
+
+                if (hits < 24)
                 {
-                    int hits = (i >= config.DamageHordeDoors.Length) ? 0 : config.DamageHordeDoors[i];
-
-                    if (hits < 24)
+                    T door = hits switch
                     {
-                        T door = hits switch
-                        {
-                            <= 6 => canvas.LoadTextureFromSWF(GAMEMODE_BONES, HORDE_DOOR_UNDAMAGED),
-                            <= 12 => canvas.LoadTextureFromSWF(GAMEMODE_BONES, HORDE_DOOR_DAMAGED),
-                            // <=23
-                            _ => canvas.LoadTextureFromSWF(GAMEMODE_BONES, HORDE_DOOR_CRITICAL),
-                        };
+                        <= 6 => canvas.LoadTextureFromSWF(GAMEMODE_BONES, HORDE_DOOR_UNDAMAGED),
+                        <= 12 => canvas.LoadTextureFromSWF(GAMEMODE_BONES, HORDE_DOOR_DAMAGED),
+                        // <=23
+                        _ => canvas.LoadTextureFromSWF(GAMEMODE_BONES, HORDE_DOOR_CRITICAL),
+                    };
 
-                        canvas.DrawTexture(g.X + g.W / 2, g.Y + g.H, door, trans, DrawPriorityEnum.FOREGROUND);
-                    }
-
-                    ++i;
+                    canvas.DrawTexture(g.X + g.W / 2.0, g.Y + g.H, door, trans, DrawPriorityEnum.FOREGROUND);
                 }
+
+                ++i;
             }
         }
     }
