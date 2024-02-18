@@ -154,7 +154,6 @@ public class LevelDesc : IDeserializable, ISerializable, IDrawable
         foreach (DynamicNavNode dn in DynamicNavNodes)
             dn.DrawOn(canvas, config, trans, time, data);
 
-
         //Gamemode stuff
         if (config.ScoringType == Enum.GetName(ScoringTypeEnum.RING))
         {
