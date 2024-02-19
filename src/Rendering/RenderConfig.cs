@@ -2,6 +2,16 @@ namespace WallyMapSpinzor2;
 
 public class RenderConfig
 {
+    public enum PathConfigEnum
+    {
+        NONE,
+        CUSTOM,
+        LEFT,
+        RIGHT,
+        TOP,
+        BOTTOM,
+    }
+
     //Which ScoringType to use
     public string ScoringType { get; set; } = Enum.GetName((ScoringTypeEnum)0) ?? "";
     //Which theme to use
@@ -12,10 +22,12 @@ public class RenderConfig
     public string Hotkey { get; set; } = Enum.GetName(HotkeyEnum.Keyboard) ?? "";
     //Whether to act as if -noskulls is on
     public bool NoSkulls { get; set; } = false;
+
     //Disables PickedPlatform display
     public bool ShowPickedPlatform { get; set; } = false;
     //In platform king, which of the platforms is the red one
     public int PickedPlatform { get; set; } = 0;
+    
     //Scores of team Blue and team Red
     //used for TeamScoreboard
     public int BlueScore { get; set; } = 0;
@@ -23,22 +35,23 @@ public class RenderConfig
 
     //whether to show the brawldown ropes
     public bool ShowRingRopes { get; set; } = false;
-
     //whether to show the zombie spawn points
     public bool ShowZombieSpawns { get; set; } = false;
-
     //whether to show the bombsketball tagets
     public bool ShowBombsketballTargets { get; set; } = false;
-
-    //whether to show the bombsketball bomb timers
-    //requires animation... we'll figure that out alongside the rest of the swf
-    //public bool ShowBombsketballTimers{get; set;} = false;
 
     //whether to show the horde doors
     public bool ShowHordeDoors { get; set; } = false;
     //how many hits each door took. if array is too short, rest of doors will have 0
     public int[] DamageHordeDoors { get; set; } = new[] { 0, 0 };
-
+    //what horde path type (if any) to show
+    public PathConfigEnum HordePathType { get; set; } = PathConfigEnum.NONE;
+    //the path index
+    public int HordePathIndex { get; set; } = 0;
+    //the horde wave
+    public int HordeWave { get; set; } = 0;
+    //the horde random seed
+    public uint HordeRandomSeed { get; set; } = 0;
 
     //whether to show the camera bounds
     public bool ShowCameraBounds { get; set; } = true;
@@ -46,30 +59,24 @@ public class RenderConfig
     public bool ShowKillBounds { get; set; } = true;
     //whether to show the sidekick bounds
     public bool ShowSpawnBotBounds { get; set; } = false;
-
     //whether to show assets
     public bool ShowAssets { get; set; } = true;
     //whether to show the background
     public bool ShowBackground { get; set; } = true;
-
     //whether to show collision
     public bool ShowCollision { get; set; } = true;
     //whether to show collision normal overrides
     public bool ShowCollisionNormalOverride { get; set; } = true;
-
     //whether to show goals
     public bool ShowGoal { get; set; } = true;
     //whether to show no dodge zones
     public bool ShowNoDodgeZone { get; set; } = true;
     //whether to show volumes
     public bool ShowVolume { get; set; } = true;
-
     //whether to show respawns
     public bool ShowRespawn { get; set; } = true;
-
     //whether to show item spawns
     public bool ShowItemSpawn { get; set; } = true;
-
     //whether to show navnodes
     public bool ShowNavNode { get; set; } = false;
 
@@ -79,12 +86,18 @@ public class RenderConfig
     public double RadiusZombieSpawn { get; set; } = 20;
     //circle radius to use for navnodes
     public double RadiusNavNode { get; set; } = 5;
+    //size of points in the horde path
+    public double RadiusHordePathPoint { get; set; } = 15;
     //length of collision normals
     public double LengthCollisionNormal { get; set; } = 50;
     //when drawing navline arrows, sideways offset of arrow sides
     public double OffsetNavLineArrowSide { get; set; } = 7;
     //when drawing navline arrows, backwards offset of arrow sides
     public double OffsetNavLineArrowBack { get; set; } = 7;
+    //when drawing horde path arrows, sideways offset of arrow sides
+    public double OffsetHordePathArrowSide { get; set; } = 18;
+    //when drawing horde path arrows, backwards offset of arrow sides
+    public double OffsetHordePathArrowBack { get; set; } = 28;
 
     //colors
     public Color ColorCameraBounds { get; set; } = Color.FromHex(0xFF00007F);
@@ -147,4 +160,6 @@ public class RenderConfig
     public Color ColorNavNodeS { get; set; } = Color.FromHex(0x7F000090);
 
     public Color ColorNavPath { get; set; } = Color.FromHex(0x8060607F);
+
+    public Color ColorHordePath { get; set; } = Color.FromHex(0x93529960);
 }

@@ -77,19 +77,7 @@ public class NavNode : IDeserializable, ISerializable, IDrawable
             if (data.NavIDDictionary.TryGetValue(id, out (double, double) pos))
             {
                 (double targetX, double targetY) = pos;
-                canvas.DrawLine(x, y, targetX, targetY, config.ColorNavPath, Transform.IDENTITY, DrawPriorityEnum.NAVNODE);
-                // draw arrow parts
-                // we start with an arrow pointing right
-                // and we rotate it to match
-                double length = BrawlhallaMath.Length(targetX - x, targetY - y); // arrow length
-                (double dirX, double dirY) = BrawlhallaMath.Normalize(targetX - x, targetY - y); // arrow direction
-                double angle = Math.Atan2(dirY, dirX); // arrow angle
-                // calculate end points by applying the rotation to the arrow
-                (double arrowEndX1, double arrowEndY1) = BrawlhallaMath.Rotated(length - config.OffsetNavLineArrowBack, config.OffsetNavLineArrowSide, angle);
-                (double arrowEndX2, double arrowEndY2) = BrawlhallaMath.Rotated(length - config.OffsetNavLineArrowBack, -config.OffsetNavLineArrowSide, angle);
-                // draw the lines
-                canvas.DrawLine(targetX, targetY, x + arrowEndX1, y + arrowEndY1, config.ColorNavPath, Transform.IDENTITY, DrawPriorityEnum.NAVLINE);
-                canvas.DrawLine(targetX, targetY, x + arrowEndX2, y + arrowEndY2, config.ColorNavPath, Transform.IDENTITY, DrawPriorityEnum.NAVLINE);
+                canvas.DrawArrow(x, y, targetX, targetY, config.OffsetNavLineArrowSide, config.OffsetNavLineArrowBack, config.ColorNavPath, Transform.IDENTITY, DrawPriorityEnum.NAVLINE);
             }
         }
     }

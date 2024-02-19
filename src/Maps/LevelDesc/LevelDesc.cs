@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
@@ -147,7 +148,8 @@ public class LevelDesc : IDeserializable, ISerializable, IDrawable
             i.DrawOn(canvas, config, trans, time, data);
         foreach (DynamicItemSpawn di in DynamicItemSpawns)
             di.DrawOn(canvas, config, trans, time, data);
-        //foreach(WaveData wd in WaveDatas)
+        foreach(WaveData wd in WaveDatas)
+            wd.DrawOn(canvas, config, trans, time, data);
         //foreach(AnimatedBackground ab in AnimatedBackgrounds)
         foreach (NavNode n in NavNodes)
             n.DrawOn(canvas, config, trans, time, data);
@@ -155,6 +157,7 @@ public class LevelDesc : IDeserializable, ISerializable, IDrawable
             dn.DrawOn(canvas, config, trans, time, data);
 
         //Gamemode stuff
+
         if (config.ShowRingRopes)
         {
             T rope = canvas.LoadTextureFromSWF(GAMEMODE_BONES, ROPE_SPRITE);
@@ -203,5 +206,71 @@ public class LevelDesc : IDeserializable, ISerializable, IDrawable
                 ++i;
             }
         }
+
+        if (config.HordePathType != RenderConfig.PathConfigEnum.NONE &&
+            config.HordePathType != RenderConfig.PathConfigEnum.CUSTOM)
+        {
+            List<Goal> goals = Volumes.OfType<Goal>().ToList();
+
+            if (goals.Count >= 2)
+            {
+                double door1CX = goals[0].X + goals[0].W / 2;
+                double door1CY = goals[0].Y + goals[0].H / 2;
+                double door2CX = goals[1].X + goals[1].W / 2;
+                double door2CY = goals[1].Y + goals[1].H / 2;
+                GenerateRandomHordePaths(config.HordeRandomSeed, CameraBounds.X, CameraBounds.Y, CameraBounds.W, CameraBounds.H, door1CX, door1CY, door2CX, door2CY);
+
+                List<List<(double, double)>> pathList = config.HordePathType switch
+                {
+                    RenderConfig.PathConfigEnum.LEFT => _leftPaths,
+                    RenderConfig.PathConfigEnum.RIGHT => _rightPaths,
+                    RenderConfig.PathConfigEnum.TOP => _topPaths,
+                    RenderConfig.PathConfigEnum.BOTTOM => _bottomPaths,
+                    _ => throw new ArgumentException(nameof(config.HordePathType))
+                };
+                int pathIndex = BrawlhallaMath.SafeMod(config.HordePathIndex, 20);
+                List<(double, double)> path = pathList[pathIndex];
+                foreach ((double x, double y) in path)
+                {
+                    canvas.DrawCircle(x, y, config.RadiusHordePathPoint, config.ColorHordePath, trans, DrawPriorityEnum.DATA);
+                }
+                
+                for(int i = 0; i < path.Count-1; ++i)
+                {
+                    canvas.DrawArrow(
+                        path[i].Item1, path[i].Item2,
+                        path[i + 1].Item1, path[i + 1].Item2,
+                        config.OffsetHordePathArrowSide, config.OffsetHordePathArrowBack,
+                        config.ColorHordePath, trans, DrawPriorityEnum.DATA
+                    );
+                }
+            }
+        }
+    }
+
+    private readonly List<List<(double, double)>> _topPaths = new();
+    private readonly List<List<(double, double)>> _leftPaths = new();
+    private readonly List<List<(double, double)>> _rightPaths = new();
+    private readonly List<List<(double, double)>> _bottomPaths = new();
+
+    private void GenerateRandomHordePaths(
+        uint hordeSeed, // seed
+        double boundX, double boundY, double boundW, double boundH, // camera bounds
+        double door1CX, double door1CY, // door 1
+        double door2CX, double door2CY // door 2
+    )
+    {
+        BrawlhallaRandom rand = new(hordeSeed);
+        _topPaths.Clear();
+        for (int i = 0; i < 10; ++i) _topPaths.Add(BrawlhallaMath.GenerateHordePath(rand, boundX, boundY, boundW, boundH, door1CX, door1CY, door2CX, door2CY, DirEnum.TOP, PathEnum.CLOSE, i).ToList());
+        for (int i = 0; i < 10; ++i) _topPaths.Add(BrawlhallaMath.GenerateHordePath(rand, boundX, boundY, boundW, boundH, door1CX, door1CY, door2CX, door2CY, DirEnum.TOP, PathEnum.FAR, i).ToList());
+        _leftPaths.Clear();
+        for (int i = 0; i < 10; ++i) _leftPaths.Add(BrawlhallaMath.GenerateHordePath(rand, boundX, boundY, boundW, boundH, door1CX, door1CY, door2CX, door2CY, DirEnum.LEFT, PathEnum.CLOSE, i).ToList());
+        for (int i = 0; i < 10; ++i) _leftPaths.Add(BrawlhallaMath.GenerateHordePath(rand, boundX, boundY, boundW, boundH, door1CX, door1CY, door2CX, door2CY, DirEnum.LEFT, PathEnum.FAR, i).ToList());
+        _rightPaths.Clear();
+        for (int i = 0; i < 10; ++i) _rightPaths.Add(BrawlhallaMath.GenerateHordePath(rand, boundX, boundY, boundW, boundH, door1CX, door1CY, door2CX, door2CY, DirEnum.RIGHT, PathEnum.CLOSE, i).ToList());
+        for (int i = 0; i < 10; ++i) _rightPaths.Add(BrawlhallaMath.GenerateHordePath(rand, boundX, boundY, boundW, boundH, door1CX, door1CY, door2CX, door2CY, DirEnum.RIGHT, PathEnum.FAR, i).ToList());
+        _bottomPaths.Clear();
+        for (int i = 0; i < 20; ++i) _bottomPaths.Add(BrawlhallaMath.GenerateHordePath(rand, boundX, boundY, boundW, boundH, door1CX, door1CY, door2CX, door2CY, DirEnum.BOTTOM, PathEnum.ANY, i).ToList());
     }
 }

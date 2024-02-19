@@ -2,7 +2,7 @@ using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
 
-public class WaveData : IDeserializable, ISerializable
+public class WaveData : IDeserializable, ISerializable, IDrawable
 {
     public int ID { get; set; }
     public double? Speed { get; set; }
@@ -39,6 +39,18 @@ public class WaveData : IDeserializable, ISerializable
 
         e.AddManySerialized(CustomPaths);
         e.AddManySerialized(Groups);
+    }
+
+    public void DrawOn<T>(ICanvas<T> canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data)
+        where T : ITexture
+    {
+        if (ID != config.HordeWave)
+            return;
+        if (config.HordePathType == RenderConfig.PathConfigEnum.CUSTOM && CustomPaths.Count != 0)
+        {
+            int pathIndex = BrawlhallaMath.SafeMod(config.HordePathIndex, CustomPaths.Count);
+            CustomPaths[pathIndex].DrawOn(canvas, config, trans, time, data);
+        }
     }
 
     public double GetSpeed(int players) => players switch

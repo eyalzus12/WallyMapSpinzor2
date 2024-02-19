@@ -1,3 +1,5 @@
+using System.Numerics;
+
 namespace WallyMapSpinzor2;
 
 public static class BrawlhallaMath
@@ -157,10 +159,12 @@ public static class BrawlhallaMath
         return (x, y);
     }
 
-    public static double SafeMod(double x, double m)
+    //this might be an overkill
+    public static T1 SafeMod<T1, T2>(T1 x, T2 m)
+        where T1 : IModulusOperators<T1, T2, T1>, IAdditionOperators<T1, T2, T1>, INumber<T1>
     {
         x %= m;
-        if (x < 0) x += m;
+        if (x < T1.Zero) x += m;
         return x;
     }
 
@@ -168,8 +172,8 @@ public static class BrawlhallaMath
     public static IEnumerable<(double, double)> GenerateHordePath(
         BrawlhallaRandom rand, // random number generator
         double boundX, double boundY, double boundW, double boundH, // camera bounds
-        double door1X, double door1Y, // door 1
-        double door2X, double door2Y, // door 2
+        double door1CX, double door1CY, // door 1
+        double door2CX, double door2CY, // door 2
         DirEnum dir, PathEnum path, // type
         int idx // path index
     )
@@ -186,7 +190,7 @@ public static class BrawlhallaMath
                     {
                         double jump = boundW / 10;
                         (double fromX, double fromY) = (boundX + idx * jump, boundY);
-                        (double doorX, double doorY) = PickDoor(path, fromX < boundW / 2) ? (door1X, door1Y) : (door2X, door2Y);
+                        (double doorX, double doorY) = PickDoor(path, fromX < boundW / 2) ? (door1CX, door1CY) : (door2CX, door2CY);
                         if (rand.Next() % 4 == 0)
                         {
                             bool idfk = Math.Abs(doorX - fromX) >= boundW / 3;
@@ -204,7 +208,7 @@ public static class BrawlhallaMath
                     {
                         double jump = boundH / 10;
                         (double fromX, double fromY) = (boundX + boundW, boundY + idx * jump);
-                        (double doorX, double doorY) = PickDoor(path, false) ? (door1X, door1Y) : (door2X, door2Y);
+                        (double doorX, double doorY) = PickDoor(path, false) ? (door1CX, door1CY) : (door2CX, door2CY);
                         if (path == PathEnum.FAR && rand.Next() % 3 == 0)
                         {
                             (double midX1, double midY1) = (3220, 1050);
@@ -230,19 +234,19 @@ public static class BrawlhallaMath
                         double midX2, midY2 = 1600;
                         if (fromX < boundX + boundW / 3)
                         {
-                            (doorX, doorY) = PickDoor(PathEnum.CLOSE, true) ? (door1X, door1Y) : (door2X, door2Y);
+                            (doorX, doorY) = PickDoor(PathEnum.CLOSE, true) ? (door1CX, door1CY) : (door2CX, door2CY);
                             midX1 = -650;
                             midX2 = -550;
                         }
                         else if (fromX > boundX + 2 * boundW / 3)
                         {
-                            (doorX, doorY) = PickDoor(PathEnum.CLOSE, false) ? (door1X, door1Y) : (door2X, door2Y);
+                            (doorX, doorY) = PickDoor(PathEnum.CLOSE, false) ? (door1CX, door1CY) : (door2CX, door2CY);
                             midX1 = 3320;
                             midX2 = 3220;
                         }
                         else
                         {
-                            (doorX, doorY) = PickDoor(PathEnum.CLOSE, fromX < boundX + boundW / 2) ? (door1X, door1Y) : (door2X, door2Y);
+                            (doorX, doorY) = PickDoor(PathEnum.CLOSE, fromX < boundX + boundW / 2) ? (door1CX, door1CY) : (door2CX, door2CY);
                             bool chance50 = rand.Next() % 2 == 0;
                             bool chance25 = rand.Next() % 4 == 0;
                             if (chance50)
@@ -266,7 +270,7 @@ public static class BrawlhallaMath
                     {
                         double jump = boundH / 10;
                         (double fromX, double fromY) = (boundX, boundY + idx * jump);
-                        (double doorX, double doorY) = PickDoor(path, true) ? (door1X, door1Y) : (door2X, door2Y);
+                        (double doorX, double doorY) = PickDoor(path, true) ? (door1CX, door1CY) : (door2CX, door2CY);
                         if (path == PathEnum.FAR && rand.Next() % 3 == 0)
                         {
                             (double midX1, double midY1) = (-550, 1050);
