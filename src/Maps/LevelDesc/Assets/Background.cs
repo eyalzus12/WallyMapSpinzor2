@@ -50,8 +50,8 @@ public class Background : IDeserializable, ISerializable, IDrawable
         }
         else
         {
-            int matchCount1 = Theme?.Count(t => t == config.Theme) ?? 0;
-            int matchCount2 = data.CurrentBackground.Theme?.Count(t => t == config.Theme) ?? 0;
+            int matchCount1 = Theme?.Count(t => t == Enum.GetName(config.Theme)) ?? 0;
+            int matchCount2 = data.CurrentBackground.Theme?.Count(t => t == Enum.GetName(config.Theme)) ?? 0;
             int themeCount1 = Theme?.Count ?? 0;
             int themeCount2 = data.CurrentBackground.Theme?.Count ?? 0;
             if (matchCount1 > matchCount2 || (matchCount1 == matchCount2 && themeCount1 < themeCount2))

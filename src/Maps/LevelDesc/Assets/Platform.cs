@@ -65,13 +65,13 @@ public class Platform : AbstractAsset
         }
         else if (Hotkey is not null)
         {
-            if (Hotkey != config.Hotkey)
+            if (Hotkey != Enum.GetName(config.Hotkey))
                 return;
         }
         else if (Theme is not null || ScoringType is not null)
         {
-            bool themeMatches = Theme?.Contains(config.Theme) ?? false;
-            bool scoringTypeMatches = ScoringType is not null && (ScoringType == config.ScoringType);
+            bool themeMatches = Theme?.Contains(Enum.GetName(config.Theme)!) ?? false;
+            bool scoringTypeMatches = ScoringType is not null && (ScoringType == Enum.GetName(config.ScoringType));
             if (!themeMatches && !scoringTypeMatches)
                 return;
         }
