@@ -13,11 +13,11 @@ public class RenderConfig
     }
 
     //Which ScoringType to use
-    public string ScoringType { get; set; } = "";
+    public ScoringTypeEnum ScoringType { get; set; } = ScoringTypeEnum.None;
     //Which theme to use
-    public string Theme { get; set; } = "";
+    public ThemeEnum Theme { get; set; } = ThemeEnum.None;
     //What keys to render in Tutorial1
-    public string Hotkey { get; set; } = Enum.GetName(HotkeyEnum.Keyboard) ?? "";
+    public HotkeyEnum Hotkey { get; set; } = HotkeyEnum.Keyboard;
     //Whether backgrounds are animated.
     public bool AnimatedBackgrounds { get; set; } = false;
     //Whether to act as if -noskulls is on
