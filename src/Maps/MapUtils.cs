@@ -26,7 +26,4 @@ public static class MapUtils
     private static readonly HashSet<DirEnum> DEFAULT_SHARED_DIR = new() { DirEnum.LEFT, DirEnum.RIGHT, DirEnum.TOP, DirEnum.BOTTOM, DirEnum.SIDE };
     public static bool IsSharedDir(DirEnum d) => DEFAULT_SHARED_DIR.Contains(d);
     public static bool IsSharedPath(PathEnum p) => p < (PathEnum)1048575; //numeric path
-
-    public static string FixBmg(string s) => s
-        .Replace("""PlatID="3"X""", """PlatID="3" X"""); //OneUpOneDownFFA3. PlatID="3"X -> PlatID="3" X
 }
