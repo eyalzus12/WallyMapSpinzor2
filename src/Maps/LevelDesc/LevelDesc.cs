@@ -148,7 +148,7 @@ public class LevelDesc : IDeserializable, ISerializable, IDrawable
             i.DrawOn(canvas, config, trans, time, data);
         foreach (DynamicItemSpawn di in DynamicItemSpawns)
             di.DrawOn(canvas, config, trans, time, data);
-        foreach(WaveData wd in WaveDatas)
+        foreach (WaveData wd in WaveDatas)
             wd.DrawOn(canvas, config, trans, time, data);
         //foreach(AnimatedBackground ab in AnimatedBackgrounds)
         foreach (NavNode n in NavNodes)
@@ -234,8 +234,8 @@ public class LevelDesc : IDeserializable, ISerializable, IDrawable
                 {
                     canvas.DrawCircle(x, y, config.RadiusHordePathPoint, config.ColorHordePath, trans, DrawPriorityEnum.DATA);
                 }
-                
-                for(int i = 0; i < path.Count-1; ++i)
+
+                for (int i = 0; i < path.Count - 1; ++i)
                 {
                     canvas.DrawArrow(
                         path[i].Item1, path[i].Item2,

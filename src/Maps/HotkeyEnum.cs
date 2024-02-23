@@ -1,7 +1,6 @@
 namespace WallyMapSpinzor2;
 
-//This enum is merely for convenience.
-//Do not use it as a type of paramater, since that could break with newer hotkeys.
+//This enum only contains the ones that are used ingame
 public enum HotkeyEnum
 {
     Keyboard,

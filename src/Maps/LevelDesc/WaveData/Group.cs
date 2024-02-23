@@ -64,7 +64,7 @@ public class Group : IDeserializable, ISerializable
             e.SetAttributeValue("Dir", Dir.ToString().ToUpper());
         if (Path != PathEnum.ANY)
             e.SetAttributeValue("Path", Path.ToString().ToUpper());
-        if (Behavior != BehaviorEnum.NORMAL)
+        if (Behavior != BehaviorEnum._)
             e.SetAttributeValue("Behavior", Behavior.ToString().ToUpper());
         if (!MapUtils.IsSharedDir(Dir) && Shared)
             e.SetAttributeValue("Shared", Shared.ToString().ToUpper());

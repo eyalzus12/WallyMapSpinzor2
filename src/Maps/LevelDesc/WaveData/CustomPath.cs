@@ -23,6 +23,7 @@ public class CustomPath : IDeserializable, ISerializable, IDrawable
         {
             p.DrawOn(canvas, config, trans, time, data);
         }
+
         for (int i = 0; i < Points.Count - 1; ++i)
         {
             canvas.DrawArrow(

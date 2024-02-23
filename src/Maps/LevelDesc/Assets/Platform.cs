@@ -52,7 +52,6 @@ public class Platform : AbstractAsset
         e.AddManySerialized(AssetChildren);
     }
 
-
     public override void DrawOn<T>(ICanvas<T> canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data)
     {
         //checks for showing assets. logic follows the game's code.

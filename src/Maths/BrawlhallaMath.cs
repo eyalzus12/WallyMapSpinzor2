@@ -161,7 +161,10 @@ public static class BrawlhallaMath
 
     //this might be an overkill
     public static T1 SafeMod<T1, T2>(T1 x, T2 m)
-        where T1 : IModulusOperators<T1, T2, T1>, IAdditionOperators<T1, T2, T1>, INumber<T1>
+        where T1 :
+            INumber<T1>,
+            IModulusOperators<T1, T2, T1>,
+            IAdditionOperators<T1, T2, T1>
     {
         x %= m;
         if (x < T1.Zero) x += m;

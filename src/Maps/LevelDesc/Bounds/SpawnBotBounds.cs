@@ -24,7 +24,6 @@ public class SpawnBotBounds : IDeserializable, ISerializable, IDrawable
         e.SetAttributeValue("Y", Y.ToString());
     }
 
-
     public void DrawOn<T>(ICanvas<T> canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data)
         where T : ITexture
     {

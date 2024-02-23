@@ -4,6 +4,7 @@ namespace WallyMapSpinzor2;
 
 public class LevelSetType : IDeserializable, ISerializable
 {
+    private const string LEVEL_SET_TYPE_TEMPLATE_NAME = "Auto";
     private const string SKIP_ORDER_VALIDATION_TEMPLATE_STRING = "Don't abuse this to be lazy. It's for special cases like Bubble Tag where we explicitly want the order to be different.";
 
     public string LevelSetName { get; set; } = null!;
@@ -29,7 +30,7 @@ public class LevelSetType : IDeserializable, ISerializable
         e.Add(new XElement("DisplayNameKey", DisplayNameKey));
         e.Add(new XElement("LevelSetID", LevelSetID));
 
-        if (LevelSetName == "Auto")
+        if (LevelSetName == LEVEL_SET_TYPE_TEMPLATE_NAME)
         {
             e.Add(new XElement("SkipOrderValidation", SKIP_ORDER_VALIDATION_TEMPLATE_STRING));
             return;

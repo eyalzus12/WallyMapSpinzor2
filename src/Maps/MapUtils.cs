@@ -18,10 +18,10 @@ public static class MapUtils
 
     public static BehaviorEnum ParseBehavior(string? s) =>
         (s is null)
-        ? BehaviorEnum.NORMAL
+        ? BehaviorEnum._
         : Enum.TryParse(s.ToUpperInvariant(), out BehaviorEnum b)
             ? b
-            : BehaviorEnum.NORMAL;
+            : BehaviorEnum._;
 
     private static readonly HashSet<DirEnum> DEFAULT_SHARED_DIR = new() { DirEnum.LEFT, DirEnum.RIGHT, DirEnum.TOP, DirEnum.BOTTOM, DirEnum.SIDE };
     public static bool IsSharedDir(DirEnum d) => DEFAULT_SHARED_DIR.Contains(d);

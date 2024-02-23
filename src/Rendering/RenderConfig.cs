@@ -13,13 +13,13 @@ public class RenderConfig
     }
 
     //Which ScoringType to use
-    public string ScoringType { get; set; } = Enum.GetName((ScoringTypeEnum)0) ?? "";
+    public string ScoringType { get; set; } = "";
     //Which theme to use
-    public string Theme { get; set; } = Enum.GetName((ThemeEnum)0) ?? "";
-    //Whether backgrounds are animated.
-    public bool AnimatedBackgrounds { get; set; } = false;
+    public string Theme { get; set; } = "";
     //What keys to render in Tutorial1
     public string Hotkey { get; set; } = Enum.GetName(HotkeyEnum.Keyboard) ?? "";
+    //Whether backgrounds are animated.
+    public bool AnimatedBackgrounds { get; set; } = false;
     //Whether to act as if -noskulls is on
     public bool NoSkulls { get; set; } = false;
 
@@ -27,7 +27,7 @@ public class RenderConfig
     public bool ShowPickedPlatform { get; set; } = false;
     //In platform king, which of the platforms is the red one
     public int PickedPlatform { get; set; } = 0;
-    
+
     //Scores of team Blue and team Red
     //used for TeamScoreboard
     public int BlueScore { get; set; } = 0;

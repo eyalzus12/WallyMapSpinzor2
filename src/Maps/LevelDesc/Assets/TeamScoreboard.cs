@@ -54,7 +54,7 @@ public class TeamScoreboard : IDeserializable, ISerializable, IDrawable
         {
             string fontName = $"{DIGIT_PREFIX}{config.RedScore}" + (RedDigitFont == "" ? "" : "_") + RedDigitFont;
             T texture = canvas.LoadTextureFromSWF(LevelDesc.GAMEMODE_BONES, fontName);
-            Transform redOnesTrans = Transform.CreateTranslate(RedTeamX, Y);
+            Transform redOnesTrans = trans * Transform.CreateTranslate(RedTeamX, Y);
             canvas.DrawTexture(0, 0, texture, redOnesTrans, DrawPriorityEnum.FOREGROUND);
         }
         else
@@ -71,7 +71,7 @@ public class TeamScoreboard : IDeserializable, ISerializable, IDrawable
             T textureOnes = canvas.LoadTextureFromSWF(LevelDesc.GAMEMODE_BONES, fontNameOnes);
             Transform redOnesTrans = trans * Transform.CreateFrom(x: RedTeamX + DoubleDigitsOnesX, y: DoubleDigitsY, scaleX: DoubleDigitsScale, scaleY: DoubleDigitsScale);
             canvas.DrawTexture(0, 0, textureOnes, redOnesTrans, DrawPriorityEnum.FOREGROUND);
-            
+
             string fontNameTens = $"{DIGIT_PREFIX}{redTen}" + (RedDigitFont == "" ? "" : "_") + RedDigitFont;
             T textureTens = canvas.LoadTextureFromSWF(LevelDesc.GAMEMODE_BONES, fontNameTens);
             Transform redTensTrans = trans * Transform.CreateFrom(x: RedTeamX + DoubleDigitsTensX, y: DoubleDigitsY, scaleX: DoubleDigitsScale, scaleY: DoubleDigitsScale);
@@ -100,7 +100,7 @@ public class TeamScoreboard : IDeserializable, ISerializable, IDrawable
             T textureOnes = canvas.LoadTextureFromSWF(LevelDesc.GAMEMODE_BONES, fontNameOnes);
             Transform blueOnesTrans = trans * Transform.CreateFrom(x: BlueTeamX + DoubleDigitsOnesX, y: DoubleDigitsY, scaleX: DoubleDigitsScale, scaleY: DoubleDigitsScale);
             canvas.DrawTexture(0, 0, textureOnes, blueOnesTrans, DrawPriorityEnum.FOREGROUND);
-            
+
             string fontNameTens = $"{DIGIT_PREFIX}{blueTen}" + (BlueDigitFont == "" ? "" : "_") + BlueDigitFont;
             T textureTens = canvas.LoadTextureFromSWF(LevelDesc.GAMEMODE_BONES, fontNameTens);
             Transform blueTensTrans = trans * Transform.CreateFrom(x: BlueTeamX + DoubleDigitsTensX, y: DoubleDigitsY, scaleX: DoubleDigitsScale, scaleY: DoubleDigitsScale);

@@ -5,8 +5,6 @@ namespace WallyMapSpinzor2;
 //Do not use it as a type of paramater, since that could break with newer scoring types.
 public enum ScoringTypeEnum
 {
-    //use 0 for none
-
-    //Snowbrawl
-    SNOWBALL = 1,
+    _,
+    SNOWBALL,
 }
