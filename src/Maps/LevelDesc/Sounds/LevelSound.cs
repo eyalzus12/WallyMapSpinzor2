@@ -18,7 +18,7 @@ public class LevelSound : IDeserializable, ISerializable
     public void Serialize(XElement e)
     {
         e.SetAttributeValue("SoundEventName", SoundEventName);
-        e.SetAttributeValue("Interval", Interval.ToString());
-        e.SetAttributeValue("Delay", Delay.ToString());
+        e.SetAttributeValue("Interval", Interval);
+        e.SetAttributeValue("Delay", Delay);
     }
 }

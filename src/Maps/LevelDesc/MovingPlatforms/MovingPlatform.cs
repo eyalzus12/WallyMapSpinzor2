@@ -53,10 +53,10 @@ public class MovingPlatform : AbstractAsset
 
     public override void DrawOn<T>(ICanvas<T> canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data)
     {
-        if (!data.PlatIDMovingPlatformOffset.ContainsKey(PlatID))
+        if (!data.PlatIDMovingPlatformOffset.TryGetValue(PlatID, out (double, double) platOffset))
             throw new InvalidOperationException($"Plat ID dictionary did not contain plat id {PlatID} when attempting to draw MovingPlatform. Make sure to call StoreOffset beforehand.");
 
-        (double offX, double offY) = data.PlatIDMovingPlatformOffset[PlatID];
+        (double offX, double offY) = platOffset;
         Transform childTrans = trans * Transform.CreateTranslate(offX, offY);
         foreach (AbstractAsset a in Assets)
             a.DrawOn(canvas, config, childTrans, time, data);

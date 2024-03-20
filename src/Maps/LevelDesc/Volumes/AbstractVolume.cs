@@ -24,13 +24,13 @@ public abstract class AbstractVolume : IDeserializable, ISerializable, IDrawable
 
     public virtual void Serialize(XElement e)
     {
-        e.SetAttributeValue("H", H.ToString());
-        e.SetAttributeValue("Team", Team.ToString());
-        e.SetAttributeValue("W", W.ToString());
-        e.SetAttributeValue("X", X.ToString());
-        e.SetAttributeValue("Y", Y.ToString());
+        e.SetAttributeValue("H", H);
+        e.SetAttributeValue("Team", Team);
+        e.SetAttributeValue("W", W);
+        e.SetAttributeValue("X", X);
+        e.SetAttributeValue("Y", Y);
         if (ID != 0)
-            e.SetAttributeValue("ID", ID.ToString());
+            e.SetAttributeValue("ID", ID);
     }
 
     public virtual void DrawOn<T>(ICanvas<T> canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data)

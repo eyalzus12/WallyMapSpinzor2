@@ -27,17 +27,17 @@ public class WaveData : IDeserializable, ISerializable, IDrawable
 
     public void Serialize(XElement e)
     {
-        e.SetAttributeValue("ID", ID.ToString());
+        e.SetAttributeValue("ID", ID);
 
         if (Speed is not null)
-            e.SetAttributeValue("Speed", Speed.ToString());
+            e.SetAttributeValue("Speed", Speed);
         if (Speed3 is not null)
-            e.SetAttributeValue("Speed3", Speed3.ToString());
+            e.SetAttributeValue("Speed3", Speed3);
         if (Speed4 is not null)
-            e.SetAttributeValue("Speed4", Speed4.ToString());
+            e.SetAttributeValue("Speed4", Speed4);
 
         if (LoopIdx != 0)
-            e.SetAttributeValue("LoopIdx", LoopIdx.ToString());
+            e.SetAttributeValue("LoopIdx", LoopIdx);
 
         e.AddManySerialized(CustomPaths);
         e.AddManySerialized(Groups);

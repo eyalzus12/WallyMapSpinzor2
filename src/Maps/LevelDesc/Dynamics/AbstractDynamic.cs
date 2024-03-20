@@ -25,8 +25,8 @@ public abstract class AbstractDynamic<T> : ISerializable, IDeserializable, IDraw
     public void Serialize(XElement e)
     {
         e.SetAttributeValue("PlatID", PlatID);
-        e.SetAttributeValue("X", X.ToString());
-        e.SetAttributeValue("Y", Y.ToString());
+        e.SetAttributeValue("X", X);
+        e.SetAttributeValue("Y", Y);
         e.AddManySerialized(Children);
     }
 

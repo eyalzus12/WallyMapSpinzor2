@@ -56,9 +56,9 @@ public class NavNode : IDeserializable, ISerializable, IDrawable
         e.SetAttributeValue("NavID", NavIDToString(NavID, Type));
         e.SetAttributeValue("Path", string.Join(',', Path.Select(_ => NavIDToString(_.Item1, _.Item2))));
         if (X != 0)
-            e.SetAttributeValue("X", X.ToString());
+            e.SetAttributeValue("X", X);
         if (Y != 0)
-            e.SetAttributeValue("Y", Y.ToString());
+            e.SetAttributeValue("Y", Y);
     }
 
     public void RegisterNavNode(RenderData data, double xOff = 0, double yOff = 0)

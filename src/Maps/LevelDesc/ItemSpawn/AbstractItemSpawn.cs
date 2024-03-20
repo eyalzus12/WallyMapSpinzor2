@@ -21,12 +21,12 @@ public abstract class AbstractItemSpawn : IDeserializable, ISerializable, IDrawa
     public void Serialize(XElement e)
     {
         if (H != DefaultH)
-            e.SetAttributeValue("H", H.ToString());
+            e.SetAttributeValue("H", H);
         if (W != DefaultW)
-            e.SetAttributeValue("W", W.ToString());
+            e.SetAttributeValue("W", W);
 
-        e.SetAttributeValue("X", X.ToString());
-        e.SetAttributeValue("Y", Y.ToString());
+        e.SetAttributeValue("X", X);
+        e.SetAttributeValue("Y", Y);
     }
 
     public abstract double DefaultX { get; }

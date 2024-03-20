@@ -34,13 +34,13 @@ public class TeamScoreboard : IDeserializable, ISerializable, IDrawable
 
     public void Serialize(XElement e)
     {
-        e.SetAttributeValue("RedTeamX", RedTeamX.ToString());
-        e.SetAttributeValue("BlueTeamX", BlueTeamX.ToString());
-        e.SetAttributeValue("Y", Y.ToString());
-        e.SetAttributeValue("DoubleDigitsOnesX", DoubleDigitsOnesX.ToString());
-        e.SetAttributeValue("DoubleDigitsTensX", DoubleDigitsTensX.ToString());
-        e.SetAttributeValue("DoubleDigitsY", DoubleDigitsY.ToString());
-        e.SetAttributeValue("DoubleDigitsScale", DoubleDigitsScale.ToString());
+        e.SetAttributeValue("RedTeamX", RedTeamX);
+        e.SetAttributeValue("BlueTeamX", BlueTeamX);
+        e.SetAttributeValue("Y", Y);
+        e.SetAttributeValue("DoubleDigitsOnesX", DoubleDigitsOnesX);
+        e.SetAttributeValue("DoubleDigitsTensX", DoubleDigitsTensX);
+        e.SetAttributeValue("DoubleDigitsY", DoubleDigitsY);
+        e.SetAttributeValue("DoubleDigitsScale", DoubleDigitsScale);
         e.SetAttributeValue("RedDigitFont", RedDigitFont);
         e.SetAttributeValue("BlueDigitFont", BlueDigitFont);
     }

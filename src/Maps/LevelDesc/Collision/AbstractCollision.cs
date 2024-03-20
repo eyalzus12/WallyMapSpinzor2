@@ -99,37 +99,37 @@ public abstract class AbstractCollision : IDeserializable, ISerializable, IDrawa
             e.SetAttributeValue("TauntEvent", TauntEvent);
 
         if (Team != 0)
-            e.SetAttributeValue("Team", Team.ToString());
+            e.SetAttributeValue("Team", Team);
 
         if (AnchorX is not null && AnchorY is not null)
         {
-            e.SetAttributeValue("AnchorX", AnchorX.ToString());
-            e.SetAttributeValue("AnchorY", AnchorY.ToString());
+            e.SetAttributeValue("AnchorX", AnchorX);
+            e.SetAttributeValue("AnchorY", AnchorY);
         }
 
         if (NormalX != 0)
-            e.SetAttributeValue("NormalX", NormalX.ToString());
+            e.SetAttributeValue("NormalX", NormalX);
         if (NormalY != 0)
-            e.SetAttributeValue("NormalY", NormalY.ToString());
+            e.SetAttributeValue("NormalY", NormalY);
 
         if (X1 == X2)
         {
-            e.SetAttributeValue("X", X1.ToString());
+            e.SetAttributeValue("X", X1);
         }
         else
         {
-            e.SetAttributeValue("X1", X1.ToString());
-            e.SetAttributeValue("X2", X2.ToString());
+            e.SetAttributeValue("X1", X1);
+            e.SetAttributeValue("X2", X2);
         }
 
         if (Y1 == Y2)
         {
-            e.SetAttributeValue("Y", Y1.ToString());
+            e.SetAttributeValue("Y", Y1);
         }
         else
         {
-            e.SetAttributeValue("Y1", Y1.ToString());
-            e.SetAttributeValue("Y2", Y2.ToString());
+            e.SetAttributeValue("Y1", Y1);
+            e.SetAttributeValue("Y2", Y2);
         }
 
         if (Flag is not null)

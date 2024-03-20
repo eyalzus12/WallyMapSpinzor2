@@ -59,7 +59,7 @@ public class AnimatedBackground : IDeserializable, ISerializable
         e.Add(new XElement("Scale", $"{Scale_X},{Scale_Y}"));
 
         if (Rotation != 0)
-            e.Add(new XElement("Rotation", Rotation.ToString()));
+            e.Add(new XElement("Rotation", Rotation));
 
         if (FrameOffset != 0)
             e.Add(new XElement("FrameOffset", FrameOffset));

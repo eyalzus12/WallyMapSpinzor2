@@ -38,12 +38,12 @@ public abstract class AbstractPressurePlateCollision : AbstractCollision
 
     public override void Serialize(XElement e)
     {
-        e.SetAttributeValue("AnimOffsetX", AnimOffsetX.ToString());
-        e.SetAttributeValue("AnimOffsetY", AnimOffsetY.ToString());
+        e.SetAttributeValue("AnimOffsetX", AnimOffsetX);
+        e.SetAttributeValue("AnimOffsetY", AnimOffsetY);
         if (AnimRotation != 0)
-            e.SetAttributeValue("AnimRotation", AnimRotation.ToString());
+            e.SetAttributeValue("AnimRotation", AnimRotation);
         e.SetAttributeValue("AssetName", AssetName);
-        e.SetAttributeValue("Cooldown", Cooldown.ToString());
+        e.SetAttributeValue("Cooldown", Cooldown);
         e.SetAttributeValue("FaceLeft", FaceLeft.ToString().ToLower());
         e.SetAttributeValue("FireOffsetX", string.Join(',', FireOffsetX));
         e.SetAttributeValue("FireOffsetY", string.Join(',', FireOffsetY));

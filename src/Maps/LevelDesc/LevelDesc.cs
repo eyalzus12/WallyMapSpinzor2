@@ -81,9 +81,9 @@ public class LevelDesc : IDeserializable, ISerializable, IDrawable
         e.SetAttributeValue("AssetDir", AssetDir);
         e.SetAttributeValue("LevelName", LevelName);
         if (NumFrames != 0)
-            e.SetAttributeValue("NumFrames", NumFrames.ToString());
+            e.SetAttributeValue("NumFrames", NumFrames);
         if (SlowMult != 1)
-            e.SetAttributeValue("SlowMult", SlowMult.ToString());
+            e.SetAttributeValue("SlowMult", SlowMult);
 
         e.AddSerialized(CameraBounds);
         e.AddSerialized(SpawnBotBounds);

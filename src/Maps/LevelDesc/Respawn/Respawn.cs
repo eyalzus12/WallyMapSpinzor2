@@ -24,8 +24,8 @@ public class Respawn : IDeserializable, ISerializable, IDrawable
             e.SetAttributeValue("Initial", Initial);
         if (ExpandedInit)
             e.SetAttributeValue("ExpandedInit", ExpandedInit);
-        e.SetAttributeValue("X", X.ToString());
-        e.SetAttributeValue("Y", Y.ToString());
+        e.SetAttributeValue("X", X);
+        e.SetAttributeValue("Y", Y);
     }
 
 

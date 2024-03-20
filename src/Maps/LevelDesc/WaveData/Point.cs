@@ -16,8 +16,8 @@ public class Point : IDeserializable, ISerializable, IDrawable
 
     public void Serialize(XElement e)
     {
-        e.SetAttributeValue("X", X.ToString());
-        e.SetAttributeValue("Y", Y.ToString());
+        e.SetAttributeValue("X", X);
+        e.SetAttributeValue("Y", Y);
     }
 
     public void DrawOn<T>(ICanvas<T> canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data)

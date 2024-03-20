@@ -41,32 +41,32 @@ public class Group : IDeserializable, ISerializable
     public void Serialize(XElement e)
     {
         if (Count is not null)
-            e.SetAttributeValue("Count", Count.ToString());
+            e.SetAttributeValue("Count", Count);
         if (Count3 is not null)
-            e.SetAttributeValue("Count3", Count3.ToString());
+            e.SetAttributeValue("Count3", Count3);
         if (Count4 is not null)
-            e.SetAttributeValue("Count4", Count4.ToString());
+            e.SetAttributeValue("Count4", Count4);
 
         if (Delay is not null)
-            e.SetAttributeValue("Delay", Delay.ToString());
+            e.SetAttributeValue("Delay", Delay);
         if (Delay3 is not null)
-            e.SetAttributeValue("Delay3", Delay3.ToString());
+            e.SetAttributeValue("Delay3", Delay3);
         if (Delay4 is not null)
-            e.SetAttributeValue("Delay4", Delay4.ToString());
+            e.SetAttributeValue("Delay4", Delay4);
 
         if (Stagger is not null)
-            e.SetAttributeValue("Stagger", Stagger.ToString());
+            e.SetAttributeValue("Stagger", Stagger);
         if (Stagger3 is not null)
-            e.SetAttributeValue("Stagger3", Stagger3.ToString());
+            e.SetAttributeValue("Stagger3", Stagger3);
         if (Stagger4 is not null)
-            e.SetAttributeValue("Stagger4", Stagger4.ToString());
+            e.SetAttributeValue("Stagger4", Stagger4);
 
         if (Dir != DirEnum.ANY)
-            e.SetAttributeValue("Dir", Dir.ToString().ToUpper());
+            e.SetAttributeValue("Dir", Dir);
         if (Path != PathEnum.ANY)
-            e.SetAttributeValue("Path", Path.ToString().ToUpper());
+            e.SetAttributeValue("Path", Path);
         if (Behavior != BehaviorEnum._)
-            e.SetAttributeValue("Behavior", Behavior.ToString().ToUpper());
+            e.SetAttributeValue("Behavior", Behavior);
         if (!MapUtils.IsSharedDir(Dir) && Shared)
             e.SetAttributeValue("Shared", Shared.ToString().ToUpper());
         if (!MapUtils.IsSharedPath(Path) && SharedPath)

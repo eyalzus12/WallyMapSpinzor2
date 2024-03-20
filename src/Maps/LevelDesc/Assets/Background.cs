@@ -34,11 +34,11 @@ public class Background : IDeserializable, ISerializable, IDrawable
         if (AnimatedAssetName != null)
             e.SetAttributeValue("AnimatedAssetName", AnimatedAssetName);
         if (HasSkulls)
-            e.SetAttributeValue("HasSkulls", HasSkulls.ToString());
+            e.SetAttributeValue("HasSkulls", HasSkulls);
         if (Theme is not null)
             e.SetAttributeValue("Theme", string.Join(',', Theme));
-        e.SetAttributeValue("H", H.ToString());
-        e.SetAttributeValue("W", W.ToString());
+        e.SetAttributeValue("H", H);
+        e.SetAttributeValue("W", W);
     }
 
     public void UpdateBackground(RenderData data, RenderConfig config)

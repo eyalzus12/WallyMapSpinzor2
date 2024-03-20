@@ -34,29 +34,29 @@ public abstract class AbstractAsset : ISerializable, IDeserializable, IDrawable
             e.SetAttributeValue("AssetName", AssetName);
 
         if (Rotation != 0)
-            e.SetAttributeValue("Rotation", Rotation.ToString());
+            e.SetAttributeValue("Rotation", Rotation);
 
         if (ScaleX == ScaleY)
         {
             if (ScaleX != 1)
-                e.SetAttributeValue("Scale", ScaleX.ToString());
+                e.SetAttributeValue("Scale", ScaleX);
         }
         else
         {
             if (ScaleX != 1)
-                e.SetAttributeValue("ScaleX", ScaleX.ToString());
+                e.SetAttributeValue("ScaleX", ScaleX);
             if (ScaleY != 1)
-                e.SetAttributeValue("ScaleY", ScaleY.ToString());
+                e.SetAttributeValue("ScaleY", ScaleY);
         }
 
         if (H != 0)
-            e.SetAttributeValue("H", H.ToString());
+            e.SetAttributeValue("H", H);
         if (W != 0)
-            e.SetAttributeValue("W", W.ToString());
+            e.SetAttributeValue("W", W);
         if (X != 0)
-            e.SetAttributeValue("X", X.ToString());
+            e.SetAttributeValue("X", X);
         if (Y != 0)
-            e.SetAttributeValue("Y", Y.ToString());
+            e.SetAttributeValue("Y", Y);
     }
 
     public virtual void DrawOn<T>(ICanvas<T> canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data)

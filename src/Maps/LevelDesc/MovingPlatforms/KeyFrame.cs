@@ -36,26 +36,26 @@ public class KeyFrame : AbstractKeyFrame
 
     public override void Serialize(XElement e)
     {
-        e.SetAttributeValue("FrameNum", FrameNum.ToString());
+        e.SetAttributeValue("FrameNum", FrameNum);
         if (Rotation != 0)
-            e.SetAttributeValue("Rotation", Rotation.ToString());
+            e.SetAttributeValue("Rotation", Rotation);
         if (HasCenter)
         {
             if (CenterX != 0 || CenterY == 0)
-                e.SetAttributeValue("CenterX", (CenterX ?? 0).ToString());
+                e.SetAttributeValue("CenterX", CenterX ?? 0);
             if (CenterY != 0 || CenterX == 0)
-                e.SetAttributeValue("CenterY", (CenterY ?? 0).ToString());
+                e.SetAttributeValue("CenterY", CenterY ?? 0);
         }
         if (EaseIn)
             e.SetAttributeValue("EaseIn", EaseIn.ToString().ToLower());
         if (EaseOut)
             e.SetAttributeValue("EaseOut", EaseOut.ToString().ToLower());
         if (EasePower != 2)
-            e.SetAttributeValue("EasePower", EasePower.ToString());
+            e.SetAttributeValue("EasePower", EasePower);
         if (X != 0)
-            e.SetAttributeValue("X", X.ToString());
+            e.SetAttributeValue("X", X);
         if (Y != 0)
-            e.SetAttributeValue("Y", Y.ToString());
+            e.SetAttributeValue("Y", Y);
     }
 
     public override double GetStartFrame() => FrameNum;

@@ -42,8 +42,8 @@ public class LevelAnim : IDeserializable, ISerializable
     {
         e.SetAttributeValue("InstanceName", InstanceName);
         e.SetAttributeValue("AssetName", AssetName);
-        e.SetAttributeValue("X", X.ToString());
-        e.SetAttributeValue("Y", Y.ToString());
+        e.SetAttributeValue("X", X);
+        e.SetAttributeValue("Y", Y);
     }
 
     /*public void DrawOn<T>(ICanvas<T> canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data)
