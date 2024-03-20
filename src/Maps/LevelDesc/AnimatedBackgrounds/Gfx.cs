@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
@@ -55,7 +58,7 @@ public class Gfx : IDeserializable, ISerializable
 
         AsymmetrySwapFlags =
             e.GetElementValue("AsymmetrySwapFlags")?.Split(',')
-            .Select(Enum.Parse<AsymmetrySwapFlagEnum>).ToList() ?? new();
+            .Select(Enum.Parse<AsymmetrySwapFlagEnum>).ToList() ?? [];
 
         CustomArts = e.Elements()
             .Where(e => e.Name.LocalName.StartsWith("CustomArt"))

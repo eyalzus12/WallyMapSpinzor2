@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
@@ -33,9 +35,9 @@ public abstract class AbstractDynamic<T> : ISerializable, IDeserializable, IDraw
     {
         if (data.PlatIDDynamicOffset is null)
             throw new InvalidOperationException($"Plat ID dictionary was null when attempting to draw {GetType().Name}");
-        if (!data.PlatIDDynamicOffset.ContainsKey(PlatID))
+        if (!data.PlatIDDynamicOffset.TryGetValue(PlatID, out (double, double) dynOffset))
             throw new InvalidOperationException($"Plat ID dictionary did not contain plat id {PlatID} when attempting to draw {GetType().Name}. Make sure to call StoreOffset on all MovingPlatforms.");
-        (double dynX, double dynY) = data.PlatIDDynamicOffset[PlatID];
+        (double dynX, double dynY) = dynOffset;
         Transform childTrans = trans * Transform.CreateTranslate(X + dynX, Y + dynY);
         foreach (T child in Children)
             child.DrawOn(canvas, config, childTrans, time, data);

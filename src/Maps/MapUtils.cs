@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+
 namespace WallyMapSpinzor2;
 
 public static class MapUtils
@@ -23,7 +26,7 @@ public static class MapUtils
             ? b
             : BehaviorEnum._;
 
-    private static readonly HashSet<DirEnum> DEFAULT_SHARED_DIR = new() { DirEnum.LEFT, DirEnum.RIGHT, DirEnum.TOP, DirEnum.BOTTOM, DirEnum.SIDE };
+    private static readonly HashSet<DirEnum> DEFAULT_SHARED_DIR = [DirEnum.LEFT, DirEnum.RIGHT, DirEnum.TOP, DirEnum.BOTTOM, DirEnum.SIDE];
     public static bool IsSharedDir(DirEnum d) => DEFAULT_SHARED_DIR.Contains(d);
     public static bool IsSharedPath(PathEnum p) => p < (PathEnum)1048575; //numeric path
 }

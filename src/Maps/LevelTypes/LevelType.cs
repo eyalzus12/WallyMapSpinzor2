@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
@@ -93,7 +95,7 @@ public class LevelType : IDeserializable, ISerializable
         FixedCamera = Utils.ParseBoolOrNull(e.GetElementValue("FixedCamera"));
         AllowItemSpawnOverlap = Utils.ParseBoolOrNull(e.GetElementValue("AllowItemSpawnOverlap"));
         // There is one case where there are two ColorExclusionList's. The last one overrides, so we do this.
-        ColorExclusionList = e.Elements("ColorExclusionList").LastOrDefault()?.Value.Split(',').ToList() ?? new();
+        ColorExclusionList = e.Elements("ColorExclusionList").LastOrDefault()?.Value.Split(',').ToList() ?? [];
         FixedWidth = Utils.ParseBoolOrNull(e.GetElementValue("FixedWidth"));
         AIPanicLine = Utils.ParseFloatOrNull(e.GetElementValue("AIPanicLine"));
         AIGroundLine = Utils.ParseFloatOrNull(e.GetElementValue("AIGroundLine"));

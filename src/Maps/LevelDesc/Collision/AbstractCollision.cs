@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
@@ -167,7 +170,7 @@ public abstract class AbstractCollision : IDeserializable, ISerializable, IDrawa
             throw new InvalidOperationException("Collision has null anchor, but cached curve is non null. Make sure CalculateCurve is called.");
 
         //if no curve, make curve just one line
-        _curve ??= new() { (X1, Y1), (X2, Y2) };
+        _curve ??= [(X1, Y1), (X2, Y2)];
 
         for (int i = 0; i < _curve.Count - 1; ++i)
         {
@@ -182,7 +185,7 @@ public abstract class AbstractCollision : IDeserializable, ISerializable, IDrawa
                     throw new ArgumentOutOfRangeException($"Collision has team {Team} which is larger than max available collision team color {config.ColorCollisionTeam.Length}");
                 canvas.DrawLineMultiColor(
                         prevX, prevY, nextX, nextY,
-                        new[] { config.ColorCollisionTeam[Team - 1], GetColor(config), config.ColorCollisionTeam[Team - 1] },
+                        [config.ColorCollisionTeam[Team - 1], GetColor(config), config.ColorCollisionTeam[Team - 1]],
                         trans, DrawPriorityEnum.DATA
                     );
             }
@@ -227,7 +230,8 @@ public abstract class AbstractCollision : IDeserializable, ISerializable, IDrawa
         ITEM_IGNORE = 1 << 5,
         BOUNCY = 1 << 6,
         GAMEMODE = 1 << 7,
-        PRESSURE_PLATE = 1 << 8
+        PRESSURE_PLATE = 1 << 8,
+        LAVA = 1 << 9,
     }
 
     public abstract CollisionTypeEnum CollisionType { get; }

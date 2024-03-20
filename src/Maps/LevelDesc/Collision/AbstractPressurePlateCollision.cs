@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
@@ -28,9 +31,9 @@ public abstract class AbstractPressurePlateCollision : AbstractCollision
         FaceLeft = e.GetBoolAttribute("FaceLeft", false);
         FireOffsetX = e.GetAttribute("FireOffsetX").Split(',').Select(double.Parse).ToList();
         FireOffsetY = e.GetAttribute("FireOffsetY").Split(',').Select(double.Parse).ToList();
-        if (FireOffsetY.Count == 0) FireOffsetY = new() { -10 }; //the game defaults it to -10
+        if (FireOffsetY.Count == 0) FireOffsetY = [-10]; //the game defaults it to -10
         PlatID = e.GetAttributeOrNull("PlatID");
-        TrapPowers = e.GetAttribute("TrapPowers").Split(',').ToList();
+        TrapPowers = [.. e.GetAttribute("TrapPowers").Split(',')];
     }
 
     public override void Serialize(XElement e)

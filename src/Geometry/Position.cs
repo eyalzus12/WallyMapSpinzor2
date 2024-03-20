@@ -1,3 +1,5 @@
+using System;
+
 namespace WallyMapSpinzor2;
 
 public readonly record struct Position(double X, double Y)

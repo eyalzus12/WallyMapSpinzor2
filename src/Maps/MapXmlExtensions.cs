@@ -1,4 +1,5 @@
-using System.Runtime.CompilerServices;
+using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
@@ -34,6 +35,7 @@ public static class MapXmlExtensions
         nameof(ItemIgnoreCollision) => e.DeserializeTo<ItemIgnoreCollision>(),
         nameof(PressurePlateCollision) => e.DeserializeTo<PressurePlateCollision>(),
         nameof(SoftPressurePlateCollision) => e.DeserializeTo<SoftPressurePlateCollision>(),
+        nameof(LavaCollision) => e.DeserializeTo<LavaCollision>(),
         _ => null
     };
 

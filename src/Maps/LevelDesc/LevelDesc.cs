@@ -1,4 +1,7 @@
+using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
@@ -9,7 +12,7 @@ public class LevelDesc : IDeserializable, ISerializable, IDrawable
     private const int LEFT_ROPE_Y = 1293;
     private const int RIGHT_ROPE_X = 2934;
     private const int RIGHT_ROPE_Y = 1293;
-    private static readonly (int, int)[] ZOMBIE_SPAWNS = new[] { (230, 390), (180, 900), (-1160, 900), (-1990, 390) };
+    private static readonly (int, int)[] ZOMBIE_SPAWNS = [(230, 390), (180, 900), (-1160, 900), (-1990, 390)];
 
     private const string ROPE_SPRITE = "a_DefaultRopes";
     private const string RED_TARGET_SPRITE = "a_TargetAnchoredRed";
@@ -32,6 +35,7 @@ public class LevelDesc : IDeserializable, ISerializable, IDrawable
     public TeamScoreboard? TeamScoreboard { get; set; }
     public List<AbstractAsset> Assets { get; set; } = null!;
     public List<LevelAnim> LevelAnims { get; set; } = null!;
+    public List<LevelAnimation> LevelAnimations { get; set; } = null!;
     public List<AbstractVolume> Volumes { get; set; } = null!;
     public List<AbstractCollision> Collisions { get; set; } = null!;
     public List<DynamicCollision> DynamicCollisions { get; set; } = null!;
@@ -58,6 +62,7 @@ public class LevelDesc : IDeserializable, ISerializable, IDrawable
         TeamScoreboard = e.DeserializeChildOfType<TeamScoreboard>();
         Assets = e.DeserializeAssetChildren();
         LevelAnims = e.DeserializeChildrenOfType<LevelAnim>();
+        LevelAnimations = e.DeserializeChildrenOfType<LevelAnimation>();
         Volumes = e.DeserializeVolumeChildren();
         Collisions = e.DeserializeCollisionChildren();
         DynamicCollisions = e.DeserializeChildrenOfType<DynamicCollision>();
@@ -87,6 +92,7 @@ public class LevelDesc : IDeserializable, ISerializable, IDrawable
         e.AddSerializedIfNotNull(TeamScoreboard);
         e.AddManySerialized(Assets);
         e.AddManySerialized(LevelAnims);
+        e.AddManySerialized(LevelAnimations);
         e.AddManySerialized(Volumes);
         e.AddManySerialized(Collisions);
         e.AddManySerialized(DynamicCollisions);
@@ -134,6 +140,7 @@ public class LevelDesc : IDeserializable, ISerializable, IDrawable
         foreach (AbstractAsset a in Assets)
             a.DrawOn(canvas, config, trans, time, data);
         //foreach (LevelAnim la in LevelAnims)
+        //foreach (LevelAnimation la in LevelAnimations)
         foreach (AbstractVolume v in Volumes)
             v.DrawOn(canvas, config, trans, time, data);
         foreach (AbstractCollision c in Collisions)
@@ -248,10 +255,10 @@ public class LevelDesc : IDeserializable, ISerializable, IDrawable
         }
     }
 
-    private readonly List<List<(double, double)>> _topPaths = new();
-    private readonly List<List<(double, double)>> _leftPaths = new();
-    private readonly List<List<(double, double)>> _rightPaths = new();
-    private readonly List<List<(double, double)>> _bottomPaths = new();
+    private readonly List<List<(double, double)>> _topPaths = [];
+    private readonly List<List<(double, double)>> _leftPaths = [];
+    private readonly List<List<(double, double)>> _rightPaths = [];
+    private readonly List<List<(double, double)>> _bottomPaths = [];
 
     private void GenerateRandomHordePaths(
         uint hordeSeed, // seed

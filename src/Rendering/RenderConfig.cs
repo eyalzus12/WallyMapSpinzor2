@@ -43,7 +43,7 @@ public class RenderConfig
     //whether to show the horde doors
     public bool ShowHordeDoors { get; set; } = false;
     //how many hits each door took. if array is too short, rest of doors will have 0
-    public int[] DamageHordeDoors { get; set; } = new[] { 0, 0 };
+    public int[] DamageHordeDoors { get; set; } = [0, 0];
     //what horde path type (if any) to show
     public PathConfigEnum HordePathType { get; set; } = PathConfigEnum.NONE;
     //the path index
@@ -116,6 +116,7 @@ public class RenderConfig
     public Color ColorItemIgnoreCollision { get; set; } = Color.FromHex(0xFF00FFFF);
     public Color ColorPressurePlateCollision { get; set; } = Color.FromHex(0xCC6619FF);
     public Color ColorSoftPressurePlateCollision { get; set; } = Color.FromHex(0x7F1900FF);
+    public Color ColorLavaCollision { get; set; } = Color.FromHex(0xFF8000FF);
 
     public Color ColorCollisionNormal { get; set; } = Color.FromHex(0xFFFFFF7F);
 
@@ -129,25 +130,25 @@ public class RenderConfig
     public Color ColorTeamItemInitSpawn { get; set; } = Color.FromHex(0x7F7F0060);
 
     //1 indexed
-    public Color[] ColorCollisionTeam { get; set; } = new[]
-    {
+    public Color[] ColorCollisionTeam { get; set; } =
+    [
         Color.FromHex(0xFF00007F), //1
         Color.FromHex(0x0000FF7F), //2
         Color.FromHex(0x00FF007F), //3
         Color.FromHex(0xFFFF007F), //4
         Color.FromHex(0xFF00FF7F)  //5
-    };
+    ];
 
     //0 indexed. team 0 is rarely used.
-    public Color[] ColorVolumeTeam { get; set; } = new[]
-    {
+    public Color[] ColorVolumeTeam { get; set; } =
+    [
         Color.FromHex(0xFFA50033), //0
         Color.FromHex(0xFF000033), //1
         Color.FromHex(0x0000FF33), //2
         Color.FromHex(0x00FF0033), //3
         Color.FromHex(0xFFFF0033), //4
         Color.FromHex(0xFF00FF33)  //5
-    };
+    ];
 
     public Color ColorZombieSpawns { get; set; } = Color.FromHex(0xFFFFFF7F);
 

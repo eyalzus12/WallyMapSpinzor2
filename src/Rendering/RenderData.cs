@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace WallyMapSpinzor2;
 
 public class RenderData
@@ -13,8 +15,8 @@ public class RenderData
 
     public Background? CurrentBackground { get; set; } = null;
 
-    public Dictionary<string, (double, double)> PlatIDDynamicOffset { get; set; } = new();
-    public Dictionary<string, (double, double)> PlatIDMovingPlatformOffset { get; set; } = new();
+    public Dictionary<string, (double, double)> PlatIDDynamicOffset { get; set; } = [];
+    public Dictionary<string, (double, double)> PlatIDMovingPlatformOffset { get; set; } = [];
 
-    public Dictionary<int, (double, double)> NavIDDictionary { get; set; } = new();
+    public Dictionary<int, (double, double)> NavIDDictionary { get; set; } = [];
 }

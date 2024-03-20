@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
@@ -19,7 +21,7 @@ public class LevelSetType : IDeserializable, ISerializable
         LevelSetName = e.GetAttribute("LevelSetName");
         DisplayNameKey = e.GetElementValue("DisplayNameKey")!;
         LevelSetID = Utils.ParseUIntOrNull(e.GetElementValue("LevelSetID")) ?? 0;
-        LevelTypes = e.GetElementValue("LevelTypes")?.Split(",").ToList() ?? new();
+        LevelTypes = e.GetElementValue("LevelTypes")?.Split(",").ToList() ?? [];
         SkipOrderValidation = Utils.ParseBoolOrNull(e.GetElementValue("SkipOrderValidation"));
     }
 

@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
@@ -11,7 +13,6 @@ don't question it.
 
 now, the real reason for making MovingPlatform an AbstractAsset is that it's possible for the game
 to put its MovingPlatforms AFTER Platforms, which would alter the drawing order.
-this is only done in BP8ThreePlatformFFABig, but we have to support it.
 
 thanks bmg.
 */
