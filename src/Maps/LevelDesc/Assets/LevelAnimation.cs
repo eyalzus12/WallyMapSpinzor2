@@ -36,8 +36,8 @@ public class LevelAnimation : IDeserializable, ISerializable
         PositionY = e.GetAttribute("PositionY");
         PlatID = e.GetAttribute("PlatID");
         Scale = e.GetFloatAttribute("Scale", 0); // yes, this defaults to 0
-        RandX = e.GetFloatAttribute("Scale", 0);
-        RandY = e.GetFloatAttribute("Scale", 0);
+        RandX = e.GetFloatAttribute("RandX", 0);
+        RandY = e.GetFloatAttribute("RandY", 0);
         Flip = e.GetBoolAttribute("Flip", false);
         PlayForeground = e.GetBoolAttribute("PlayForeground", false);
         PlayMidground = e.GetBoolAttribute("PlayMidground", false);
