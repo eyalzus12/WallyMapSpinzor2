@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
@@ -6,7 +7,17 @@ namespace WallyMapSpinzor2;
 
 public class LevelType : IDeserializable, ISerializable
 {
+    public enum TeamColorEnum
+    {
+        Default, // this is used as a fallback
+        Red,
+        Blue,
+        Yellow,
+        Purple,
+    }
+
     private const string TEMPLATE_LEVEL_TYPE = "Template";
+    private static readonly TeamColorEnum[] DEFAULT_TEAM_COLOR_ORDER = [TeamColorEnum.Red, TeamColorEnum.Blue, TeamColorEnum.Yellow, TeamColorEnum.Purple];
 
     public string LevelName { get; set; } = null!;
     public bool DevOnly { get; set; }
@@ -14,7 +25,8 @@ public class LevelType : IDeserializable, ISerializable
 
     public string DisplayName { get; set; } = null!;
     public int LevelID { get; set; } //max 255
-    public string[]? TeamColorOrder { get; set; }
+    public TeamColorEnum[] TeamColorOrder { get; set; } = null!;
+    public TeamColorEnum AvoidTeamColor { get; set; }
     public string? FileName { get; set; }
     public string? AssetName { get; set; }
     public CrateColor? CrateColorA { get; set; }
@@ -51,10 +63,7 @@ public class LevelType : IDeserializable, ISerializable
     public bool? FixedWidth { get; set; }
     public double? AIPanicLine { get; set; }
     public double? AIGroundLine { get; set; }
-
-    //not used in LevelTypes.xml, but they exist in the code
     public int? ShadowTint { get; set; }
-    public string? ItemOverride { get; set; }
 
     public void Deserialize(XElement e)
     {
@@ -64,7 +73,11 @@ public class LevelType : IDeserializable, ISerializable
 
         DisplayName = e.GetElementValue("DisplayName")!;
         LevelID = Utils.ParseIntOrNull(e.GetElementValue("LevelID")) ?? 0;
-        TeamColorOrder = e.GetElementValue("TeamColorOrder")?.Split(',');
+        TeamColorOrder = e.GetElementValue("TeamColorOrder")?
+            .Split(',')?
+            .Select((s) => Utils.ParseEnumOrDefault<TeamColorEnum>(s))?
+            .ToArray() ?? DEFAULT_TEAM_COLOR_ORDER;
+        AvoidTeamColor = Utils.ParseEnumOrDefault<TeamColorEnum>(e.GetElementValue("AvoidTeamColor"));
         FileName = e.GetElementValue("FileName");
         AssetName = e.GetElementValue("AssetName");
 
@@ -94,15 +107,11 @@ public class LevelType : IDeserializable, ISerializable
         StartFrame = Utils.ParseIntOrNull(e.GetElementValue("StartFrame"));
         FixedCamera = Utils.ParseBoolOrNull(e.GetElementValue("FixedCamera"));
         AllowItemSpawnOverlap = Utils.ParseBoolOrNull(e.GetElementValue("AllowItemSpawnOverlap"));
-        // There is one case where there are two ColorExclusionList's. The last one overrides, so we do this.
-        ColorExclusionList = e.Elements("ColorExclusionList").LastOrDefault()?.Value.Split(',').ToList() ?? [];
+        ColorExclusionList = e.GetElementValue("ColorExclusionList")?.Split(',').ToList() ?? [];
         FixedWidth = Utils.ParseBoolOrNull(e.GetElementValue("FixedWidth"));
         AIPanicLine = Utils.ParseFloatOrNull(e.GetElementValue("AIPanicLine"));
         AIGroundLine = Utils.ParseFloatOrNull(e.GetElementValue("AIGroundLine"));
         ShadowTint = Utils.ParseIntOrNull(e.GetElementValue("ShadowTint"));
-
-        string itemOverrideString = string.Join(',', e.Elements("ItemOverride").Select(ee => e.Value));
-        ItemOverride = itemOverrideString == "" ? null : itemOverrideString;
     }
 
     public void Serialize(XElement e)
@@ -113,8 +122,10 @@ public class LevelType : IDeserializable, ISerializable
 
         e.Add(new XElement("DisplayName", DisplayName));
         e.Add(new XElement("LevelID", LevelID));
-        if (TeamColorOrder is not null)
+        if (!TeamColorOrder.SequenceEqual(DEFAULT_TEAM_COLOR_ORDER))
             e.Add(new XElement("TeamColorOrder", string.Join(',', TeamColorOrder)));
+        if (AvoidTeamColor != TeamColorEnum.Default)
+            e.Add(new XElement("AvoidTeamColor", AvoidTeamColor));
         e.AddIfNotNull("FileName", FileName);
         e.AddIfNotNull("AssetName", AssetName);
         e.AddIfNotNull("CrateColorA", CrateColorA?.ToHexString());
@@ -161,18 +172,5 @@ public class LevelType : IDeserializable, ISerializable
 
         if (ShadowTint is not null)
             e.Add(new XElement("ShadowTint", ShadowTint));
-
-        // it is unclear how ItemOverride would be formatted, but this is my best guess
-        // due to how it works
-        if (ItemOverride is not null)
-        {
-            string[] split = ItemOverride.Split(',');
-            for (int i = 0; i < split.Length - 1; i += 2)
-            {
-                e.Add(new XElement("ItemOverride", $"{split[i]},{split[i + 1]}"));
-            }
-            if (split.Length % 2 != 0)
-                e.Add(new XElement("ItemOverride", split[^1]));
-        }
     }
 }

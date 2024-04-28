@@ -106,7 +106,6 @@ public class LevelDesc : IDeserializable, ISerializable, IDrawable
         e.AddManySerialized(DynamicNavNodes);
     }
 
-
     public void DrawOn<T>(ICanvas<T> canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data)
         where T : ITexture
     {
