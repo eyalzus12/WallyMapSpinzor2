@@ -76,7 +76,8 @@ public class Background : IDeserializable, ISerializable, IDrawable
         T texture = canvas.LoadTextureFromPath(Path.Join(BACKGROUND_FOLDER, assetName).ToString());
         canvas.DrawTextureRect(
             data.BackgroundRect_X ?? 0, data.BackgroundRect_Y ?? 0, data.BackgroundRect_W ?? 0, data.BackgroundRect_H ?? 0,
-            texture, trans, DrawPriorityEnum.BACKGROUND
+            texture, trans, DrawPriorityEnum.BACKGROUND,
+            this
         );
     }
 }

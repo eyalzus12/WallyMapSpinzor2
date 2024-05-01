@@ -76,7 +76,7 @@ public abstract class AbstractAsset : ISerializable, IDeserializable, IDrawable
         double scaleY = (H == 0) ? 1 : H / texture.H;
         Transform childTrans = trans * Transform * Transform.CreateScale(scaleX, scaleY);
 
-        canvas.DrawTexture(0, 0, texture, childTrans, DrawPriorityEnum.MIDGROUND);
+        canvas.DrawTexture(0, 0, texture, childTrans, DrawPriorityEnum.MIDGROUND, this);
     }
 
     public Transform Transform =>

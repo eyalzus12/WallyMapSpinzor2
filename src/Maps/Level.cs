@@ -67,6 +67,6 @@ public class Level : IDeserializable, ISerializable, IDrawable
         double killW = Desc.CameraBounds.W + Type.RightKill + Type.LeftKill ?? 0;
         double killH = Desc.CameraBounds.H + Type.BottomKill + Type.TopKill ?? 0;
 
-        canvas.DrawRect(killX, killY, killW, killH, false, config.ColorKillBounds, trans, DrawPriorityEnum.DATA);
+        canvas.DrawRect(killX, killY, killW, killH, false, config.ColorKillBounds, trans, DrawPriorityEnum.DATA, this);
     }
 }

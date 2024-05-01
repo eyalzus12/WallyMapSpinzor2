@@ -178,7 +178,7 @@ public abstract class AbstractCollision : IDeserializable, ISerializable, IDrawa
             (double nextX, double nextY) = _curve[i + 1];
             //draw current line
             if (Team == 0)
-                canvas.DrawLine(prevX, prevY, nextX, nextY, GetColor(config), trans, DrawPriorityEnum.DATA);
+                canvas.DrawLine(prevX, prevY, nextX, nextY, GetColor(config), trans, DrawPriorityEnum.DATA, this);
             else
             {
                 if (Team - 1 >= config.ColorCollisionTeam.Length)
@@ -186,7 +186,8 @@ public abstract class AbstractCollision : IDeserializable, ISerializable, IDrawa
                 canvas.DrawLineMultiColor(
                         prevX, prevY, nextX, nextY,
                         [config.ColorCollisionTeam[Team - 1], GetColor(config), config.ColorCollisionTeam[Team - 1]],
-                        trans, DrawPriorityEnum.DATA
+                        trans, DrawPriorityEnum.DATA,
+                        this
                     );
             }
 
@@ -204,7 +205,8 @@ public abstract class AbstractCollision : IDeserializable, ISerializable, IDrawa
 
                     canvas.DrawLine(
                         normalStartX, normalStartY, normalEndX, normalEndY,
-                        config.ColorCollisionNormal, trans, DrawPriorityEnum.DATA
+                        config.ColorCollisionNormal, trans, DrawPriorityEnum.DATA,
+                        this
                     );
                 }
                 //Otherwise normals are auto generated

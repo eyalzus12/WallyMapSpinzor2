@@ -72,13 +72,13 @@ public class NavNode : IDeserializable, ISerializable, IDrawable
     {
         if (!config.ShowNavNode) return;
         (double x, double y) = trans * (X, Y);
-        canvas.DrawCircle(x, y, config.RadiusNavNode, GetNavIDColor(Type, config), Transform.IDENTITY, DrawPriorityEnum.NAVNODE);
+        canvas.DrawCircle(x, y, config.RadiusNavNode, GetNavIDColor(Type, config), Transform.IDENTITY, DrawPriorityEnum.NAVNODE, this);
         foreach ((int id, _) in Path)
         {
             if (data.NavIDDictionary.TryGetValue(id, out (double, double) pos))
             {
                 (double targetX, double targetY) = pos;
-                canvas.DrawArrow(x, y, targetX, targetY, config.OffsetNavLineArrowSide, config.OffsetNavLineArrowBack, config.ColorNavPath, Transform.IDENTITY, DrawPriorityEnum.NAVLINE);
+                canvas.DrawArrow(x, y, targetX, targetY, config.OffsetNavLineArrowSide, config.OffsetNavLineArrowBack, config.ColorNavPath, Transform.IDENTITY, DrawPriorityEnum.NAVLINE, this);
             }
         }
     }

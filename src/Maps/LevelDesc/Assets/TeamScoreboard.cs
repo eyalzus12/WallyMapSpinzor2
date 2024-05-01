@@ -56,7 +56,7 @@ public class TeamScoreboard : IDeserializable, ISerializable, IDrawable
             string fontName = $"{DIGIT_PREFIX}{config.RedScore}" + (RedDigitFont == "" ? "" : "_") + RedDigitFont;
             T texture = canvas.LoadTextureFromSWF(LevelDesc.GAMEMODE_BONES, fontName);
             Transform redOnesTrans = trans * Transform.CreateTranslate(RedTeamX, Y);
-            canvas.DrawTexture(0, 0, texture, redOnesTrans, DrawPriorityEnum.FOREGROUND);
+            canvas.DrawTexture(0, 0, texture, redOnesTrans, DrawPriorityEnum.FOREGROUND, this);
         }
         else
         {
@@ -71,12 +71,12 @@ public class TeamScoreboard : IDeserializable, ISerializable, IDrawable
             string fontNameOnes = $"{DIGIT_PREFIX}{redOne}" + (RedDigitFont == "" ? "" : "_") + RedDigitFont;
             T textureOnes = canvas.LoadTextureFromSWF(LevelDesc.GAMEMODE_BONES, fontNameOnes);
             Transform redOnesTrans = trans * Transform.CreateFrom(x: RedTeamX + DoubleDigitsOnesX, y: DoubleDigitsY, scaleX: DoubleDigitsScale, scaleY: DoubleDigitsScale);
-            canvas.DrawTexture(0, 0, textureOnes, redOnesTrans, DrawPriorityEnum.FOREGROUND);
+            canvas.DrawTexture(0, 0, textureOnes, redOnesTrans, DrawPriorityEnum.FOREGROUND, this);
 
             string fontNameTens = $"{DIGIT_PREFIX}{redTen}" + (RedDigitFont == "" ? "" : "_") + RedDigitFont;
             T textureTens = canvas.LoadTextureFromSWF(LevelDesc.GAMEMODE_BONES, fontNameTens);
             Transform redTensTrans = trans * Transform.CreateFrom(x: RedTeamX + DoubleDigitsTensX, y: DoubleDigitsY, scaleX: DoubleDigitsScale, scaleY: DoubleDigitsScale);
-            canvas.DrawTexture(0, 0, textureTens, redTensTrans, DrawPriorityEnum.FOREGROUND);
+            canvas.DrawTexture(0, 0, textureTens, redTensTrans, DrawPriorityEnum.FOREGROUND, this);
         }
 
         //blue
@@ -85,7 +85,7 @@ public class TeamScoreboard : IDeserializable, ISerializable, IDrawable
             string fontName = $"{DIGIT_PREFIX}{config.BlueScore}" + (BlueDigitFont == "" ? "" : "_") + BlueDigitFont;
             T texture = canvas.LoadTextureFromSWF(LevelDesc.GAMEMODE_BONES, fontName);
             Transform blueOnesTrans = trans * Transform.CreateTranslate(BlueTeamX, Y);
-            canvas.DrawTexture(0, 0, texture, blueOnesTrans, DrawPriorityEnum.FOREGROUND);
+            canvas.DrawTexture(0, 0, texture, blueOnesTrans, DrawPriorityEnum.FOREGROUND, this);
         }
         else
         {
@@ -100,12 +100,12 @@ public class TeamScoreboard : IDeserializable, ISerializable, IDrawable
             string fontNameOnes = $"{DIGIT_PREFIX}{blueOne}" + (BlueDigitFont == "" ? "" : "_") + BlueDigitFont;
             T textureOnes = canvas.LoadTextureFromSWF(LevelDesc.GAMEMODE_BONES, fontNameOnes);
             Transform blueOnesTrans = trans * Transform.CreateFrom(x: BlueTeamX + DoubleDigitsOnesX, y: DoubleDigitsY, scaleX: DoubleDigitsScale, scaleY: DoubleDigitsScale);
-            canvas.DrawTexture(0, 0, textureOnes, blueOnesTrans, DrawPriorityEnum.FOREGROUND);
+            canvas.DrawTexture(0, 0, textureOnes, blueOnesTrans, DrawPriorityEnum.FOREGROUND, this);
 
             string fontNameTens = $"{DIGIT_PREFIX}{blueTen}" + (BlueDigitFont == "" ? "" : "_") + BlueDigitFont;
             T textureTens = canvas.LoadTextureFromSWF(LevelDesc.GAMEMODE_BONES, fontNameTens);
             Transform blueTensTrans = trans * Transform.CreateFrom(x: BlueTeamX + DoubleDigitsTensX, y: DoubleDigitsY, scaleX: DoubleDigitsScale, scaleY: DoubleDigitsScale);
-            canvas.DrawTexture(0, 0, textureTens, blueTensTrans, DrawPriorityEnum.FOREGROUND);
+            canvas.DrawTexture(0, 0, textureTens, blueTensTrans, DrawPriorityEnum.FOREGROUND, this);
         }
     }
 }

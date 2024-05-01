@@ -167,14 +167,14 @@ public class LevelDesc : IDeserializable, ISerializable, IDrawable
         if (config.ShowRingRopes)
         {
             T rope = canvas.LoadTextureFromSWF(GAMEMODE_BONES, ROPE_SPRITE);
-            canvas.DrawTexture(LEFT_ROPE_X, LEFT_ROPE_Y, rope, trans, DrawPriorityEnum.FOREGROUND);
-            canvas.DrawTexture(RIGHT_ROPE_X, RIGHT_ROPE_Y, rope, trans * Transform.CreateScale(-1, 1), DrawPriorityEnum.FOREGROUND);
+            canvas.DrawTexture(LEFT_ROPE_X, LEFT_ROPE_Y, rope, trans, DrawPriorityEnum.FOREGROUND, null);
+            canvas.DrawTexture(RIGHT_ROPE_X, RIGHT_ROPE_Y, rope, trans * Transform.CreateScale(-1, 1), DrawPriorityEnum.FOREGROUND, null);
         }
 
         if (config.ShowZombieSpawns)
         {
             foreach ((int x, int y) in ZOMBIE_SPAWNS)
-                canvas.DrawCircle(x, y, config.RadiusZombieSpawn, config.ColorZombieSpawns, trans, DrawPriorityEnum.DATA);
+                canvas.DrawCircle(x, y, config.RadiusZombieSpawn, config.ColorZombieSpawns, trans, DrawPriorityEnum.DATA, null);
         }
 
         if (config.ShowBombsketballTargets)
@@ -182,11 +182,11 @@ public class LevelDesc : IDeserializable, ISerializable, IDrawable
             T blue = canvas.LoadTextureFromSWF(GAMEMODE_BONES, BLUE_TARGET_SPRITE);
             Goal? goalblue = Volumes.OfType<Goal>().Where(g => g.Team == 1).FirstOrDefault();
             if (goalblue is not null)
-                canvas.DrawTexture(goalblue.X + goalblue.W / 2.0, goalblue.Y + goalblue.H / 2.0, blue, trans, DrawPriorityEnum.FOREGROUND);
+                canvas.DrawTexture(goalblue.X + goalblue.W / 2.0, goalblue.Y + goalblue.H / 2.0, blue, trans, DrawPriorityEnum.FOREGROUND, null);
             T red = canvas.LoadTextureFromSWF(GAMEMODE_BONES, RED_TARGET_SPRITE);
             Goal? goalred = Volumes.OfType<Goal>().Where(g => g.Team == 2).FirstOrDefault();
             if (goalred is not null)
-                canvas.DrawTexture(goalred.X + goalred.W / 2.0, goalred.Y + goalred.H / 2.0, red, trans, DrawPriorityEnum.FOREGROUND);
+                canvas.DrawTexture(goalred.X + goalred.W / 2.0, goalred.Y + goalred.H / 2.0, red, trans, DrawPriorityEnum.FOREGROUND, null);
         }
 
         if (config.ShowHordeDoors)
@@ -206,7 +206,7 @@ public class LevelDesc : IDeserializable, ISerializable, IDrawable
                         _ => canvas.LoadTextureFromSWF(GAMEMODE_BONES, HORDE_DOOR_CRITICAL),
                     };
 
-                    canvas.DrawTexture(g.X + g.W / 2.0, g.Y + g.H, door, trans, DrawPriorityEnum.FOREGROUND);
+                    canvas.DrawTexture(g.X + g.W / 2.0, g.Y + g.H, door, trans, DrawPriorityEnum.FOREGROUND, null);
                 }
 
                 ++i;
@@ -238,7 +238,7 @@ public class LevelDesc : IDeserializable, ISerializable, IDrawable
                 List<(double, double)> path = pathList[pathIndex];
                 foreach ((double x, double y) in path)
                 {
-                    canvas.DrawCircle(x, y, config.RadiusHordePathPoint, config.ColorHordePath, trans, DrawPriorityEnum.DATA);
+                    canvas.DrawCircle(x, y, config.RadiusHordePathPoint, config.ColorHordePath, trans, DrawPriorityEnum.DATA, null);
                 }
 
                 for (int i = 0; i < path.Count - 1; ++i)
@@ -247,7 +247,8 @@ public class LevelDesc : IDeserializable, ISerializable, IDrawable
                         path[i].Item1, path[i].Item2,
                         path[i + 1].Item1, path[i + 1].Item2,
                         config.OffsetHordePathArrowSide, config.OffsetHordePathArrowBack,
-                        config.ColorHordePath, trans, DrawPriorityEnum.DATA
+                        config.ColorHordePath, trans, DrawPriorityEnum.DATA,
+                        null
                     );
                 }
             }

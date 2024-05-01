@@ -37,7 +37,8 @@ public class Respawn : IDeserializable, ISerializable, IDrawable
             X, Y,
             config.RadiusRespawn,
             GetColor(config),
-            trans, DrawPriorityEnum.DATA
+            trans, DrawPriorityEnum.DATA,
+            this
         );
     }
 
