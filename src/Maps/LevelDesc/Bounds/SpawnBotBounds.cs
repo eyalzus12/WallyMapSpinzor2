@@ -29,6 +29,6 @@ public class SpawnBotBounds : IDeserializable, ISerializable, IDrawable
         where T : ITexture
     {
         if (!config.ShowSpawnBotBounds) return;
-        canvas.DrawRect(X, Y, W, H, false, config.ColorSpawnBotBounds, trans, DrawPriorityEnum.DATA);
+        canvas.DrawRect(X, Y, W, H, false, config.ColorSpawnBotBounds, trans, DrawPriorityEnum.DATA, this);
     }
 }

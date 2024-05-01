@@ -34,6 +34,6 @@ public class CameraBounds : IDeserializable, ISerializable, IDrawable
         data.BackgroundRect_H = H;
 
         if (!config.ShowCameraBounds) return;
-        canvas.DrawRect(X, Y, W, H, false, config.ColorCameraBounds, trans, DrawPriorityEnum.DATA);
+        canvas.DrawRect(X, Y, W, H, false, config.ColorCameraBounds, trans, DrawPriorityEnum.DATA, this);
     }
 }

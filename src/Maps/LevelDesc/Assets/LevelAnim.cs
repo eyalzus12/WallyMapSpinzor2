@@ -56,6 +56,6 @@ public class LevelAnim : IDeserializable, ISerializable
         if (!config.ShowAssets) return;
         //NOTE: there may be some extra logic needed here. need to get renderer impl working to figure out.
         T texture = canvas.LoadTextureFromSWF("SFX_Level.swf", AssetName);
-        canvas.DrawTexture(X, Y, texture, trans, DrawPriorityEnum.MIDGROUND);
+        canvas.DrawTexture(X, Y, texture, trans, DrawPriorityEnum.MIDGROUND, this);
     }*/
 }

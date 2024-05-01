@@ -32,7 +32,7 @@ public class CustomPath : IDeserializable, ISerializable, IDrawable
                 Points[i].X, Points[i].Y,
                 Points[i + 1].X, Points[i + 1].Y,
                 config.OffsetHordePathArrowSide, config.OffsetHordePathArrowBack,
-                config.ColorHordePath, trans, DrawPriorityEnum.DATA
+                config.ColorHordePath, trans, DrawPriorityEnum.DATA, this
             );
         }
     }
