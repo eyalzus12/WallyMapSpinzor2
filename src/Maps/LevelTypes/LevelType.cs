@@ -48,12 +48,12 @@ public class LevelType : IDeserializable, ISerializable
 
     //used nowhere except in the template
     public uint? MidgroundTint { get; set; }
-    public uint? MidgroundOffset { get; set; }
+    public uint? MidgroundOffset { get; set; } // default to 0
     public double? MidgroundFraction { get; set; }
 
-    public uint? BotTint { get; set; } //always 0 in xml
+    public uint? BotTint { get; set; }
     public uint? BotOffset { get; set; }
-    public double? BotFraction { get; set; }
+    public double? BotFraction { get; set; } // defaults to 0.5
 
     public bool? ShowPlatsDuringMove { get; set; }
     public bool? NegateOverlaps { get; set; }
