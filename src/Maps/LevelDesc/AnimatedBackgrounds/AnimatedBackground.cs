@@ -6,6 +6,8 @@ public class AnimatedBackground : IDeserializable, ISerializable
 {
     public bool Midground { get; set; }
 
+    public bool ForceDraw { get; set; }
+
     public Gfx Gfx { get; set; } = null!;
 
     public double Position_X { get; set; }
@@ -24,6 +26,8 @@ public class AnimatedBackground : IDeserializable, ISerializable
     public void Deserialize(XElement e)
     {
         Midground = e.GetBoolAttribute("Midground", false);
+
+        ForceDraw = Utils.ParseBoolOrNull(e.GetElementValue("ForceDraw")) ?? false;
 
         Gfx = e.DeserializeChildOfType<Gfx>()!;
 
@@ -47,7 +51,10 @@ public class AnimatedBackground : IDeserializable, ISerializable
     public void Serialize(XElement e)
     {
         if (Midground)
-            e.SetAttributeValue("Midground", Midground.ToString().ToLower());
+            e.SetAttributeValue("Midground", "true");
+
+        if (ForceDraw)
+            e.Add(new XElement("ForceDraw", "True"));
 
         e.AddSerialized(Gfx);
 

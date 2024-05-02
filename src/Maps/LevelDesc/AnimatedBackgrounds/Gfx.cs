@@ -76,9 +76,9 @@ public class Gfx : IDeserializable, ISerializable
         e.Add(new XElement("AnimFile", AnimFile));
         e.Add(new XElement("AnimClass", AnimClass));
         if (AnimScale != 1)
-            e.Add(new XElement("AnimScale", AnimScale.ToString()));
+            e.Add(new XElement("AnimScale", AnimScale));
         if (MoveAnimSpeed != 1)
-            e.Add(new XElement("MoveAnimSpeed", MoveAnimSpeed.ToString()));
+            e.Add(new XElement("MoveAnimSpeed", MoveAnimSpeed));
         if (BaseAnim != "Ready")
             e.Add(new XElement("BaseAnim", BaseAnim));
         if (RunAnim != "Run")

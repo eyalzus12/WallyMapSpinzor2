@@ -6,7 +6,7 @@ public interface ICanvas<TTexture> where TTexture : ITexture
     void DrawCircle(double x, double y, double radius, Color color, Transform trans, DrawPriorityEnum priority, object? caller);
     //draw a line
     void DrawLine(double x1, double y1, double x2, double y2, Color color, Transform trans, DrawPriorityEnum priority, object? caller);
-    //draw a line that has 2 colors. used to indicate teams.
+    //draw a line that has multiple colors. used to indicate teams.
     void DrawLineMultiColor(double x1, double y1, double x2, double y2, Color[] colors, Transform trans, DrawPriorityEnum priority, object? caller);
     //draw rect
     void DrawRect(double x, double y, double w, double h, bool filled, Color color, Transform trans, DrawPriorityEnum priority, object? caller);

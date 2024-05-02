@@ -41,7 +41,8 @@ public class LevelType : IDeserializable, ISerializable
     public bool? SoftTopKill { get; set; }
     public bool? HardLeftKill { get; set; } //LeftKill needs to be equal or more than 200 for this to be true
     public bool? HardRightKill { get; set; } //RightKill needs to be equal or more than 200 for this to be true
-    public string? BGMusic { get; set; } = null!;
+    public string? BGMusic { get; set; }
+    public string? StreamerBGMusic { get; set; }
     public string? ThumbnailPNGFile { get; set; }
     public bool? AIStrictRecover { get; set; }
 
@@ -94,6 +95,7 @@ public class LevelType : IDeserializable, ISerializable
         HardLeftKill = Utils.ParseBoolOrNull(e.GetElementValue("HardLeftKill"));
         HardRightKill = Utils.ParseBoolOrNull(e.GetElementValue("HardRightKill"));
         BGMusic = e.GetElementValue("BGMusic");
+        StreamerBGMusic = e.GetElementValue("StreamerBGMusic");
         ThumbnailPNGFile = e.GetElementValue("ThumbnailPNGFile");
         AIStrictRecover = Utils.ParseBoolOrNull(e.GetElementValue("AIStrictRecover"));
         MidgroundTint = Utils.ParseUIntOrNull(e.GetElementValue("MidgroundTint"));
@@ -142,6 +144,7 @@ public class LevelType : IDeserializable, ISerializable
             e.Add(new XElement("HardRightKill", (bool)HardRightKill && RightKill >= 200));
 
         e.AddIfNotNull("BGMusic", BGMusic);
+        e.AddIfNotNull("StreamerBGMusic", StreamerBGMusic);
         e.AddIfNotNull("FixedWidth", FixedWidth?.ToString()?.ToUpperInvariant());
         e.AddIfNotNull("ThumbnailPNGFile", ThumbnailPNGFile);
         e.AddIfNotNull("AIStrictRecover", AIStrictRecover?.ToString()?.ToUpperInvariant());
