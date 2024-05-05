@@ -70,7 +70,7 @@ public class RenderConfig
     //whether to show fire offset of pressure plates
     public bool ShowFireOffsetLocation { get; set; } = false;
     public bool ShowFireOffsetLine { get; set; } = false;
-    public bool ShowFireOffsetDirection { get; set; } = false;
+    public bool ShowFireDirection { get; set; } = false;
     //whether to show goals
     public bool ShowGoal { get; set; } = true;
     //whether to show no dodge zones
@@ -98,7 +98,7 @@ public class RenderConfig
     //length of collision normals
     public double LengthCollisionNormal { get; set; } = 50;
     //when drawing pressure plate fire direction, length of the direction arrow
-    public double LengthFireDirection { get; set; } = 50;
+    public double LengthFireDirectionArrow { get; set; } = 50;
 
     //when drawing navline arrows, sideways offset of arrow sides
     public double OffsetNavLineArrowSide { get; set; } = 7;
@@ -133,9 +133,9 @@ public class RenderConfig
     public Color ColorLavaCollision { get; set; } = Color.FromHex(0xFF8000FF);
 
     public Color ColorCollisionNormal { get; set; } = Color.FromHex(0xFFFFFF7F);
-    public Color ColorFireOffsetLocation { get; set; } = Color.FromHex(0xAA8000FF);
+    public Color ColorFireOffset { get; set; } = Color.FromHex(0xAA8000FF);
     public Color ColorFireOffsetLine { get; set; } = Color.FromHex(0xBB7000FF);
-    public Color ColorFireOffsetDirection { get; set; } = Color.FromHex(0xCC5000FF);
+    public Color ColorFireDirection { get; set; } = Color.FromHex(0xCC5000FF);
 
     public Color ColorRespawn { get; set; } = Color.FromHex(0xFF7F0060);
     public Color ColorInitialRespawn { get; set; } = Color.FromHex(0xFF000060);
