@@ -9,9 +9,9 @@ public class KeyFrame : AbstractKeyFrame
     public double Rotation { get; set; }
     public double? CenterX { get; set; }
     public double? CenterY { get; set; }
-    public bool EaseIn { get; set; }
-    public bool EaseOut { get; set; }
-    public int EasePower { get; set; }
+    public bool? EaseIn { get; set; }
+    public bool? EaseOut { get; set; }
+    public int? EasePower { get; set; }
     public double X { get; set; }
     public double Y { get; set; }
 
@@ -22,14 +22,11 @@ public class KeyFrame : AbstractKeyFrame
         FrameNum = e.GetIntAttribute("FrameNum", 0);
         //Unlike other rotations, this one doesn't get translated to radians.
         Rotation = e.GetFloatAttribute("Rotation", 0);
-        if (e.HasAttribute("CenterX") || e.HasAttribute("CenterY"))
-        {
-            CenterX = e.GetFloatAttribute("CenterX", 0);
-            CenterY = e.GetFloatAttribute("CenterY", 0);
-        }
-        EaseIn = e.GetBoolAttribute("EaseIn", false);
-        EaseOut = e.GetBoolAttribute("EaseOut", false);
-        EasePower = e.GetIntAttribute("EasePower", 2);
+        CenterX = e.GetFloatAttributeOrNull("CenterX");
+        CenterY = e.GetFloatAttributeOrNull("CenterY");
+        EaseIn = e.GetBoolAttributeOrNull("EaseIn");
+        EaseOut = e.GetBoolAttributeOrNull("EaseOut");
+        EasePower = e.GetIntAttributeOrNull("EasePower");
         X = e.GetFloatAttribute("X", 0);
         Y = e.GetFloatAttribute("Y", 0);
     }
@@ -39,18 +36,15 @@ public class KeyFrame : AbstractKeyFrame
         e.SetAttributeValue("FrameNum", FrameNum);
         if (Rotation != 0)
             e.SetAttributeValue("Rotation", Rotation);
-        if (HasCenter)
-        {
-            if (CenterX != 0 || CenterY == 0)
-                e.SetAttributeValue("CenterX", CenterX ?? 0);
-            if (CenterY != 0 || CenterX == 0)
-                e.SetAttributeValue("CenterY", CenterY ?? 0);
-        }
-        if (EaseIn)
-            e.SetAttributeValue("EaseIn", EaseIn.ToString().ToLower());
-        if (EaseOut)
-            e.SetAttributeValue("EaseOut", EaseOut.ToString().ToLower());
-        if (EasePower != 2)
+        if (CenterX is not null)
+            e.SetAttributeValue("CenterX", CenterX);
+        if (CenterY is not null)
+            e.SetAttributeValue("CenterY", CenterY);
+        if (EaseIn is not null)
+            e.SetAttributeValue("EaseIn", EaseIn);
+        if (EaseOut is not null)
+            e.SetAttributeValue("EaseOut", EaseOut);
+        if (EasePower is not null)
             e.SetAttributeValue("EasePower", EasePower);
         if (X != 0)
             e.SetAttributeValue("X", X);
@@ -71,12 +65,12 @@ public class KeyFrame : AbstractKeyFrame
             tdiff = BrawlhallaMath.SafeMod(tdiff, numframes);
             double w = tdiff / fdiff;
             w = BrawlhallaMath.EaseWeight(w,
-                EaseIn || defaults.EaseIn,
-                EaseOut || defaults.EaseOut,
-                EasePower == 2 ? defaults.EasePower : EasePower
+                EaseIn ?? defaults.EaseIn,
+                EaseOut ?? defaults.EaseOut,
+                EasePower ?? defaults.EasePower
             );
             if (w < 0 || 1 < w)
-                throw new InvalidOperationException($"RENDERER BUG. PLEASE REPORT. Invalid weight {w} during keyframe interpolation. From: {FrameNum}(+{fromTimeOffset}) To: {k.FrameNum}(+{toTimeOffset}). Keyframe time: {frame}. Frame diff: {fdiff}. Time diff: {tdiff}.");
+                throw new InvalidOperationException($"RENDERER BUG. PLEASE REPORT. Invalid weight {w} during keyframe interpolation. From: {FrameNum}(+{fromTimeOffset}) To: {k.FrameNum}(+{toTimeOffset}). Keyframe time: {frame}. Frame diff: {fdiff}. Time diff: {tdiff}. EaseIn: {EaseIn ?? defaults.EaseIn}. EaseOut: {EaseOut ?? defaults.EaseOut}. EasePower: {EasePower ?? defaults.EasePower}");
 
             if (CenterX is not null || CenterY is not null || defaults.CenterX is not null || defaults.CenterY is not null)
                 return BrawlhallaMath.BrawlhallaLerpWithCenter(X, Y, k.X, k.Y, CenterX ?? defaults.CenterX ?? 0, CenterY ?? defaults.CenterY ?? 0, w);
