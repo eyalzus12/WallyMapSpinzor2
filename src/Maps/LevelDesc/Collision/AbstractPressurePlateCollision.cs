@@ -67,14 +67,14 @@ public abstract class AbstractPressurePlateCollision : AbstractCollision
             double fireOffsetX = GetOffset(FireOffsetX, i);
             double fireOffsetY = GetOffset(FireOffsetY, i);
             if (config.ShowFireOffsetLocation)
-                canvas.DrawCircle(fireOffsetX, fireOffsetY, config.RadiusFireOffsetLocation, config.ColorFireOffset, trans, DrawPriorityEnum.DATA, this);
+                canvas.DrawCircle(fireOffsetX, fireOffsetY, config.RadiusFireOffsetLocation, config.ColorFireOffset, trans, DrawPriorityEnum.FIRE_OFFSET, this);
             if (config.ShowFireOffsetLine)
-                canvas.DrawLine((X1 + X2) / 2, (Y1 + Y2) / 2, fireOffsetX, fireOffsetY, config.ColorFireOffsetLine, trans, DrawPriorityEnum.DATA, this);
+                canvas.DrawLine((X1 + X2) / 2, (Y1 + Y2) / 2, fireOffsetX, fireOffsetY, config.ColorFireOffsetLine, trans, DrawPriorityEnum.FIRE_OFFSET, this);
             if (config.ShowFireDirection)
             {
                 double arrowEndX = fireOffsetX + (FaceLeft ? -1 : 1) * config.LengthFireDirectionArrow;
                 double arrowEndY = fireOffsetY;
-                canvas.DrawArrow(fireOffsetX, fireOffsetY, arrowEndX, arrowEndY, config.OffsetFireDirectionArrowSide, config.OffsetFireDirectionArrowBack, config.ColorFireDirection, trans, DrawPriorityEnum.DATA, this);
+                canvas.DrawArrow(fireOffsetX, fireOffsetY, arrowEndX, arrowEndY, config.OffsetFireDirectionArrowSide, config.OffsetFireDirectionArrowBack, config.ColorFireDirection, trans, DrawPriorityEnum.FIRE_OFFSET, this);
             }
         }
 

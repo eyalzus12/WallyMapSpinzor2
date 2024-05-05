@@ -8,6 +8,7 @@ public enum DrawPriorityEnum
     FOREGROUND,
     //technical stuff
     DATA,
+    FIRE_OFFSET,
     VOLUMES,
     NAVNODE,
     NAVLINE,
