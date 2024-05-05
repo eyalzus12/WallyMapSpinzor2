@@ -133,9 +133,9 @@ public class RenderConfig
     public Color ColorLavaCollision { get; set; } = Color.FromHex(0xFF8000FF);
 
     public Color ColorCollisionNormal { get; set; } = Color.FromHex(0xFFFFFF7F);
-    public Color ColorFireOffset { get; set; } = Color.FromHex(0xAA8000FF);
-    public Color ColorFireOffsetLine { get; set; } = Color.FromHex(0xBB7000FF);
-    public Color ColorFireDirection { get; set; } = Color.FromHex(0xCC5000FF);
+    public Color ColorFireOffset { get; set; } = Color.FromHex(0x7000AA70);
+    public Color ColorFireOffsetLine { get; set; } = Color.FromHex(0xBB7000D0);
+    public Color ColorFireDirection { get; set; } = Color.FromHex(0xCC5000BE);
 
     public Color ColorRespawn { get; set; } = Color.FromHex(0xFF7F0060);
     public Color ColorInitialRespawn { get; set; } = Color.FromHex(0xFF000060);
