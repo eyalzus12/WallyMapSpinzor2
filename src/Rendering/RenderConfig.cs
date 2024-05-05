@@ -67,6 +67,10 @@ public class RenderConfig
     public bool ShowCollision { get; set; } = true;
     //whether to show collision normal overrides
     public bool ShowCollisionNormalOverride { get; set; } = true;
+    //whether to show fire offset of pressure plates
+    public bool ShowFireOffsetLocation { get; set; } = false;
+    public bool ShowFireOffsetLine { get; set; } = false;
+    public bool ShowFireOffsetDirection { get; set; } = false;
     //whether to show goals
     public bool ShowGoal { get; set; } = true;
     //whether to show no dodge zones
@@ -88,8 +92,14 @@ public class RenderConfig
     public double RadiusNavNode { get; set; } = 5;
     //size of points in the horde path
     public double RadiusHordePathPoint { get; set; } = 15;
+    //size of radius to indicate pressure plate fire offset
+    public double RadiusFireOffsetLocation { get; set; } = 15;
+
     //length of collision normals
     public double LengthCollisionNormal { get; set; } = 50;
+    //when drawing pressure plate fire direction, length of the direction arrow
+    public double LengthFireDirection { get; set; } = 50;
+
     //when drawing navline arrows, sideways offset of arrow sides
     public double OffsetNavLineArrowSide { get; set; } = 7;
     //when drawing navline arrows, backwards offset of arrow sides
@@ -98,6 +108,10 @@ public class RenderConfig
     public double OffsetHordePathArrowSide { get; set; } = 18;
     //when drawing horde path arrows, backwards offset of arrow sides
     public double OffsetHordePathArrowBack { get; set; } = 28;
+    //when drawing pressure plate fire direction, sideways offset of arrow sides
+    public double OffsetFireDirectionArrowSide { get; set; } = 18;
+    //when drawing pressure plate fire direction, backwards offset of arrow sides
+    public double OffsetFireDirectionArrowBack { get; set; } = 28;
 
     //colors
     public Color ColorCameraBounds { get; set; } = Color.FromHex(0xFF00007F);
@@ -119,6 +133,9 @@ public class RenderConfig
     public Color ColorLavaCollision { get; set; } = Color.FromHex(0xFF8000FF);
 
     public Color ColorCollisionNormal { get; set; } = Color.FromHex(0xFFFFFF7F);
+    public Color ColorFireOffsetLocation { get; set; } = Color.FromHex(0xAA8000FF);
+    public Color ColorFireOffsetLine { get; set; } = Color.FromHex(0xBB7000FF);
+    public Color ColorFireOffsetDirection { get; set; } = Color.FromHex(0xCC5000FF);
 
     public Color ColorRespawn { get; set; } = Color.FromHex(0xFF7F0060);
     public Color ColorInitialRespawn { get; set; } = Color.FromHex(0xFF000060);

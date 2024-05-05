@@ -57,12 +57,26 @@ public abstract class AbstractPressurePlateCollision : AbstractCollision
     {
         base.DrawOn(canvas, config, trans, time, data);
 
-        //if a pressure plate has an Anchor, its
-        //pressureplate-ness is ignored by the game.
+        // if a pressure plate has an Anchor, its
+        // pressureplate-ness is ignored by the game.
         if (AnchorX is not null || AnchorY is not null)
             return;
 
-        //TODO: show fire offset
+        for (int i = 0; i < TrapPowers.Count; ++i)
+        {
+            double fireOffsetX = GetOffset(FireOffsetX, i);
+            double fireOffsetY = GetOffset(FireOffsetY, i);
+            if (config.ShowFireOffsetLocation)
+                canvas.DrawCircle(fireOffsetX, fireOffsetY, config.RadiusFireOffsetLocation, config.ColorFireOffsetLocation, trans, DrawPriorityEnum.DATA, this);
+            if (config.ShowFireOffsetLine)
+                canvas.DrawLine((X1 + X2) / 2, (Y1 + Y2) / 2, fireOffsetX, fireOffsetY, config.ColorFireOffsetLine, trans, DrawPriorityEnum.DATA, this);
+            if (config.ShowFireOffsetDirection)
+            {
+                double arrowEndX = fireOffsetX + (FaceLeft ? -1 : 1) * config.LengthFireDirection;
+                double arrowEndY = fireOffsetY;
+                canvas.DrawArrow(fireOffsetX, fireOffsetY, arrowEndX, arrowEndY, config.OffsetFireDirectionArrowSide, config.OffsetFireDirectionArrowBack, config.ColorFireOffsetDirection, trans, DrawPriorityEnum.DATA, this);
+            }
+        }
 
         if (config.ShowAssets)
         {
@@ -70,13 +84,12 @@ public abstract class AbstractPressurePlateCollision : AbstractCollision
                 throw new InvalidOperationException($"Plat ID dictionary did not contain plat id {PlatID} when attempting to draw pressure plate. Make sure to call StoreOffset beforehand.");
 
             string finalAssetName = AssetName;
-            //NOTE: this will probably need to change once we have proper anim rendering
+            //NOTE: this will need to change once we have proper anim rendering
             if (finalAssetName.Length >= ASSET_NAME_PREFIX.Length)
                 finalAssetName = finalAssetName[ASSET_NAME_PREFIX.Length..];
             finalAssetName = "a_ClimbPressurePlate" + (finalAssetName == "" ? "" : "_") + finalAssetName;
             T texture = canvas.LoadTextureFromSWF(LevelDesc.GAMEMODE_BONES, finalAssetName);
 
-            //we ignore the dynamic transform, and instead use the moving platform's
             (double platformX, double platformY) = (PlatID is null) ? (0, 0) : data.PlatIDMovingPlatformOffset[PlatID];
 
             double assetX = platformX + AnimOffsetX;
@@ -84,5 +97,16 @@ public abstract class AbstractPressurePlateCollision : AbstractCollision
             Transform spriteTrans = Transform.CreateFrom(x: assetX, y: assetY, rot: AnimRotation * Math.PI / 180);
             canvas.DrawTexture(0, 0, texture, spriteTrans, DrawPriorityEnum.MIDGROUND, this);
         }
+    }
+
+    // this is how it's done ingame
+    private double GetOffset(List<double> offset, int i)
+    {
+        if (offset.Count == 0)
+            return 0;
+        else if (offset.Count == TrapPowers.Count)
+            return offset[i];
+        else
+            return offset[0];
     }
 }
