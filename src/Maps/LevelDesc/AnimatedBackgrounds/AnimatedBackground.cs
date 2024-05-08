@@ -6,8 +6,6 @@ public class AnimatedBackground : IDeserializable, ISerializable
 {
     public bool Midground { get; set; }
 
-    public bool ForceDraw { get; set; }
-
     public Gfx Gfx { get; set; } = null!;
 
     public double Position_X { get; set; }
@@ -23,11 +21,11 @@ public class AnimatedBackground : IDeserializable, ISerializable
 
     public int FrameOffset { get; set; }
 
+    public bool ForceDraw { get; set; }
+
     public void Deserialize(XElement e)
     {
         Midground = e.GetBoolAttribute("Midground", false);
-
-        ForceDraw = Utils.ParseBoolOrNull(e.GetElementValue("ForceDraw")) ?? false;
 
         Gfx = e.DeserializeChildOfType<Gfx>()!;
 
@@ -46,15 +44,14 @@ public class AnimatedBackground : IDeserializable, ISerializable
         Rotation = Utils.ParseFloatOrNull(e.GetElementValue("Rotation")) ?? 0;
 
         FrameOffset = Utils.ParseIntOrNull(e.GetElementValue("FrameOffset")) ?? 0;
+
+        ForceDraw = Utils.ParseBoolOrNull(e.GetElementValue("ForceDraw")) ?? false;
     }
 
     public void Serialize(XElement e)
     {
         if (Midground)
             e.SetAttributeValue("Midground", "true");
-
-        if (ForceDraw)
-            e.Add(new XElement("ForceDraw", "True"));
 
         e.AddSerialized(Gfx);
 
@@ -70,5 +67,8 @@ public class AnimatedBackground : IDeserializable, ISerializable
 
         if (FrameOffset != 0)
             e.Add(new XElement("FrameOffset", FrameOffset));
+
+        if (ForceDraw)
+            e.Add(new XElement("ForceDraw", "True"));
     }
 }
