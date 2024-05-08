@@ -23,7 +23,7 @@ public class LevelAnimation : IDeserializable, ISerializable
     public double RandX { get; set; }
     public double RandY { get; set; }
     public int LoopIterations { get; set; }
-    public string PlatID { get; set; } = null!;
+    public string? PlatID { get; set; }
     public bool IgnoreOnBlurBG { get; set; }
 
     public void Deserialize(XElement e)
@@ -44,7 +44,7 @@ public class LevelAnimation : IDeserializable, ISerializable
         RandX = e.GetFloatAttribute("RandX", 0);
         RandY = e.GetFloatAttribute("RandY", 0);
         LoopIterations = e.GetIntAttribute("LoopIterations", 0);
-        PlatID = e.GetAttribute("PlatID");
+        PlatID = e.GetAttributeOrNull("PlatID");
         IgnoreOnBlurBG = e.GetBoolAttribute("IgnoreOnBlurBG", false);
     }
 
@@ -78,7 +78,8 @@ public class LevelAnimation : IDeserializable, ISerializable
             e.SetAttributeValue("RandY", RandY);
         if (LoopIterations != 0)
             e.SetAttributeValue("LoopIterations", LoopIterations);
-        e.SetAttributeValue("PlatID", PlatID);
+        if (PlatID is not null)
+            e.SetAttributeValue("PlatID", PlatID);
         if (IgnoreOnBlurBG)
             e.SetAttributeValue("IgnoreOnBlurBG", IgnoreOnBlurBG);
     }
