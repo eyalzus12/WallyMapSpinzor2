@@ -74,7 +74,7 @@ public class Background : IDeserializable, ISerializable, IDrawable
 
         string assetName = ((config.AnimatedBackgrounds ? AnimatedAssetName : null) ?? AssetName)!;
         canvas.DrawTextureRect(
-            Path.Join(BACKGROUND_FOLDER, assetName),
+            Path.Combine(BACKGROUND_FOLDER, assetName),
             data.BackgroundRect_X ?? 0, data.BackgroundRect_Y ?? 0, data.BackgroundRect_W ?? 0, data.BackgroundRect_H ?? 0,
             trans, DrawPriorityEnum.BACKGROUND,
             this

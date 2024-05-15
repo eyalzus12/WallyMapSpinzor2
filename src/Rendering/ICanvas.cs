@@ -18,7 +18,7 @@ public interface ICanvas<TTexture> where TTexture : ITexture
     //draw an animation
     public void DrawAnim(string animGroup, string animName, int frame, double x, double y, Transform trans, DrawPriorityEnum priority, object? caller);
     //draw swf texture
-    public void DrawSwfTexture(string swfPath, string spriteName, double x, double y, Transform trans, DrawPriorityEnum priority, object? caller);
+    public void DrawSwfTexture(string swfPath, string spriteName, double x, double y, double opacity, Transform trans, DrawPriorityEnum priority, object? caller);
     //draw a texture, resizing it to fit inside a rectangle
     public void DrawTextureRect(string path, double x, double y, double w, double h, Transform trans, DrawPriorityEnum priority, object? caller);
 
