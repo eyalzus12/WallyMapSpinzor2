@@ -1,8 +1,9 @@
+using System;
 using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
 
-public class AnimatedBackground : IDeserializable, ISerializable
+public class AnimatedBackground : IDeserializable, ISerializable, IDrawable
 {
     public bool Midground { get; set; }
 
@@ -70,5 +71,11 @@ public class AnimatedBackground : IDeserializable, ISerializable
 
         if (ForceDraw)
             e.Add(new XElement("ForceDraw", "True"));
+    }
+
+    public void DrawOn<T>(ICanvas<T> canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data) where T : ITexture
+    {
+        Transform spriteTrans = Transform.CreateFrom(x: Position_X, y: Position_Y, rot: Rotation, skewX: Skew_X, skewY: Skew_Y, scaleX: Scale_X, scaleY: Scale_Y);
+        canvas.DrawAnim($"{Gfx.AnimFile}/{Gfx.AnimClass}", "Ready", FrameOffset, 0, 0, spriteTrans, DrawPriorityEnum.BACKGROUND, this);
     }
 }

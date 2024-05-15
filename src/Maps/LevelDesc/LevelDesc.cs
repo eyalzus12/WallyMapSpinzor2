@@ -155,7 +155,8 @@ public class LevelDesc : IDeserializable, ISerializable, IDrawable
             di.DrawOn(canvas, config, trans, time, data);
         foreach (WaveData wd in WaveDatas)
             wd.DrawOn(canvas, config, trans, time, data);
-        //foreach(AnimatedBackground ab in AnimatedBackgrounds)
+        foreach (AnimatedBackground ab in AnimatedBackgrounds)
+            ab.DrawOn(canvas, config, trans, time, data);
         foreach (NavNode n in NavNodes)
             n.DrawOn(canvas, config, trans, time, data);
         foreach (DynamicNavNode dn in DynamicNavNodes)
@@ -165,9 +166,8 @@ public class LevelDesc : IDeserializable, ISerializable, IDrawable
 
         if (config.ShowRingRopes)
         {
-            T rope = canvas.LoadTextureFromSWF(GAMEMODE_BONES, ROPE_SPRITE);
-            canvas.DrawTexture(LEFT_ROPE_X, LEFT_ROPE_Y, rope, trans, DrawPriorityEnum.FOREGROUND, null);
-            canvas.DrawTexture(RIGHT_ROPE_X, RIGHT_ROPE_Y, rope, trans * Transform.CreateScale(-1, 1), DrawPriorityEnum.FOREGROUND, null);
+            canvas.DrawAnim("Animation_GameModes.swf/a__AnimationRingRope", "Ready", 0, LEFT_ROPE_X, LEFT_ROPE_Y, trans, DrawPriorityEnum.FOREGROUND, null);
+            canvas.DrawAnim("Animation_GameModes.swf/a__AnimationRingRope", "Ready", 0, RIGHT_ROPE_X, RIGHT_ROPE_Y, trans * Transform.CreateScale(-1, 1), DrawPriorityEnum.FOREGROUND, null);
         }
 
         if (config.ShowZombieSpawns)
@@ -178,14 +178,12 @@ public class LevelDesc : IDeserializable, ISerializable, IDrawable
 
         if (config.ShowBombsketballTargets)
         {
-            T blue = canvas.LoadTextureFromSWF(GAMEMODE_BONES, BLUE_TARGET_SPRITE);
             Goal? goalblue = Volumes.OfType<Goal>().Where(g => g.Team == 1).FirstOrDefault();
             if (goalblue is not null)
-                canvas.DrawTexture(goalblue.X + goalblue.W / 2.0, goalblue.Y + goalblue.H / 2.0, blue, trans, DrawPriorityEnum.FOREGROUND, null);
-            T red = canvas.LoadTextureFromSWF(GAMEMODE_BONES, RED_TARGET_SPRITE);
+                canvas.DrawSwfTexture(GAMEMODE_BONES, BLUE_TARGET_SPRITE, goalblue.X + goalblue.W / 2.0, goalblue.Y + goalblue.H / 2.0, trans, DrawPriorityEnum.FOREGROUND, null);
             Goal? goalred = Volumes.OfType<Goal>().Where(g => g.Team == 2).FirstOrDefault();
             if (goalred is not null)
-                canvas.DrawTexture(goalred.X + goalred.W / 2.0, goalred.Y + goalred.H / 2.0, red, trans, DrawPriorityEnum.FOREGROUND, null);
+                canvas.DrawSwfTexture(GAMEMODE_BONES, RED_TARGET_SPRITE, goalred.X + goalred.W / 2.0, goalred.Y + goalred.H / 2.0, trans, DrawPriorityEnum.FOREGROUND, null);
         }
 
         if (config.ShowHordeDoors)
@@ -195,18 +193,15 @@ public class LevelDesc : IDeserializable, ISerializable, IDrawable
             {
                 int hits = (i >= config.DamageHordeDoors.Length) ? 0 : config.DamageHordeDoors[i];
 
-                if (hits < 24)
+                string animationName = hits switch
                 {
-                    T door = hits switch
-                    {
-                        <= 6 => canvas.LoadTextureFromSWF(GAMEMODE_BONES, HORDE_DOOR_UNDAMAGED),
-                        <= 12 => canvas.LoadTextureFromSWF(GAMEMODE_BONES, HORDE_DOOR_DAMAGED),
-                        // <=23
-                        _ => canvas.LoadTextureFromSWF(GAMEMODE_BONES, HORDE_DOOR_CRITICAL),
-                    };
+                    <= 6 => "Ready",
+                    <= 12 => "QuarterDamage",
+                    <= 23 => "HalfDamage",
+                    _ => "FullDamage",
+                };
 
-                    canvas.DrawTexture(g.X + g.W / 2.0, g.Y + g.H, door, trans, DrawPriorityEnum.FOREGROUND, null);
-                }
+                canvas.DrawAnim("Animation_GameModes.swf/a__AnimationValhallaDoor", animationName, 0, g.X + g.W / 2.0, g.Y + g.H, trans, DrawPriorityEnum.FOREGROUND, null);
 
                 ++i;
             }
