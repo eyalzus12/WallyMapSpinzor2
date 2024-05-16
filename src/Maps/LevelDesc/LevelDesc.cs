@@ -166,8 +166,8 @@ public class LevelDesc : IDeserializable, ISerializable, IDrawable
 
         if (config.ShowRingRopes)
         {
-            canvas.DrawAnim("Animation_GameModes.swf/a__AnimationRingRope", "Ready", 0, LEFT_ROPE_X, LEFT_ROPE_Y, trans, DrawPriorityEnum.FOREGROUND, null);
-            canvas.DrawAnim("Animation_GameModes.swf/a__AnimationRingRope", "Ready", 0, RIGHT_ROPE_X, RIGHT_ROPE_Y, trans * Transform.CreateScale(-1, 1), DrawPriorityEnum.FOREGROUND, null);
+            canvas.DrawAnim("Animation_GameModes.swf", "a__AnimationRingRope", "Ready", 0, LEFT_ROPE_X, LEFT_ROPE_Y, trans, DrawPriorityEnum.FOREGROUND, null);
+            canvas.DrawAnim("Animation_GameModes.swf", "a__AnimationRingRope", "Ready", 0, RIGHT_ROPE_X, RIGHT_ROPE_Y, trans * Transform.CreateScale(-1, 1), DrawPriorityEnum.FOREGROUND, null);
         }
 
         if (config.ShowZombieSpawns)
@@ -201,7 +201,7 @@ public class LevelDesc : IDeserializable, ISerializable, IDrawable
                     _ => "FullDamage",
                 };
 
-                canvas.DrawAnim("Animation_GameModes.swf/a__AnimationValhallaDoor", animationName, 0, g.X + g.W / 2.0, g.Y + g.H, trans, DrawPriorityEnum.FOREGROUND, null);
+                canvas.DrawAnim("Animation_GameModes.swf", "a__AnimationValhallaDoor", animationName, 0, g.X + g.W / 2.0, g.Y + g.H, trans, DrawPriorityEnum.FOREGROUND, null);
 
                 ++i;
             }

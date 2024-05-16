@@ -84,7 +84,7 @@ public abstract class AbstractPressurePlateCollision : AbstractCollision
             double assetX = platformX + AnimOffsetX;
             double assetY = platformY + AnimOffsetY;
             Transform spriteTrans = Transform.CreateFrom(x: assetX, y: assetY, rot: AnimRotation * Math.PI / 180);
-            canvas.DrawAnim($"Animation_GameModes.swf/{AssetName}", "Ready", 0, 0, 0, spriteTrans, DrawPriorityEnum.MIDGROUND, this);
+            canvas.DrawAnim("Animation_GameModes.swf", AssetName, "Ready", 0, 0, 0, spriteTrans, DrawPriorityEnum.MIDGROUND, this);
         }
     }
 
