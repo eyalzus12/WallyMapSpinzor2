@@ -7,18 +7,14 @@ namespace WallyMapSpinzor2;
 
 public class LevelDesc : IDeserializable, ISerializable, IDrawable
 {
+    //FIXME: need to investigate correct multiplier.
+    public const double ANIMATION_FPS = 24;
+
     private const int LEFT_ROPE_X = 521;
     private const int LEFT_ROPE_Y = 1293;
     private const int RIGHT_ROPE_X = 2934;
     private const int RIGHT_ROPE_Y = 1293;
     private static readonly (int, int)[] ZOMBIE_SPAWNS = [(230, 390), (180, 900), (-1160, 900), (-1990, 390)];
-
-    private const string ROPE_SPRITE = "a_DefaultRopes";
-    private const string RED_TARGET_SPRITE = "a_TargetAnchoredRed";
-    private const string BLUE_TARGET_SPRITE = "a_TargetAnchoredBlue";
-    private const string HORDE_DOOR_UNDAMAGED = "a_ValhallaDoor_000";
-    private const string HORDE_DOOR_DAMAGED = "a_ValhallaDoor_025";
-    private const string HORDE_DOOR_CRITICAL = "a_ValhallaDoor_050";
 
     public const string GAMEMODE_BONES = "bones/Bones_GameModes.swf";
 
@@ -180,10 +176,10 @@ public class LevelDesc : IDeserializable, ISerializable, IDrawable
         {
             Goal? goalblue = Volumes.OfType<Goal>().Where(g => g.Team == 1).FirstOrDefault();
             if (goalblue is not null)
-                canvas.DrawSwf(GAMEMODE_BONES, BLUE_TARGET_SPRITE, 0, goalblue.X + goalblue.W / 2.0, goalblue.Y + goalblue.H / 2.0, 1, trans, DrawPriorityEnum.FOREGROUND, null);
+                canvas.DrawAnim("Animation_GameModes.swf", "a__AnimationTargetAnchoredBlue", "Ready", 0, goalblue.X + 85, goalblue.Y + 85, trans, DrawPriorityEnum.FOREGROUND, null);
             Goal? goalred = Volumes.OfType<Goal>().Where(g => g.Team == 2).FirstOrDefault();
             if (goalred is not null)
-                canvas.DrawSwf(GAMEMODE_BONES, RED_TARGET_SPRITE, 0, goalred.X + goalred.W / 2.0, goalred.Y + goalred.H / 2.0, 1, trans, DrawPriorityEnum.FOREGROUND, null);
+                canvas.DrawAnim("Animation_GameModes.swf", "a__AnimationTargetAnchoredRed", "Ready", 0, goalred.X + 85, goalred.Y + 85, trans, DrawPriorityEnum.FOREGROUND, null);
         }
 
         if (config.ShowHordeDoors)
