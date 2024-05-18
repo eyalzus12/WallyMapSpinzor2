@@ -180,10 +180,10 @@ public class LevelDesc : IDeserializable, ISerializable, IDrawable
         {
             Goal? goalblue = Volumes.OfType<Goal>().Where(g => g.Team == 1).FirstOrDefault();
             if (goalblue is not null)
-                canvas.DrawSwf(GAMEMODE_BONES, BLUE_TARGET_SPRITE, 1, goalblue.X + goalblue.W / 2.0, goalblue.Y + goalblue.H / 2.0, 1, trans, DrawPriorityEnum.FOREGROUND, null);
+                canvas.DrawSwf(GAMEMODE_BONES, BLUE_TARGET_SPRITE, 0, goalblue.X + goalblue.W / 2.0, goalblue.Y + goalblue.H / 2.0, 1, trans, DrawPriorityEnum.FOREGROUND, null);
             Goal? goalred = Volumes.OfType<Goal>().Where(g => g.Team == 2).FirstOrDefault();
             if (goalred is not null)
-                canvas.DrawSwf(GAMEMODE_BONES, RED_TARGET_SPRITE, 1, goalred.X + goalred.W / 2.0, goalred.Y + goalred.H / 2.0, 1, trans, DrawPriorityEnum.FOREGROUND, null);
+                canvas.DrawSwf(GAMEMODE_BONES, RED_TARGET_SPRITE, 0, goalred.X + goalred.W / 2.0, goalred.Y + goalred.H / 2.0, 1, trans, DrawPriorityEnum.FOREGROUND, null);
         }
 
         if (config.ShowHordeDoors)
