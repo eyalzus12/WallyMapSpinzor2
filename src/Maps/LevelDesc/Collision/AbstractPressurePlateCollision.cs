@@ -51,7 +51,7 @@ public abstract class AbstractPressurePlateCollision : AbstractCollision
         base.Serialize(e);
     }
 
-    public override void DrawOn<T>(ICanvas<T> canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data)
+    public override void DrawOn(ICanvas canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data)
     {
         base.DrawOn(canvas, config, trans, time, data);
 

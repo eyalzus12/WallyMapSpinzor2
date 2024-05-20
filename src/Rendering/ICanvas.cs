@@ -1,6 +1,6 @@
 namespace WallyMapSpinzor2;
 
-public interface ICanvas<TTexture> where TTexture : ITexture
+public interface ICanvas
 {
     //draw a circle
     void DrawCircle(double x, double y, double radius, Color color, Transform trans, DrawPriorityEnum priority, object? caller);

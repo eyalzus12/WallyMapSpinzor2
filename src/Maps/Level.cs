@@ -56,8 +56,7 @@ public class Level : IDeserializable, ISerializable, IDrawable
         e.Add(new XElement("Playlists", string.Join(",", Playlists)));
     }
 
-    public void DrawOn<T>(ICanvas<T> canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data)
-        where T : ITexture
+    public void DrawOn(ICanvas canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data)
     {
         Desc.DrawOn(canvas, config, trans, time, data);
 

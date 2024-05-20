@@ -51,7 +51,7 @@ public class MovingPlatform : AbstractAsset
         rd.PlatIDMovingPlatformOffset[PlatID] = (offX + X, offY + Y);
     }
 
-    public override void DrawOn<T>(ICanvas<T> canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data)
+    public override void DrawOn(ICanvas canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data)
     {
         if (!data.PlatIDMovingPlatformOffset.TryGetValue(PlatID, out (double, double) platOffset))
             throw new InvalidOperationException($"Plat ID dictionary did not contain plat id {PlatID} when attempting to draw MovingPlatform. Make sure to call StoreOffset beforehand.");

@@ -59,8 +59,7 @@ public abstract class AbstractAsset : ISerializable, IDeserializable, IDrawable
             e.SetAttributeValue("Y", Y);
     }
 
-    public virtual void DrawOn<T>(ICanvas<T> canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data)
-        where T : ITexture
+    public virtual void DrawOn(ICanvas canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data)
     {
         if (!config.ShowAssets)
             return;

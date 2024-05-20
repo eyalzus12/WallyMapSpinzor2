@@ -101,8 +101,7 @@ public class LevelDesc : IDeserializable, ISerializable, IDrawable
         e.AddManySerialized(DynamicNavNodes);
     }
 
-    public void DrawOn<T>(ICanvas<T> canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data)
-        where T : ITexture
+    public void DrawOn(ICanvas canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data)
     {
         if (trans != Transform.IDENTITY)
             throw new ArgumentException("Initial transform must be the identity transformation. Do not pass the camera transformation inside. Instead, handle it on the rendering side.");

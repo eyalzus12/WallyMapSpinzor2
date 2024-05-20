@@ -20,7 +20,7 @@ public class Platform : AbstractAsset
     public List<string>? Theme { get; set; }
     public string? ScoringType { get; set; }
 
-    public List<AbstractAsset> AssetChildren { get; set; } = null!;
+    public List<AbstractAsset>? AssetChildren { get; set; }
 
     public bool NoSkulls => InstanceName == NO_SKULLS;
     public string? Hotkey => InstanceName.StartsWith(HOTKEY) ? InstanceName[(InstanceName.LastIndexOf('_') + 1)..] : null;
@@ -34,7 +34,8 @@ public class Platform : AbstractAsset
         PlatformAssetSwap = e.GetAttributeOrNull("PlatformAssetSwap");
         Theme = e.GetAttributeOrNull("Theme")?.Split(',').ToList();
         ScoringType = e.GetAttributeOrNull("ScoringType");
-        AssetChildren = e.DeserializeAssetChildren();
+        if (AssetName is null)
+            AssetChildren = e.DeserializeAssetChildren();
     }
 
     public override void Serialize(XElement e)
@@ -52,10 +53,11 @@ public class Platform : AbstractAsset
 
         base.Serialize(e);
 
-        e.AddManySerialized(AssetChildren);
+        if (AssetName is null)
+            e.AddManySerialized(AssetChildren!);
     }
 
-    public override void DrawOn<T>(ICanvas<T> canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data)
+    public override void DrawOn(ICanvas canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data)
     {
         //checks for showing assets. logic follows the game's code.
         if (!config.ShowAssets)
@@ -99,7 +101,7 @@ public class Platform : AbstractAsset
         else
         {
             Transform childTrans = trans * Transform;
-            foreach (AbstractAsset a in AssetChildren)
+            foreach (AbstractAsset a in AssetChildren!)
                 a.DrawOn(canvas, config, childTrans, time, data);
         }
     }

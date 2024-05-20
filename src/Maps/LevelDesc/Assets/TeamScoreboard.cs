@@ -45,8 +45,7 @@ public class TeamScoreboard : IDeserializable, ISerializable, IDrawable
         e.SetAttributeValue("BlueDigitFont", BlueDigitFont);
     }
 
-    public void DrawOn<T>(ICanvas<T> canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data)
-        where T : ITexture
+    public void DrawOn(ICanvas canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data)
     {
         if (!config.ShowAssets) return;
 

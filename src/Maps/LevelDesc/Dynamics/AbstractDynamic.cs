@@ -30,8 +30,7 @@ public abstract class AbstractDynamic<T> : ISerializable, IDeserializable, IDraw
         e.AddManySerialized(Children);
     }
 
-    public virtual void DrawOn<E>(ICanvas<E> canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data)
-        where E : ITexture
+    public virtual void DrawOn(ICanvas canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data)
     {
         if (data.PlatIDDynamicOffset is null)
             throw new InvalidOperationException($"Plat ID dictionary was null when attempting to draw {GetType().Name}");

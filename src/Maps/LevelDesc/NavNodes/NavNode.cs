@@ -66,9 +66,7 @@ public class NavNode : IDeserializable, ISerializable, IDrawable
         data.NavIDDictionary[NavID] = (X + xOff, Y + yOff);
     }
 
-    public void DrawOn<T>
-    (ICanvas<T> canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data)
-        where T : ITexture
+    public void DrawOn(ICanvas canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data)
     {
         if (!config.ShowNavNode) return;
         (double x, double y) = trans * (X, Y);

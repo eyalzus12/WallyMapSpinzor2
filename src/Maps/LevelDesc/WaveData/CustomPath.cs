@@ -18,8 +18,7 @@ public class CustomPath : IDeserializable, ISerializable, IDrawable
         e.AddManySerialized(Points);
     }
 
-    public void DrawOn<T>(ICanvas<T> canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data)
-        where T : ITexture
+    public void DrawOn(ICanvas canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data)
     {
         foreach (Point p in Points)
         {
