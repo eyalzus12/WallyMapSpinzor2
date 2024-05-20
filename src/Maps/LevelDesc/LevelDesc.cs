@@ -161,8 +161,9 @@ public class LevelDesc : IDeserializable, ISerializable, IDrawable
 
         if (config.ShowRingRopes)
         {
-            canvas.DrawAnim("Animation_GameModes.swf", "a__AnimationRingRope", "Ready", 0, LEFT_ROPE_X, LEFT_ROPE_Y, trans, DrawPriorityEnum.FOREGROUND, null);
-            canvas.DrawAnim("Animation_GameModes.swf", "a__AnimationRingRope", "Ready", 0, RIGHT_ROPE_X, RIGHT_ROPE_Y, trans * Transform.CreateScale(-1, 1), DrawPriorityEnum.FOREGROUND, null);
+            Gfx gfx = new() { AnimFile = "Animation_GameModes.swf", AnimClass = "a__AnimationRingRope" };
+            canvas.DrawAnim(gfx, "Ready", 0, trans * Transform.CreateTranslate(LEFT_ROPE_X, LEFT_ROPE_Y), DrawPriorityEnum.FOREGROUND, null);
+            canvas.DrawAnim(gfx, "Ready", 0, trans * Transform.CreateTranslate(RIGHT_ROPE_X, RIGHT_ROPE_Y) * Transform.CreateScale(-1, 1), DrawPriorityEnum.FOREGROUND, null);
         }
 
         if (config.ShowZombieSpawns)
@@ -175,14 +176,48 @@ public class LevelDesc : IDeserializable, ISerializable, IDrawable
         {
             Goal? goalblue = Volumes.OfType<Goal>().Where(g => g.Team == 1).FirstOrDefault();
             if (goalblue is not null)
-                canvas.DrawAnim("Animation_GameModes.swf", "a__AnimationTargetAnchoredBlue", "Ready", 0, goalblue.X + 85, goalblue.Y + 85, trans, DrawPriorityEnum.FOREGROUND, null);
+            {
+                Gfx gfx = new()
+                {
+                    AnimFile = "Animation_GameModes.swf",
+                    AnimClass = "a__AnimationTargetAnchoredBlue",
+                    BaseAnim = "Ready",
+                    AnimScale = 1.7,
+                };
+                canvas.DrawAnim(gfx, "Ready", 0, trans * Transform.CreateTranslate(goalblue.X + 85, goalblue.Y + 85), DrawPriorityEnum.FOREGROUND, null);
+            }
             Goal? goalred = Volumes.OfType<Goal>().Where(g => g.Team == 2).FirstOrDefault();
             if (goalred is not null)
-                canvas.DrawAnim("Animation_GameModes.swf", "a__AnimationTargetAnchoredRed", "Ready", 0, goalred.X + 85, goalred.Y + 85, trans, DrawPriorityEnum.FOREGROUND, null);
+            {
+                Gfx gfx = new()
+                {
+                    AnimFile = "Animation_GameModes.swf",
+                    AnimClass = "a__AnimationTargetAnchoredRed",
+                    BaseAnim = "Ready",
+                    AnimScale = 1.7,
+                };
+                canvas.DrawAnim(gfx, "Ready", 0, trans * Transform.CreateTranslate(goalred.X + 85, goalred.Y + 85), DrawPriorityEnum.FOREGROUND, null);
+            }
         }
 
         if (config.ShowHordeDoors)
         {
+            Gfx doorGfx = new()
+            {
+                AnimFile = "Animation_GameModes.swf",
+                AnimClass = "a__AnimationValhallaDoor",
+                BaseAnim = "Ready",
+                AnimScale = 1,
+                FireAndForget = true,
+            };
+
+            Gfx sparkleGfx = new()
+            {
+                AnimFile = "SFX_GameModes.swf",
+                AnimClass = "a_ValhallaDoor_Loop",
+                AnimScale = 1.7,
+            };
+
             int i = 0;
             foreach (Goal g in Volumes.OfType<Goal>())
             {
@@ -196,7 +231,9 @@ public class LevelDesc : IDeserializable, ISerializable, IDrawable
                     _ => "FullDamage",
                 };
 
-                canvas.DrawAnim("Animation_GameModes.swf", "a__AnimationValhallaDoor", animationName, 0, g.X + g.W / 2.0, g.Y + g.H, trans, DrawPriorityEnum.FOREGROUND, null);
+                canvas.DrawAnim(doorGfx, animationName, 0, trans * Transform.CreateTranslate(g.X + g.W / 2.0, g.Y + g.H), DrawPriorityEnum.FOREGROUND, null);
+                //FIXME: displays in the wrong spot for some reason
+                //canvas.DrawAnim(sparkleGfx, animationName, (int)(ANIMATION_FPS * time.TotalSeconds), trans * Transform.CreateTranslate(g.X + g.W / 2.0, g.Y + g.H), DrawPriorityEnum.FOREGROUND, null);
 
                 ++i;
             }

@@ -25,21 +25,21 @@ public class Gfx : IDeserializable, ISerializable
         EYES = 14
     }
 
-    public string AnimFile { get; set; } = null!;
-    public string AnimClass { get; set; } = null!;
-    public double AnimScale { get; set; }
-    public double MoveAnimSpeed { get; set; }
-    public string BaseAnim { get; set; } = null!;
-    public string RunAnim { get; set; } = null!;
-    public bool FlipAnim { get; set; }
-    public bool FireAndForget { get; set; }
-    public bool RandomFrameStart { get; set; }
-    public bool Desynch { get; set; } //yes it's actually called Desynch
-    public bool IgnoreCachedWeapon { get; set; }
-    public uint Tint { get; set; } //packed
-    public List<AsymmetrySwapFlagEnum> AsymmetrySwapFlags { get; set; } = null!;
-    public List<CustomArt> CustomArts { get; set; } = null!;
-    public List<ColorSwap> ColorSwaps { get; set; } = null!;
+    public string AnimFile { get; set; } = "";
+    public string AnimClass { get; set; } = "a__Animation";
+    public double AnimScale { get; set; } = 1;
+    public double MoveAnimSpeed { get; set; } = 1;
+    public string BaseAnim { get; set; } = "Ready";
+    public string RunAnim { get; set; } = "Run";
+    public bool FlipAnim { get; set; } = false;
+    public bool FireAndForget { get; set; } = false;
+    public bool RandomFrameStart { get; set; } = false;
+    public bool Desynch { get; set; } = false; //yes it's actually called Desynch
+    public bool IgnoreCachedWeapon { get; set; } = false;
+    public uint Tint { get; set; } = 0; //packed
+    public List<AsymmetrySwapFlagEnum> AsymmetrySwapFlags { get; set; } = [];
+    public List<CustomArt> CustomArts { get; set; } = [];
+    public List<ColorSwap> ColorSwaps { get; set; } = [];
 
     public void Deserialize(XElement e)
     {

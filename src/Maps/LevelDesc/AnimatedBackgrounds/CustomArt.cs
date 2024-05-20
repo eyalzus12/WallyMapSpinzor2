@@ -4,8 +4,8 @@ namespace WallyMapSpinzor2;
 
 public class CustomArt : IDeserializable, ISerializable
 {
-    public bool Right { get; set; }
-    public int Type { get; set; }
+    public bool Right { get; set; } = false;
+    public int Type { get; set; } = 0;
     public string FileName { get; set; } = null!;
     public string Name { get; set; } = null!;
 

@@ -82,7 +82,7 @@ public class AnimatedBackground : IDeserializable, ISerializable, IDrawable
         // Non-midground animated backgrounds are BACKGROUNDS, so they need to be transformed to match the background.
         DrawPriorityEnum priority = Midground ? DrawPriorityEnum.MIDGROUND : DrawPriorityEnum.BACKGROUND;
         Transform spriteTrans = (Midground ? Transform.IDENTITY : CalculateBackgroundTransform(data)) * SpriteTransform;
-        canvas.DrawAnim(Gfx.AnimFile, Gfx.AnimClass, "Ready", frame + FrameOffset, 0, 0, spriteTrans * trans, priority, this);
+        canvas.DrawAnim(Gfx, "Ready", frame + FrameOffset, spriteTrans * trans, priority, this);
     }
 
     private static Transform CalculateBackgroundTransform(RenderData data)

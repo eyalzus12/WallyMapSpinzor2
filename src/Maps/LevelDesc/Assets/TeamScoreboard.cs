@@ -45,16 +45,27 @@ public class TeamScoreboard : IDeserializable, ISerializable, IDrawable
         e.SetAttributeValue("BlueDigitFont", BlueDigitFont);
     }
 
+    private static Gfx CreateGfx(string font) => new()
+    {
+        AnimFile = "Animation_GameModes.swf",
+        AnimClass = "a__AnimationScore",
+        AnimScale = 2,
+        BaseAnim = "Ready",
+        CustomArts = font == "" ? [] : [new CustomArt() { FileName = "Animation_GameModes.swf", Name = font }]
+    };
+
     public void DrawOn(ICanvas canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data)
     {
         if (!config.ShowAssets) return;
 
+        Gfx redGfx = CreateGfx(RedDigitFont);
+        Gfx blueGfx = CreateGfx(BlueDigitFont);
+
         //red
         if (config.RedScore < 10)
         {
-            string fontName = $"{DIGIT_PREFIX}{config.RedScore}" + (RedDigitFont == "" ? "" : "_") + RedDigitFont;
             Transform redOnesTrans = trans * Transform.CreateTranslate(RedTeamX, Y);
-            canvas.DrawSwf(LevelDesc.GAMEMODE_BONES, fontName, 0, 0, 0, 1, redOnesTrans, DrawPriorityEnum.FOREGROUND, this);
+            canvas.DrawAnim(redGfx, $"{config.RedScore}", 0, redOnesTrans, DrawPriorityEnum.FOREGROUND, this);
         }
         else
         {
@@ -65,22 +76,17 @@ public class TeamScoreboard : IDeserializable, ISerializable, IDrawable
                 redOne = 9;
                 redTen = 9;
             }
-
-            string fontNameOnes = $"{DIGIT_PREFIX}{redOne}" + (RedDigitFont == "" ? "" : "_") + RedDigitFont;
             Transform redOnesTrans = trans * Transform.CreateFrom(x: RedTeamX + DoubleDigitsOnesX, y: DoubleDigitsY, scaleX: DoubleDigitsScale, scaleY: DoubleDigitsScale);
-            canvas.DrawSwf(LevelDesc.GAMEMODE_BONES, fontNameOnes, 0, 0, 0, 1, redOnesTrans, DrawPriorityEnum.FOREGROUND, this);
-
-            string fontNameTens = $"{DIGIT_PREFIX}{redTen}" + (RedDigitFont == "" ? "" : "_") + RedDigitFont;
+            canvas.DrawAnim(redGfx, $"{redOne}", 0, redOnesTrans, DrawPriorityEnum.FOREGROUND, this);
             Transform redTensTrans = trans * Transform.CreateFrom(x: RedTeamX + DoubleDigitsTensX, y: DoubleDigitsY, scaleX: DoubleDigitsScale, scaleY: DoubleDigitsScale);
-            canvas.DrawSwf(LevelDesc.GAMEMODE_BONES, fontNameTens, 0, 0, 0, 1, redTensTrans, DrawPriorityEnum.FOREGROUND, this);
+            canvas.DrawAnim(redGfx, $"{redTen}", 0, redTensTrans, DrawPriorityEnum.FOREGROUND, this);
         }
 
         //blue
         if (config.BlueScore < 10)
         {
-            string fontName = $"{DIGIT_PREFIX}{config.BlueScore}" + (BlueDigitFont == "" ? "" : "_") + BlueDigitFont;
             Transform blueOnesTrans = trans * Transform.CreateTranslate(BlueTeamX, Y);
-            canvas.DrawSwf(LevelDesc.GAMEMODE_BONES, fontName, 0, 0, 0, 1, blueOnesTrans, DrawPriorityEnum.FOREGROUND, this);
+            canvas.DrawAnim(blueGfx, $"{config.BlueScore}", 0, blueOnesTrans, DrawPriorityEnum.FOREGROUND, this);
         }
         else
         {
@@ -91,14 +97,10 @@ public class TeamScoreboard : IDeserializable, ISerializable, IDrawable
                 blueOne = 9;
                 blueTen = 9;
             }
-
-            string fontNameOnes = $"{DIGIT_PREFIX}{blueOne}" + (BlueDigitFont == "" ? "" : "_") + BlueDigitFont;
             Transform blueOnesTrans = trans * Transform.CreateFrom(x: BlueTeamX + DoubleDigitsOnesX, y: DoubleDigitsY, scaleX: DoubleDigitsScale, scaleY: DoubleDigitsScale);
-            canvas.DrawSwf(LevelDesc.GAMEMODE_BONES, fontNameOnes, 0, 0, 0, 1, blueOnesTrans, DrawPriorityEnum.FOREGROUND, this);
-
-            string fontNameTens = $"{DIGIT_PREFIX}{blueTen}" + (BlueDigitFont == "" ? "" : "_") + BlueDigitFont;
+            canvas.DrawAnim(blueGfx, $"{blueOne}", 0, blueOnesTrans, DrawPriorityEnum.FOREGROUND, this);
             Transform blueTensTrans = trans * Transform.CreateFrom(x: BlueTeamX + DoubleDigitsTensX, y: DoubleDigitsY, scaleX: DoubleDigitsScale, scaleY: DoubleDigitsScale);
-            canvas.DrawSwf(LevelDesc.GAMEMODE_BONES, fontNameTens, 0, 0, 0, 1, blueTensTrans, DrawPriorityEnum.FOREGROUND, this);
+            canvas.DrawAnim(blueGfx, $"{blueTen}", 0, blueTensTrans, DrawPriorityEnum.FOREGROUND, this);
         }
     }
 }
