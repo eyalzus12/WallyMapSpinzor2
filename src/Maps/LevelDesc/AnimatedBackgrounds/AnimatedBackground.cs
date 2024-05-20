@@ -1,8 +1,9 @@
+using System;
 using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
 
-public class AnimatedBackground : IDeserializable, ISerializable
+public class AnimatedBackground : IDeserializable, ISerializable, IDrawable
 {
     public bool Midground { get; set; }
 
@@ -71,4 +72,35 @@ public class AnimatedBackground : IDeserializable, ISerializable
         if (ForceDraw)
             e.Add(new XElement("ForceDraw", "True"));
     }
+
+    public void DrawOn<T>(ICanvas<T> canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data) where T : ITexture
+    {
+        if (!config.AnimatedBackgrounds && !ForceDraw)
+            return;
+        int frame = (int)(LevelDesc.ANIMATION_FPS * time.TotalSeconds);
+
+        // Non-midground animated backgrounds are BACKGROUNDS, so they need to be transformed to match the background.
+        DrawPriorityEnum priority = Midground ? DrawPriorityEnum.MIDGROUND : DrawPriorityEnum.BACKGROUND;
+        Transform spriteTrans = (Midground ? Transform.IDENTITY : CalculateBackgroundTransform(data)) * SpriteTransform;
+        canvas.DrawAnim(Gfx.AnimFile, Gfx.AnimClass, "Ready", frame + FrameOffset, 0, 0, spriteTrans * trans, priority, this);
+    }
+
+    private static Transform CalculateBackgroundTransform(RenderData data)
+    {
+        double backgroundX = data.BackgroundRect_X!.Value;
+        double backgroundY = data.BackgroundRect_Y!.Value;
+        double backgroundScaleX = data.BackgroundRect_W!.Value / data.CurrentBackground!.W;
+        double backgroundScaleY = data.BackgroundRect_H!.Value / data.CurrentBackground!.H;
+        return Transform.CreateFrom(x: backgroundX, y: backgroundY, scaleX: backgroundScaleX, scaleY: backgroundScaleY);
+    }
+
+    public Transform SpriteTransform => Transform.CreateFrom(
+        x: Position_X,
+        y: Position_Y,
+        rot: Rotation * Math.PI / 180,
+        skewX: Skew_X * Math.PI / 180,
+        skewY: Skew_Y * Math.PI / 180,
+        scaleX: Scale_X,
+        scaleY: Scale_Y
+    );
 }

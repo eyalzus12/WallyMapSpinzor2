@@ -12,16 +12,15 @@ public interface ICanvas<TTexture> where TTexture : ITexture
     void DrawRect(double x, double y, double w, double h, bool filled, Color color, Transform trans, DrawPriorityEnum priority, object? caller);
     //draw text. possibly multiline.
     void DrawString(double x, double y, string text, double fontSize, Color color, Transform trans, DrawPriorityEnum priority, object? caller);
-    //load a texture from a file from a path
-    TTexture LoadTextureFromPath(string path);
-    //load a texture from an swf file
-    TTexture LoadTextureFromSWF(string filePath, string name);
-    //TTexture LoadTextureFromANM(string filePath, string name);
 
     //draw a texture
-    public void DrawTexture(double x, double y, TTexture texture, Transform trans, DrawPriorityEnum priority, object? caller);
+    public void DrawTexture(string path, double x, double y, Transform trans, DrawPriorityEnum priority, object? caller);
+    //draw an animation
+    public void DrawAnim(string animFile, string animClass, string animName, int frame, double x, double y, Transform trans, DrawPriorityEnum priority, object? caller);
+    //draw swf texture
+    public void DrawSwf(string swfPath, string spriteName, int frame, double x, double y, double opacity, Transform trans, DrawPriorityEnum priority, object? caller);
     //draw a texture, resizing it to fit inside a rectangle
-    public void DrawTextureRect(double x, double y, double w, double h, TTexture texture, Transform trans, DrawPriorityEnum priority, object? caller);
+    public void DrawTextureRect(string path, double x, double y, double w, double h, Transform trans, DrawPriorityEnum priority, object? caller);
 
     public void ClearTextureCache();
 }

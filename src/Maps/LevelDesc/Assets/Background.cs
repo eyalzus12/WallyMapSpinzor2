@@ -73,10 +73,10 @@ public class Background : IDeserializable, ISerializable, IDrawable
             throw new InvalidOperationException("Attempting to draw background, but global data is missing the background rect. Make sure the camera bounds are drawn before the background.");
 
         string assetName = ((config.AnimatedBackgrounds ? AnimatedAssetName : null) ?? AssetName)!;
-        T texture = canvas.LoadTextureFromPath(Path.Join(BACKGROUND_FOLDER, assetName).ToString());
         canvas.DrawTextureRect(
+            Path.Combine(BACKGROUND_FOLDER, assetName),
             data.BackgroundRect_X ?? 0, data.BackgroundRect_Y ?? 0, data.BackgroundRect_W ?? 0, data.BackgroundRect_H ?? 0,
-            texture, trans, DrawPriorityEnum.BACKGROUND,
+            trans, DrawPriorityEnum.BACKGROUND,
             this
         );
     }

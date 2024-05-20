@@ -7,8 +7,6 @@ namespace WallyMapSpinzor2;
 
 public abstract class AbstractPressurePlateCollision : AbstractCollision
 {
-    private const string ASSET_NAME_PREFIX = "a__AnimationPressurePlate";
-
     public double AnimOffsetX { get; set; }
     public double AnimOffsetY { get; set; }
     public double AnimRotation { get; set; }
@@ -82,20 +80,11 @@ public abstract class AbstractPressurePlateCollision : AbstractCollision
         {
             if (PlatID is not null && !data.PlatIDMovingPlatformOffset.ContainsKey(PlatID))
                 throw new InvalidOperationException($"Plat ID dictionary did not contain plat id {PlatID} when attempting to draw pressure plate. Make sure to call StoreOffset beforehand.");
-
-            string finalAssetName = AssetName;
-            //NOTE: this will need to change once we have proper anim rendering
-            if (finalAssetName.Length >= ASSET_NAME_PREFIX.Length)
-                finalAssetName = finalAssetName[ASSET_NAME_PREFIX.Length..];
-            finalAssetName = "a_ClimbPressurePlate" + (finalAssetName == "" ? "" : "_") + finalAssetName;
-            T texture = canvas.LoadTextureFromSWF(LevelDesc.GAMEMODE_BONES, finalAssetName);
-
             (double platformX, double platformY) = (PlatID is null) ? (0, 0) : data.PlatIDMovingPlatformOffset[PlatID];
-
             double assetX = platformX + AnimOffsetX;
             double assetY = platformY + AnimOffsetY;
             Transform spriteTrans = Transform.CreateFrom(x: assetX, y: assetY, rot: AnimRotation * Math.PI / 180);
-            canvas.DrawTexture(0, 0, texture, spriteTrans, DrawPriorityEnum.MIDGROUND, this);
+            canvas.DrawAnim("Animation_GameModes.swf", AssetName, "Ready", 0, 0, 0, spriteTrans, DrawPriorityEnum.MIDGROUND, this);
         }
     }
 
