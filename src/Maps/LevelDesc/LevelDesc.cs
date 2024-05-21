@@ -10,13 +10,7 @@ public class LevelDesc : IDeserializable, ISerializable, IDrawable
     //FIXME: need to investigate correct multiplier.
     public const double ANIMATION_FPS = 24;
 
-    private const int LEFT_ROPE_X = 521;
-    private const int LEFT_ROPE_Y = 1293;
-    private const int RIGHT_ROPE_X = 2934;
-    private const int RIGHT_ROPE_Y = 1293;
     private static readonly (int, int)[] ZOMBIE_SPAWNS = [(230, 390), (180, 900), (-1160, 900), (-1990, 390)];
-
-    public const string GAMEMODE_BONES = "bones/Bones_GameModes.swf";
 
     public string AssetDir { get; set; } = null!;
     public string LevelName { get; set; } = null!;
@@ -161,9 +155,14 @@ public class LevelDesc : IDeserializable, ISerializable, IDrawable
 
         if (config.ShowRingRopes)
         {
-            Gfx gfx = new() { AnimFile = "Animation_GameModes.swf", AnimClass = "a__AnimationRingRope" };
-            canvas.DrawAnim(gfx, "Ready", 0, trans * Transform.CreateTranslate(LEFT_ROPE_X, LEFT_ROPE_Y), DrawPriorityEnum.FOREGROUND, null);
-            canvas.DrawAnim(gfx, "Ready", 0, trans * Transform.CreateTranslate(RIGHT_ROPE_X, RIGHT_ROPE_Y) * Transform.CreateScale(-1, 1), DrawPriorityEnum.FOREGROUND, null);
+            Gfx gfx = new()
+            {
+                AnimFile = "Animation_GameModes.swf",
+                AnimClass = "a__AnimationRingRope",
+                AnimScale = 2,
+            };
+            canvas.DrawAnim(gfx, "Ready", 0, trans * Transform.CreateTranslate(521, 1293), DrawPriorityEnum.FOREGROUND, null);
+            canvas.DrawAnim(gfx, "Ready", 0, trans * Transform.CreateTranslate(2934, 1293) * Transform.CreateScale(-1, 1), DrawPriorityEnum.FOREGROUND, null);
         }
 
         if (config.ShowZombieSpawns)
