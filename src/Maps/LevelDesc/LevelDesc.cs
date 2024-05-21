@@ -126,7 +126,8 @@ public class LevelDesc : IDeserializable, ISerializable, IDrawable
         TeamScoreboard?.DrawOn(canvas, config, trans, time, data);
         foreach (AbstractAsset a in Assets)
             a.DrawOn(canvas, config, trans, time, data);
-        //foreach (LevelAnim la in LevelAnims)
+        foreach (LevelAnim la in LevelAnims)
+            la.DrawOn(canvas, config, trans, time, data);
         //foreach (LevelAnimation la in LevelAnimations)
         foreach (AbstractVolume v in Volumes)
             v.DrawOn(canvas, config, trans, time, data);

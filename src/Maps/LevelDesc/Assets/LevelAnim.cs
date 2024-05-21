@@ -1,8 +1,9 @@
+using System;
 using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
 
-public class LevelAnim : IDeserializable, ISerializable
+public class LevelAnim : IDeserializable, ISerializable, IDrawable
 {
     private const string FOREGROUND = "am_Foreground";
     private const string BACKGROUND = "am_Background";
@@ -46,16 +47,17 @@ public class LevelAnim : IDeserializable, ISerializable
         e.SetAttributeValue("Y", Y);
     }
 
-    /*public void DrawOn<T>(ICanvas<T> canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data)
-        where T : ITexture
+    public void DrawOn(ICanvas canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data)
     {
-        //LevelAnim requires more than one swf shape to be rendered.
-        //it's more work to get working, so for now im commenting it out
-        return;
-
         if (!config.ShowAssets) return;
-        //NOTE: there may be some extra logic needed here. need to get renderer impl working to figure out.
-        T texture = canvas.LoadTextureFromSWF("SFX_Level.swf", AssetName);
-        canvas.DrawTexture(X, Y, texture, trans, DrawPriorityEnum.MIDGROUND, this);
-    }*/
+        Gfx gfx = new()
+        {
+            AnimFile = "SFX_Level.swf",
+            AnimClass = AssetName,
+            FireAndForget = false,
+            RandomFrameStart = true,
+            Desynch = true,
+        };
+        canvas.DrawAnim(gfx, "", 0, trans * Transform.CreateTranslate(X, Y), DrawPriorityEnum.MIDGROUND, this);
+    }
 }
