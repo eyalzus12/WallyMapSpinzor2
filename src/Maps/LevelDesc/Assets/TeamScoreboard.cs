@@ -5,8 +5,6 @@ namespace WallyMapSpinzor2;
 
 public class TeamScoreboard : IDeserializable, ISerializable, IDrawable
 {
-    private const string DIGIT_PREFIX = "a_Digit";
-
     //yes, brawlhalla defines those as ints
     public int RedTeamX { get; set; }
     public int BlueTeamX { get; set; }
