@@ -233,7 +233,7 @@ public class LevelDesc : IDeserializable, ISerializable, IDrawable
 
                 canvas.DrawAnim(doorGfx, animationName, GET_ANIM_FRAME(time), trans * Transform.CreateTranslate(g.X + g.W / 2.0, g.Y + g.H), DrawPriorityEnum.FOREGROUND, null);
                 if (hits != 0 && hits < 24)
-                    canvas.DrawAnim(sparkleGfx, animationName, GET_ANIM_FRAME(time), trans * Transform.CreateTranslate(g.X + g.W / 2.0, g.Y + g.H), DrawPriorityEnum.FOREGROUND, null);
+                    canvas.DrawAnim(sparkleGfx, "", GET_ANIM_FRAME(time), trans * Transform.CreateTranslate(g.X + g.W / 2.0, g.Y + g.H), DrawPriorityEnum.FOREGROUND, null);
 
                 ++i;
             }
