@@ -7,8 +7,8 @@ namespace WallyMapSpinzor2;
 
 public class LevelDesc : IDeserializable, ISerializable, IDrawable
 {
-    //FIXME: need to investigate correct multiplier.
     public const double ANIMATION_FPS = 24;
+    public static int GET_ANIM_FRAME(TimeSpan time) => (int)(ANIMATION_FPS * time.TotalSeconds);
 
     private static readonly (int, int)[] ZOMBIE_SPAWNS = [(230, 390), (180, 900), (-1160, 900), (-1990, 390)];
 
@@ -231,9 +231,9 @@ public class LevelDesc : IDeserializable, ISerializable, IDrawable
                     _ => "FullDamage",
                 };
 
-                canvas.DrawAnim(doorGfx, animationName, 0, trans * Transform.CreateTranslate(g.X + g.W / 2.0, g.Y + g.H), DrawPriorityEnum.FOREGROUND, null);
-                //FIXME: displays in the wrong spot for some reason
-                //canvas.DrawAnim(sparkleGfx, animationName, (int)(ANIMATION_FPS * time.TotalSeconds), trans * Transform.CreateTranslate(g.X + g.W / 2.0, g.Y + g.H), DrawPriorityEnum.FOREGROUND, null);
+                canvas.DrawAnim(doorGfx, animationName, GET_ANIM_FRAME(time), trans * Transform.CreateTranslate(g.X + g.W / 2.0, g.Y + g.H), DrawPriorityEnum.FOREGROUND, null);
+                if (hits != 0 && hits < 24)
+                    canvas.DrawAnim(sparkleGfx, animationName, GET_ANIM_FRAME(time), trans * Transform.CreateTranslate(g.X + g.W / 2.0, g.Y + g.H), DrawPriorityEnum.FOREGROUND, null);
 
                 ++i;
             }
