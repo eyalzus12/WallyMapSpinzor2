@@ -20,7 +20,7 @@ public class Point : IDeserializable, ISerializable, IDrawable
         e.SetAttributeValue("Y", Y);
     }
 
-    public void DrawOn(ICanvas canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data)
+    public void DrawOn(ICanvas canvas, Transform trans, RenderConfig config, RenderContext context, RenderState state)
     {
         canvas.DrawCircle(X, Y, config.RadiusHordePathPoint, config.ColorHordePath, trans, DrawPriorityEnum.DATA, this);
     }

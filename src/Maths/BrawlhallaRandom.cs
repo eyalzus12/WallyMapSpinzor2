@@ -43,4 +43,9 @@ public class BrawlhallaRandom
 
         return State[Index];
     }
+
+    public double NextF()
+    {
+        return Next() / 4294967295.0;
+    }
 }

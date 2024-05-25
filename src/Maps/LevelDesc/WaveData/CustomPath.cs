@@ -18,11 +18,11 @@ public class CustomPath : IDeserializable, ISerializable, IDrawable
         e.AddManySerialized(Points);
     }
 
-    public void DrawOn(ICanvas canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data)
+    public void DrawOn(ICanvas canvas, Transform trans, RenderConfig config, RenderContext context, RenderState state)
     {
         foreach (Point p in Points)
         {
-            p.DrawOn(canvas, config, trans, time, data);
+            p.DrawOn(canvas, trans, config, context, state);
         }
 
         for (int i = 0; i < Points.Count - 1; ++i)

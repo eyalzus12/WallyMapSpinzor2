@@ -29,7 +29,7 @@ public class Respawn : IDeserializable, ISerializable, IDrawable
     }
 
 
-    public void DrawOn(ICanvas canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data)
+    public void DrawOn(ICanvas canvas, Transform trans, RenderConfig config, RenderContext context, RenderState state)
     {
         if (!config.ShowRespawn) return;
         canvas.DrawCircle(

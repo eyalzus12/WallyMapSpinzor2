@@ -1,8 +1,6 @@
-using System;
-
 namespace WallyMapSpinzor2;
 
 public interface IDrawable
 {
-    void DrawOn(ICanvas canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data);
+    void DrawOn(ICanvas canvas, Transform trans, RenderConfig config, RenderContext context, RenderState state);
 }

@@ -59,17 +59,17 @@ public abstract class AbstractAsset : ISerializable, IDeserializable, IDrawable
             e.SetAttributeValue("Y", Y);
     }
 
-    public virtual void DrawOn(ICanvas canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data)
+    public virtual void DrawOn(ICanvas canvas, Transform trans, RenderConfig config, RenderContext context, RenderState state)
     {
         if (!config.ShowAssets)
             return;
 
         if (AssetName is null) return;
 
-        if (data.AssetDir is null)
-            throw new InvalidOperationException("Attempting to draw an asset, but global data is missing the AssetDir.");
+        if (context.AssetDir is null)
+            throw new InvalidOperationException("Attempting to draw an asset, but the render context is missing the AssetDir.");
 
-        string path = Path.Combine(data.AssetDir, AssetName);
+        string path = Path.Combine(context.AssetDir, AssetName);
         canvas.DrawTextureRect(path, 0, 0, W, H, trans * Transform, DrawPriorityEnum.MIDGROUND, this);
     }
 

@@ -1,4 +1,3 @@
-using System;
 using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
@@ -10,10 +9,10 @@ public class DynamicCollision : AbstractDynamic<AbstractCollision>
         Children = element.DeserializeCollisionChildren();
     }
 
-    public override void DrawOn(ICanvas canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data)
+    public override void DrawOn(ICanvas canvas, Transform trans, RenderConfig config, RenderContext context, RenderState state)
     {
         foreach (AbstractCollision c in Children)
             c.CalculateCurve(X, Y);
-        base.DrawOn(canvas, config, trans, time, data);
+        base.DrawOn(canvas, trans, config, context, state);
     }
 }

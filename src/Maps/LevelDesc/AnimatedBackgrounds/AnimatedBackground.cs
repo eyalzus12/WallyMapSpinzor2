@@ -73,24 +73,24 @@ public class AnimatedBackground : IDeserializable, ISerializable, IDrawable
             e.Add(new XElement("ForceDraw", "True"));
     }
 
-    public void DrawOn(ICanvas canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data)
+    public void DrawOn(ICanvas canvas, Transform trans, RenderConfig config, RenderContext context, RenderState state)
     {
         if (!config.AnimatedBackgrounds && !ForceDraw)
             return;
-        int frame = LevelDesc.GET_ANIM_FRAME(time);
+        int frame = LevelDesc.GET_ANIM_FRAME(config.Time);
 
         // Non-midground animated backgrounds are BACKGROUNDS, so they need to be transformed to match the background.
         DrawPriorityEnum priority = Midground ? DrawPriorityEnum.MIDGROUND : DrawPriorityEnum.BACKGROUND;
-        Transform spriteTrans = (Midground ? Transform.IDENTITY : CalculateBackgroundTransform(data)) * SpriteTransform;
-        canvas.DrawAnim(Gfx, "Ready", frame + FrameOffset, spriteTrans * trans, priority, this);
+        Transform spriteTrans = (Midground ? Transform.IDENTITY : CalculateBackgroundTransform(context)) * SpriteTransform;
+        canvas.DrawAnim(Gfx, "Ready", frame + FrameOffset, trans * spriteTrans, priority, this);
     }
 
-    private static Transform CalculateBackgroundTransform(RenderData data)
+    private static Transform CalculateBackgroundTransform(RenderContext context)
     {
-        double backgroundX = data.BackgroundRect_X!.Value;
-        double backgroundY = data.BackgroundRect_Y!.Value;
-        double backgroundScaleX = data.BackgroundRect_W!.Value / data.CurrentBackground!.W;
-        double backgroundScaleY = data.BackgroundRect_H!.Value / data.CurrentBackground!.H;
+        double backgroundX = context.BackgroundRect_X!.Value;
+        double backgroundY = context.BackgroundRect_Y!.Value;
+        double backgroundScaleX = context.BackgroundRect_W!.Value / context.CurrentBackground!.W;
+        double backgroundScaleY = context.BackgroundRect_H!.Value / context.CurrentBackground!.H;
         return Transform.CreateFrom(x: backgroundX, y: backgroundY, scaleX: backgroundScaleX, scaleY: backgroundScaleY);
     }
 

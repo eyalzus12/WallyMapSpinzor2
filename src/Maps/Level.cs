@@ -56,9 +56,9 @@ public class Level : IDeserializable, ISerializable, IDrawable
         e.Add(new XElement("Playlists", string.Join(",", Playlists)));
     }
 
-    public void DrawOn(ICanvas canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data)
+    public void DrawOn(ICanvas canvas, Transform trans, RenderConfig config, RenderContext context, RenderState state)
     {
-        Desc.DrawOn(canvas, config, trans, time, data);
+        Desc.DrawOn(canvas, trans, config, context, state);
 
         if (Type is null || !config.ShowKillBounds) return;
         double killX = Desc.CameraBounds.X - Type.LeftKill ?? 0;

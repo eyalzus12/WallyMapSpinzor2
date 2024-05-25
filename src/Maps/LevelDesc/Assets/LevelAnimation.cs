@@ -1,9 +1,10 @@
+using System;
 using System.Collections.Generic;
 using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
 
-public class LevelAnimation : IDeserializable, ISerializable
+public class LevelAnimation : IDeserializable, ISerializable, IDrawable
 {
     public List<string> AnimationName { get; set; } = null!;
     public bool PlayMidground { get; set; }
@@ -14,10 +15,9 @@ public class LevelAnimation : IDeserializable, ISerializable
     public int InitDelay { get; set; }
     public int Interval { get; set; }
     public int IntervalRand { get; set; }
-    // why is this a string
-    public string PositionX { get; set; } = null!;
-    // why is this a string
-    public string PositionY { get; set; } = null!;
+    public double PositionX { get; set; }
+    public double PositionY { get; set; }
+    // radians
     public double Rotation { get; set; }
     public double Scale { get; set; }
     public double RandX { get; set; }
@@ -37,8 +37,8 @@ public class LevelAnimation : IDeserializable, ISerializable
         InitDelay = e.GetIntAttribute("InitDelay", 0);
         Interval = e.GetIntAttribute("Interval", 0);
         IntervalRand = e.GetIntAttribute("IntervalRand", 0);
-        PositionX = e.GetAttribute("PositionX");
-        PositionY = e.GetAttribute("PositionY");
+        PositionX = e.GetFloatAttribute("PositionX");
+        PositionY = e.GetFloatAttribute("PositionY");
         Rotation = e.GetFloatAttribute("Rotation", 0);
         Scale = e.GetFloatAttribute("Scale", 0); // yes, this defaults to 0
         RandX = e.GetFloatAttribute("RandX", 0);
@@ -82,5 +82,134 @@ public class LevelAnimation : IDeserializable, ISerializable
             e.SetAttributeValue("PlatID", PlatID);
         if (IgnoreOnBlurBG)
             e.SetAttributeValue("IgnoreOnBlurBG", IgnoreOnBlurBG);
+    }
+
+    private static TimeSpan FromTimestamp(int timestamp) => TimeSpan.FromSeconds(timestamp / 60.0 / 16.0);
+    private TimeSpan RollInterval(BrawlhallaRandom rand) => FromTimestamp((int)Math.Floor(rand.NextF() * (IntervalRand + 1)));
+
+    /*
+    This is not a fully accurate simulation of the game, because the game is a piece of shit.
+
+    The game starts with a delay of InitDelay, and then does delays of Interval.
+    Except that it adds a random value between 0 and IntervalRand to each.
+
+    The main difficulty is shit breaks because you can roll back time.
+    Brawlhalla fixes this for replays, but in a way that requires knowing the length of the replay and doesn't work with negative time.
+    Generally, the implementation ingame is pretty weird and is hard to adapt.
+    Mostly because of how brawlhalla keeps track of time.
+
+    I opted to just use simple TimeSpans instead.
+
+    The animation ingame DOES break when you rewind time in training room, so you could argue that a bugged rewind is being accurate to the game.
+    But whatever. This code is cleaner anyways.
+    */
+    public void DrawOn(ICanvas canvas, Transform trans, RenderConfig config, RenderContext context, RenderState state_)
+    {
+        if (IgnoreOnBlurBG && !config.AnimatedBackgrounds)
+            return;
+
+        BrawlhallaRandom random = state_.Random;
+        State state = state_[this];
+        if (!state.Initialized)
+        {
+            int initialOffset = InitDelay != 0 ? InitDelay : Interval;
+            state.NextAnimationStartTime = FromTimestamp(initialOffset) + RollInterval(random);
+            // if the user starts rolling back now, we need to pretend an animation used to play.
+            // otherwise the "went before animation" logic won't trigger.
+            state.AnimationStartTime = state.NextAnimationStartTime - FromTimestamp(Interval);
+
+            state.Initialized = true;
+        }
+
+        bool forcePlayNew = false;
+        /*
+        moving to before a playing animation.
+        move back in intervals until reaching a theoretical animation start.
+        then force-select a new animation.
+        needs a while loop for cases of overshooting.
+        */
+        while (config.Time < state.AnimationStartTime)
+        {
+            state.NextAnimationStartTime = state.AnimationStartTime;
+            state.AnimationStartTime -= FromTimestamp(Interval) + RollInterval(random);
+            forcePlayNew = true;
+            state.Gfx = null;
+        }
+
+        // needs a while loop because high speeds can make the global time overshoot
+        while (forcePlayNew || config.Time >= state.NextAnimationStartTime)
+        {
+            if (PlatID is not null && !context.PlatIDMovingPlatformOffset.ContainsKey(PlatID))
+                throw new InvalidOperationException($"Plat ID dictionary did not contain plat id {PlatID} when attempting to draw level animation. Make sure to call {nameof(MovingPlatform.StoreMovingPlatformOffset)}.");
+            (double platformX, double platformY) = (PlatID is null) ? (0, 0) : context.PlatIDMovingPlatformOffset[PlatID];
+
+            double positionX = platformX + PositionX + 2 * random.NextF() * RandX - RandX;
+            double positionY = platformY + PositionY + 2 * random.NextF() * RandY - RandY;
+            int animIndex = (int)Math.Floor(AnimationName.Count * random.NextF());
+            string anim = AnimationName[animIndex];
+
+            state.Gfx = new()
+            {
+                AnimFile = FileName,
+                AnimClass = anim,
+                BaseAnim = "Ready",
+                FireAndForget = true,
+                AnimScale = Scale,
+            };
+
+            state.Layer = PlayForeground
+                ? DrawPriorityEnum.FOREGROUND
+                : PlayMidground
+                    ? DrawPriorityEnum.MIDGROUND
+                    : PlayBackground
+                        ? DrawPriorityEnum.BACKGROUND
+                        : DrawPriorityEnum.MIDGROUND; // if none apply, there's a secret 4th layer. TODO: figure out what it is.
+
+            double rotation = Rotation % Math.Tau;
+            if (rotation < -Math.PI) rotation += Math.Tau;
+            if (rotation > Math.PI) rotation -= Math.Tau;
+
+            state.Trans = Transform.CreateFrom(
+                x: positionX, y: positionY,
+                scaleX: Scale * (Flip ? -1 : 1), scaleY: Scale,
+                rot: rotation
+            );
+
+            if (!forcePlayNew)
+            {
+                state.AnimationStartTime = state.NextAnimationStartTime;
+                state.NextAnimationStartTime += FromTimestamp(Interval) + RollInterval(random);
+            }
+            forcePlayNew = false; // prevent an infinite loop
+        }
+
+        if (state.Gfx is not null)
+        {
+            int frame = LevelDesc.GET_ANIM_FRAME(config.Time - state.AnimationStartTime);
+            canvas.DrawAnim(state.Gfx, "Ready", frame, trans * state.Trans, state.Layer, this, loopLimit: LoopIterations != 0 ? LoopIterations + 1 : 1);
+        }
+
+        state_[this] = state;
+    }
+
+    private static Transform CalculateBackgroundTransform(RenderContext context)
+    {
+        double backgroundX = context.BackgroundRect_X!.Value;
+        double backgroundY = context.BackgroundRect_Y!.Value;
+        double backgroundScaleX = context.BackgroundRect_W!.Value / context.CurrentBackground!.W;
+        double backgroundScaleY = context.BackgroundRect_H!.Value / context.CurrentBackground!.H;
+        return Transform.CreateFrom(x: backgroundX, y: backgroundY, scaleX: backgroundScaleX, scaleY: backgroundScaleY);
+    }
+
+    internal class State
+    {
+        public bool Initialized = false;
+
+        public Gfx? Gfx;
+        public Transform Trans;
+        public DrawPriorityEnum Layer;
+
+        public TimeSpan AnimationStartTime;
+        public TimeSpan NextAnimationStartTime;
     }
 }

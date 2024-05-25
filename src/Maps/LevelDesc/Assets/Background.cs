@@ -41,7 +41,7 @@ public class Background : IDeserializable, ISerializable, IDrawable
         e.SetAttributeValue("W", W);
     }
 
-    public void UpdateBackground(RenderData data, RenderConfig config)
+    public void UpdateBackground(RenderContext data, RenderConfig config)
     {
         if (data.CurrentBackground is null)
         {
@@ -63,18 +63,18 @@ public class Background : IDeserializable, ISerializable, IDrawable
         }
     }
 
-    public void DrawOn(ICanvas canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data)
+    public void DrawOn(ICanvas canvas, Transform trans, RenderConfig config, RenderContext context, RenderState state)
     {
         if (!config.ShowBackground) return;
-        if (data.CurrentBackground != this) return;
+        if (context.CurrentBackground != this) return;
 
-        if (data.BackgroundRect_H is null || data.BackgroundRect_W is null || data.BackgroundRect_X is null || data.BackgroundRect_Y is null)
-            throw new InvalidOperationException("Attempting to draw background, but global data is missing the background rect. Make sure the camera bounds are drawn before the background.");
+        if (context.BackgroundRect_H is null || context.BackgroundRect_W is null || context.BackgroundRect_X is null || context.BackgroundRect_Y is null)
+            throw new InvalidOperationException("Attempting to draw background, but render context is missing the background rect. Make sure the camera bounds are drawn before the background.");
 
         string assetName = ((config.AnimatedBackgrounds ? AnimatedAssetName : null) ?? AssetName)!;
         canvas.DrawTextureRect(
             Path.Combine(BACKGROUND_FOLDER, assetName),
-            data.BackgroundRect_X ?? 0, data.BackgroundRect_Y ?? 0, data.BackgroundRect_W ?? 0, data.BackgroundRect_H ?? 0,
+            context.BackgroundRect_X ?? 0, context.BackgroundRect_Y ?? 0, context.BackgroundRect_W ?? 0, context.BackgroundRect_H ?? 0,
             trans, DrawPriorityEnum.BACKGROUND,
             this
         );

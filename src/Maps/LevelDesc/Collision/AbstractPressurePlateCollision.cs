@@ -51,9 +51,9 @@ public abstract class AbstractPressurePlateCollision : AbstractCollision
         base.Serialize(e);
     }
 
-    public override void DrawOn(ICanvas canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data)
+    public override void DrawOn(ICanvas canvas, Transform trans, RenderConfig config, RenderContext context, RenderState state)
     {
-        base.DrawOn(canvas, config, trans, time, data);
+        base.DrawOn(canvas, trans, config, context, state);
 
         // if a pressure plate has an Anchor, its
         // pressureplate-ness is ignored by the game.
@@ -78,9 +78,9 @@ public abstract class AbstractPressurePlateCollision : AbstractCollision
 
         if (config.ShowAssets)
         {
-            if (PlatID is not null && !data.PlatIDMovingPlatformOffset.ContainsKey(PlatID))
-                throw new InvalidOperationException($"Plat ID dictionary did not contain plat id {PlatID} when attempting to draw pressure plate. Make sure to call StoreOffset beforehand.");
-            (double platformX, double platformY) = (PlatID is null) ? (0, 0) : data.PlatIDMovingPlatformOffset[PlatID];
+            if (PlatID is not null && !context.PlatIDMovingPlatformOffset.ContainsKey(PlatID))
+                throw new InvalidOperationException($"Plat ID dictionary did not contain plat id {PlatID} when attempting to draw pressure plate. Make sure to call {nameof(MovingPlatform.StoreMovingPlatformOffset)}.");
+            (double platformX, double platformY) = (PlatID is null) ? (0, 0) : context.PlatIDMovingPlatformOffset[PlatID];
             double assetX = platformX + AnimOffsetX;
             double assetY = platformY + AnimOffsetY;
             Transform spriteTrans = Transform.CreateFrom(x: assetX, y: assetY, rot: AnimRotation * Math.PI / 180);

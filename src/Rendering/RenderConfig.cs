@@ -1,3 +1,5 @@
+using System;
+
 namespace WallyMapSpinzor2;
 
 public class RenderConfig
@@ -11,6 +13,8 @@ public class RenderConfig
         TOP,
         BOTTOM,
     }
+
+    public TimeSpan Time { get; set; }
 
     //Which ScoringType to use
     public ScoringTypeEnum ScoringType { get; set; } = ScoringTypeEnum.None;

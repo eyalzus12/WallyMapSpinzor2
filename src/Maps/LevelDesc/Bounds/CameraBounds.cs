@@ -1,4 +1,3 @@
-using System;
 using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
@@ -25,12 +24,12 @@ public class CameraBounds : IDeserializable, ISerializable, IDrawable
         e.SetAttributeValue("Y", Y);
     }
 
-    public void DrawOn(ICanvas canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data)
+    public void DrawOn(ICanvas canvas, Transform trans, RenderConfig config, RenderContext context, RenderState state)
     {
-        data.BackgroundRect_X = X;
-        data.BackgroundRect_Y = Y;
-        data.BackgroundRect_W = W;
-        data.BackgroundRect_H = H;
+        context.BackgroundRect_X = X;
+        context.BackgroundRect_Y = Y;
+        context.BackgroundRect_W = W;
+        context.BackgroundRect_H = H;
 
         if (!config.ShowCameraBounds) return;
         canvas.DrawRect(X, Y, W, H, false, config.ColorCameraBounds, trans, DrawPriorityEnum.DATA, this);

@@ -61,19 +61,19 @@ public class NavNode : IDeserializable, ISerializable, IDrawable
             e.SetAttributeValue("Y", Y);
     }
 
-    public void RegisterNavNode(RenderData data, double xOff = 0, double yOff = 0)
+    public void RegisterNavNode(RenderContext data, double xOff = 0, double yOff = 0)
     {
         data.NavIDDictionary[NavID] = (X + xOff, Y + yOff);
     }
 
-    public void DrawOn(ICanvas canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data)
+    public void DrawOn(ICanvas canvas, Transform trans, RenderConfig config, RenderContext context, RenderState state)
     {
         if (!config.ShowNavNode) return;
         (double x, double y) = trans * (X, Y);
         canvas.DrawCircle(x, y, config.RadiusNavNode, GetNavIDColor(Type, config), Transform.IDENTITY, DrawPriorityEnum.NAVNODE, this);
         foreach ((int id, _) in Path)
         {
-            if (data.NavIDDictionary.TryGetValue(id, out (double, double) pos))
+            if (context.NavIDDictionary.TryGetValue(id, out (double, double) pos))
             {
                 (double targetX, double targetY) = pos;
                 canvas.DrawArrow(x, y, targetX, targetY, config.OffsetNavLineArrowSide, config.OffsetNavLineArrowBack, config.ColorNavPath, Transform.IDENTITY, DrawPriorityEnum.NAVLINE, this);

@@ -1,4 +1,3 @@
-using System;
 using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
@@ -25,7 +24,7 @@ public class SpawnBotBounds : IDeserializable, ISerializable, IDrawable
         e.SetAttributeValue("Y", Y);
     }
 
-    public void DrawOn(ICanvas canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data)
+    public void DrawOn(ICanvas canvas, Transform trans, RenderConfig config, RenderContext context, RenderState state)
     {
         if (!config.ShowSpawnBotBounds) return;
         canvas.DrawRect(X, Y, W, H, false, config.ColorSpawnBotBounds, trans, DrawPriorityEnum.DATA, this);

@@ -43,14 +43,14 @@ public class WaveData : IDeserializable, ISerializable, IDrawable
         e.AddManySerialized(Groups);
     }
 
-    public void DrawOn(ICanvas canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data)
+    public void DrawOn(ICanvas canvas, Transform trans, RenderConfig config, RenderContext context, RenderState state)
     {
         if (ID != config.HordeWave)
             return;
         if (config.HordePathType == RenderConfig.PathConfigEnum.CUSTOM && CustomPaths.Count != 0)
         {
             int pathIndex = BrawlhallaMath.SafeMod(config.HordePathIndex, CustomPaths.Count);
-            CustomPaths[pathIndex].DrawOn(canvas, config, trans, time, data);
+            CustomPaths[pathIndex].DrawOn(canvas, trans, config, context, state);
         }
     }
 

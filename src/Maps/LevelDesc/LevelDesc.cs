@@ -95,62 +95,63 @@ public class LevelDesc : IDeserializable, ISerializable, IDrawable
         e.AddManySerialized(DynamicNavNodes);
     }
 
-    public void DrawOn(ICanvas canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data)
+    public void DrawOn(ICanvas canvas, Transform trans, RenderConfig config, RenderContext context, RenderState state)
     {
         if (trans != Transform.IDENTITY)
             throw new ArgumentException("Initial transform must be the identity transformation. Do not pass the camera transformation inside. Instead, handle it on the rendering side.");
         // setup
-        data.AssetDir = AssetDir;
-        data.DefaultNumFrames = NumFrames;
-        data.DefaultSlowMult = SlowMult;
+        context.AssetDir = AssetDir;
+        context.DefaultNumFrames = NumFrames;
+        context.DefaultSlowMult = SlowMult;
         foreach (Background b in Backgrounds)
-            b.UpdateBackground(data, config);
-        data.PlatIDDynamicOffset.Clear();
-        data.PlatIDMovingPlatformOffset.Clear();
+            b.UpdateBackground(context, config);
+        context.PlatIDDynamicOffset.Clear();
+        context.PlatIDMovingPlatformOffset.Clear();
         foreach (AbstractAsset a in Assets) if (a is MovingPlatform mp)
-                mp.StoreMovingPlatformOffset(data, time);
+                mp.StoreMovingPlatformOffset(context, config.Time);
         foreach (AbstractCollision c in Collisions)
             c.CalculateCurve(0, 0);
-        data.NavIDDictionary.Clear();
+        context.NavIDDictionary.Clear();
         foreach (NavNode n in NavNodes)
-            n.RegisterNavNode(data);
+            n.RegisterNavNode(context);
         foreach (DynamicNavNode dn in DynamicNavNodes)
-            dn.RegisterNavNodes(data);
+            dn.RegisterNavNodes(context);
 
         // drawing
-        CameraBounds.DrawOn(canvas, config, trans, time, data);
-        SpawnBotBounds.DrawOn(canvas, config, trans, time, data);
+        CameraBounds.DrawOn(canvas, trans, config, context, state);
+        SpawnBotBounds.DrawOn(canvas, trans, config, context, state);
         foreach (Background b in Backgrounds)
-            b.DrawOn(canvas, config, trans, time, data);
+            b.DrawOn(canvas, trans, config, context, state);
         //foreach(LevelSound ls in LevelSounds)
-        TeamScoreboard?.DrawOn(canvas, config, trans, time, data);
+        TeamScoreboard?.DrawOn(canvas, trans, config, context, state);
         foreach (AbstractAsset a in Assets)
-            a.DrawOn(canvas, config, trans, time, data);
+            a.DrawOn(canvas, trans, config, context, state);
         foreach (LevelAnim la in LevelAnims)
-            la.DrawOn(canvas, config, trans, time, data);
-        //foreach (LevelAnimation la in LevelAnimations)
+            la.DrawOn(canvas, trans, config, context, state);
         foreach (AbstractVolume v in Volumes)
-            v.DrawOn(canvas, config, trans, time, data);
+            v.DrawOn(canvas, trans, config, context, state);
         foreach (AbstractCollision c in Collisions)
-            c.DrawOn(canvas, config, trans, time, data);
+            c.DrawOn(canvas, trans, config, context, state);
         foreach (DynamicCollision dc in DynamicCollisions)
-            dc.DrawOn(canvas, config, trans, time, data);
+            dc.DrawOn(canvas, trans, config, context, state);
         foreach (Respawn r in Respawns)
-            r.DrawOn(canvas, config, trans, time, data);
+            r.DrawOn(canvas, trans, config, context, state);
         foreach (DynamicRespawn dr in DynamicRespawns)
-            dr.DrawOn(canvas, config, trans, time, data);
+            dr.DrawOn(canvas, trans, config, context, state);
         foreach (AbstractItemSpawn i in ItemSpawns)
-            i.DrawOn(canvas, config, trans, time, data);
+            i.DrawOn(canvas, trans, config, context, state);
         foreach (DynamicItemSpawn di in DynamicItemSpawns)
-            di.DrawOn(canvas, config, trans, time, data);
+            di.DrawOn(canvas, trans, config, context, state);
         foreach (WaveData wd in WaveDatas)
-            wd.DrawOn(canvas, config, trans, time, data);
+            wd.DrawOn(canvas, trans, config, context, state);
         foreach (AnimatedBackground ab in AnimatedBackgrounds)
-            ab.DrawOn(canvas, config, trans, time, data);
+            ab.DrawOn(canvas, trans, config, context, state);
+        foreach (LevelAnimation la in LevelAnimations)
+            la.DrawOn(canvas, trans, config, context, state);
         foreach (NavNode n in NavNodes)
-            n.DrawOn(canvas, config, trans, time, data);
+            n.DrawOn(canvas, trans, config, context, state);
         foreach (DynamicNavNode dn in DynamicNavNodes)
-            dn.DrawOn(canvas, config, trans, time, data);
+            dn.DrawOn(canvas, trans, config, context, state);
 
         //Gamemode stuff
 
@@ -231,9 +232,9 @@ public class LevelDesc : IDeserializable, ISerializable, IDrawable
                     _ => "FullDamage",
                 };
 
-                canvas.DrawAnim(doorGfx, animationName, GET_ANIM_FRAME(time), trans * Transform.CreateTranslate(g.X + g.W / 2.0, g.Y + g.H), DrawPriorityEnum.FOREGROUND, null);
+                canvas.DrawAnim(doorGfx, animationName, GET_ANIM_FRAME(config.Time), trans * Transform.CreateTranslate(g.X + g.W / 2.0, g.Y + g.H), DrawPriorityEnum.FOREGROUND, null);
                 if (hits != 0 && hits < 24)
-                    canvas.DrawAnim(sparkleGfx, "", GET_ANIM_FRAME(time), trans * Transform.CreateTranslate(g.X + g.W / 2.0, g.Y + g.H), DrawPriorityEnum.FOREGROUND, null);
+                    canvas.DrawAnim(sparkleGfx, "", GET_ANIM_FRAME(config.Time), trans * Transform.CreateTranslate(g.X + g.W / 2.0, g.Y + g.H), DrawPriorityEnum.FOREGROUND, null);
 
                 ++i;
             }

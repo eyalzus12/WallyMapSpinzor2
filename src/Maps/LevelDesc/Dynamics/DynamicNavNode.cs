@@ -9,10 +9,10 @@ public class DynamicNavNode : AbstractDynamic<NavNode>
         Children = element.DeserializeChildrenOfType<NavNode>();
     }
 
-    public void RegisterNavNodes(RenderData data)
+    public void RegisterNavNodes(RenderContext context)
     {
-        (double dynX, double dynY) = data.PlatIDDynamicOffset[PlatID];
+        (double dynX, double dynY) = context.PlatIDDynamicOffset[PlatID];
         foreach (NavNode n in Children)
-            n.RegisterNavNode(data, X + dynX, Y + dynY);
+            n.RegisterNavNode(context, X + dynX, Y + dynY);
     }
 }

@@ -159,7 +159,7 @@ public abstract class AbstractCollision : IDeserializable, ISerializable, IDrawa
             .ToList();
     }
 
-    public virtual void DrawOn(ICanvas canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data)
+    public virtual void DrawOn(ICanvas canvas, Transform trans, RenderConfig config, RenderContext context, RenderState state)
     {
         if (!config.ShowCollision) return;
 

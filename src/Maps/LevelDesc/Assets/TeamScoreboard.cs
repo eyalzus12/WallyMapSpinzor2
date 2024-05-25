@@ -1,4 +1,3 @@
-using System;
 using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
@@ -52,7 +51,7 @@ public class TeamScoreboard : IDeserializable, ISerializable, IDrawable
         CustomArts = font == "" ? [] : [new CustomArt() { FileName = "Animation_GameModes.swf", Name = font }]
     };
 
-    public void DrawOn(ICanvas canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data)
+    public void DrawOn(ICanvas canvas, Transform trans, RenderConfig config, RenderContext context, RenderState state)
     {
         if (!config.ShowAssets) return;
 

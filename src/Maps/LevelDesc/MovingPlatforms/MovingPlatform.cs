@@ -42,23 +42,23 @@ public class MovingPlatform : AbstractAsset
             e.Add(a.SerializeToXElement());
     }
 
-    public void StoreMovingPlatformOffset(RenderData rd, TimeSpan time)
+    public void StoreMovingPlatformOffset(RenderContext ctx, TimeSpan time)
     {
-        (double offX, double offY) = Animation.GetOffset(rd, time);
+        (double offX, double offY) = Animation.GetOffset(ctx, time);
         //for some reason, dynamics need the first keyframe position of the animation removed
         (double anmX, double anmY) = Animation.KeyFrames[0].GetPosition();
-        rd.PlatIDDynamicOffset[PlatID] = (offX - anmX, offY - anmY);
-        rd.PlatIDMovingPlatformOffset[PlatID] = (offX + X, offY + Y);
+        ctx.PlatIDDynamicOffset[PlatID] = (offX - anmX, offY - anmY);
+        ctx.PlatIDMovingPlatformOffset[PlatID] = (offX + X, offY + Y);
     }
 
-    public override void DrawOn(ICanvas canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data)
+    public override void DrawOn(ICanvas canvas, Transform trans, RenderConfig config, RenderContext context, RenderState state)
     {
-        if (!data.PlatIDMovingPlatformOffset.TryGetValue(PlatID, out (double, double) platOffset))
-            throw new InvalidOperationException($"Plat ID dictionary did not contain plat id {PlatID} when attempting to draw MovingPlatform. Make sure to call StoreOffset beforehand.");
+        if (!context.PlatIDMovingPlatformOffset.TryGetValue(PlatID, out (double, double) platOffset))
+            throw new InvalidOperationException($"Plat ID dictionary did not contain plat id {PlatID} when attempting to draw MovingPlatform. Make sure to call {nameof(StoreMovingPlatformOffset)}.");
 
         (double offX, double offY) = platOffset;
         Transform childTrans = trans * Transform.CreateTranslate(offX, offY);
         foreach (AbstractAsset a in Assets)
-            a.DrawOn(canvas, config, childTrans, time, data);
+            a.DrawOn(canvas, childTrans, config, context, state);
     }
 }

@@ -34,7 +34,7 @@ public abstract class AbstractVolume : IDeserializable, ISerializable, IDrawable
             e.SetAttributeValue("ID", ID);
     }
 
-    public virtual void DrawOn(ICanvas canvas, RenderConfig config, Transform trans, TimeSpan time, RenderData data)
+    public virtual void DrawOn(ICanvas canvas, Transform trans, RenderConfig config, RenderContext context, RenderState state)
     {
         if (!ShouldShow(config))
             return;
