@@ -10,6 +10,7 @@ public static class Utils
     public static int? ParseIntOrNull(string? s) => (s is null) ? null : int.Parse(s, CultureInfo.InvariantCulture);
     public static uint? ParseUIntOrNull(string? s) => (s is null) ? null : (s.StartsWith("0x") ? Convert.ToUInt32(s, 16) : uint.Parse(s, CultureInfo.InvariantCulture));
     public static E ParseEnumOrDefault<E>(string? s, E @default = default) where E : struct, Enum => Enum.TryParse(s, out E e) ? e : @default;
+    public static E? ParseEnumOrNull<E>(string? s, E @default = default) where E : struct, Enum => s is null ? null : Enum.TryParse(s, out E e) ? e : @default;
 
     public static void DrawArrow(this ICanvas canvas, double x1, double y1, double x2, double y2, double arrowSide, double arrowBack, Color color, Transform trans, DrawPriorityEnum priority, object? caller)
     {
