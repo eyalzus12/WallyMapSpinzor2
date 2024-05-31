@@ -42,11 +42,11 @@ public class TeamScoreboard : IDeserializable, ISerializable, IDrawable
         e.SetAttributeValue("BlueDigitFont", BlueDigitFont);
     }
 
-    private static Gfx CreateGfx(string font) => new()
+    private static Gfx CreateGfx(RenderConfig config, string font) => new()
     {
         AnimFile = "Animation_GameModes.swf",
         AnimClass = "a__AnimationScore",
-        AnimScale = 2,
+        AnimScale = config.UseBombsketballDigitSize ? 1.3 : 2,
         BaseAnim = "Ready",
         CustomArts = font == "" ? [] : [new CustomArt() { FileName = "Animation_GameModes.swf", Name = font }]
     };
@@ -55,8 +55,8 @@ public class TeamScoreboard : IDeserializable, ISerializable, IDrawable
     {
         if (!config.ShowAssets) return;
 
-        Gfx redGfx = CreateGfx(RedDigitFont);
-        Gfx blueGfx = CreateGfx(BlueDigitFont);
+        Gfx redGfx = CreateGfx(config, RedDigitFont);
+        Gfx blueGfx = CreateGfx(config, BlueDigitFont);
 
         //red
         if (config.RedScore < 10)

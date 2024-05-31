@@ -47,6 +47,8 @@ public class RenderConfig : IDeserializable, ISerializable
     public bool ShowZombieSpawns { get; set; } = false;
     //whether to show the bombsketball tagets
     public bool ShowBombsketballTargets { get; set; } = false;
+    //whether to use the bombsketball-specific size for TeamScoreboard digits
+    public bool UseBombsketballDigitSize { get; set; } = false;
 
     //whether to show the horde doors
     public bool ShowHordeDoors { get; set; } = false;
@@ -206,6 +208,7 @@ public class RenderConfig : IDeserializable, ISerializable
         ShowRingRopes = Utils.ParseBoolOrNull(e.GetElementValue(nameof(ShowRingRopes))) ?? false;
         ShowZombieSpawns = Utils.ParseBoolOrNull(e.GetElementValue(nameof(ShowZombieSpawns))) ?? false;
         ShowBombsketballTargets = Utils.ParseBoolOrNull(e.GetElementValue(nameof(ShowBombsketballTargets))) ?? false;
+        UseBombsketballDigitSize = Utils.ParseBoolOrNull(e.GetElementValue(nameof(UseBombsketballDigitSize))) ?? false;
         ShowHordeDoors = Utils.ParseBoolOrNull(e.GetElementValue(nameof(ShowHordeDoors))) ?? false;
         DamageHordeDoors =
         [
@@ -316,6 +319,7 @@ public class RenderConfig : IDeserializable, ISerializable
         e.AddChild(nameof(ShowRingRopes), ShowRingRopes);
         e.AddChild(nameof(ShowZombieSpawns), ShowZombieSpawns);
         e.AddChild(nameof(ShowBombsketballTargets), ShowBombsketballTargets);
+        e.AddChild(nameof(UseBombsketballDigitSize), UseBombsketballDigitSize);
         e.AddChild(nameof(ShowHordeDoors), ShowHordeDoors);
         XElement damageHordeDoorsElement = new(nameof(DamageHordeDoors));
         damageHordeDoorsElement.AddChild("Index0", DamageHordeDoors[0]);
