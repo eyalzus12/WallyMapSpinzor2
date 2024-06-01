@@ -60,7 +60,7 @@ public class LevelType : IDeserializable, ISerializable
     public int? StartFrame { get; set; }
     public bool? FixedCamera { get; set; }
     public bool? AllowItemSpawnOverlap { get; set; }
-    public List<string> ColorExclusionList { get; set; } = null!;
+    public string[] ColorExclusionList { get; set; } = null!;
     public bool? FixedWidth { get; set; }
     public double? AIPanicLine { get; set; }
     public double? AIGroundLine { get; set; }
@@ -74,10 +74,12 @@ public class LevelType : IDeserializable, ISerializable
 
         DisplayName = e.GetElementValue("DisplayName")!;
         LevelID = Utils.ParseIntOrNull(e.GetElementValue("LevelID")) ?? 0;
-        TeamColorOrder = e.GetElementValue("TeamColorOrder")?
-            .Split(',')?
-            .Select((s) => Utils.ParseEnumOrDefault<TeamColorEnum>(s))?
-            .ToArray() ?? DEFAULT_TEAM_COLOR_ORDER;
+        TeamColorOrder =
+        [
+            ..e.GetElementValue("TeamColorOrder")?.Split(',')
+            .Select((s) => Utils.ParseEnumOrDefault<TeamColorEnum>(s))
+            ?? DEFAULT_TEAM_COLOR_ORDER
+        ];
         AvoidTeamColor = Utils.ParseEnumOrDefault<TeamColorEnum>(e.GetElementValue("AvoidTeamColor"));
         FileName = e.GetElementValue("FileName");
         AssetName = e.GetElementValue("AssetName");
@@ -109,7 +111,7 @@ public class LevelType : IDeserializable, ISerializable
         StartFrame = Utils.ParseIntOrNull(e.GetElementValue("StartFrame"));
         FixedCamera = Utils.ParseBoolOrNull(e.GetElementValue("FixedCamera"));
         AllowItemSpawnOverlap = Utils.ParseBoolOrNull(e.GetElementValue("AllowItemSpawnOverlap"));
-        ColorExclusionList = e.GetElementValue("ColorExclusionList")?.Split(',').ToList() ?? [];
+        ColorExclusionList = e.GetElementValue("ColorExclusionList")?.Split(',') ?? [];
         FixedWidth = Utils.ParseBoolOrNull(e.GetElementValue("FixedWidth"));
         AIPanicLine = Utils.ParseFloatOrNull(e.GetElementValue("AIPanicLine"));
         AIGroundLine = Utils.ParseFloatOrNull(e.GetElementValue("AIGroundLine"));
@@ -122,12 +124,12 @@ public class LevelType : IDeserializable, ISerializable
         e.SetAttributeValue("DevOnly", DevOnly);
         e.SetAttributeValue("TestLevel", TestLevel);
 
-        e.Add(new XElement("DisplayName", DisplayName));
-        e.Add(new XElement("LevelID", LevelID));
+        e.AddChild("DisplayName", DisplayName);
+        e.AddChild("LevelID", LevelID);
         if (!TeamColorOrder.SequenceEqual(DEFAULT_TEAM_COLOR_ORDER))
-            e.Add(new XElement("TeamColorOrder", string.Join(',', TeamColorOrder)));
+            e.AddChild("TeamColorOrder", string.Join(',', TeamColorOrder));
         if (AvoidTeamColor != TeamColorEnum.Default)
-            e.Add(new XElement("AvoidTeamColor", AvoidTeamColor));
+            e.AddChild("AvoidTeamColor", AvoidTeamColor);
         e.AddIfNotNull("FileName", FileName);
         e.AddIfNotNull("AssetName", AssetName);
         e.AddIfNotNull("CrateColorA", CrateColorA?.ToHexString());
@@ -139,9 +141,9 @@ public class LevelType : IDeserializable, ISerializable
         e.AddIfNotNull("SoftTopKill", SoftTopKill);
 
         if (HardLeftKill is not null)
-            e.Add(new XElement("HardLeftKill", (bool)HardLeftKill && LeftKill >= 200));
+            e.AddChild("HardLeftKill", (bool)HardLeftKill && LeftKill >= 200);
         if (HardRightKill is not null)
-            e.Add(new XElement("HardRightKill", (bool)HardRightKill && RightKill >= 200));
+            e.AddChild("HardRightKill", (bool)HardRightKill && RightKill >= 200);
 
         e.AddIfNotNull("BGMusic", BGMusic);
         e.AddIfNotNull("StreamerBGMusic", StreamerBGMusic);
@@ -150,15 +152,15 @@ public class LevelType : IDeserializable, ISerializable
         e.AddIfNotNull("AIStrictRecover", AIStrictRecover?.ToString()?.ToUpperInvariant());
 
         if (MidgroundTint is not null)
-            e.Add(new XElement("MidgroundTint", "0x" + MidgroundTint?.ToString("X6")));
+            e.AddChild("MidgroundTint", "0x" + MidgroundTint?.ToString("X6"));
         if (MidgroundOffset is not null)
-            e.Add(new XElement("MidgroundOffset", "0x" + MidgroundTint?.ToString("X6")));
+            e.AddChild("MidgroundOffset", "0x" + MidgroundTint?.ToString("X6"));
         e.AddIfNotNull("MidgroundFraction", MidgroundFraction);
 
-        if (BotTint == 0) e.Add(new XElement("BotTint", 0));
-        else if (BotTint > 0) e.Add(new XElement("BotTint", "0x" + BotTint?.ToString("X6")));
-        if (LevelName == TEMPLATE_LEVEL_TYPE) e.Add(new XElement("BotOffset", 0));
-        else if (BotOffset is not null) e.Add(new XElement("BotOffset", "0x" + BotOffset?.ToString("X6")));
+        if (BotTint == 0) e.AddChild("BotTint", 0);
+        else if (BotTint > 0) e.AddChild("BotTint", "0x" + BotTint?.ToString("X6"));
+        if (LevelName == TEMPLATE_LEVEL_TYPE) e.AddChild("BotOffset", 0);
+        else if (BotOffset is not null) e.AddChild("BotOffset", "0x" + BotOffset?.ToString("X6"));
         e.AddIfNotNull("BotFraction", BotFraction);
 
         e.AddIfNotNull("ShowPlatsDuringMove", ShowPlatsDuringMove);
@@ -167,13 +169,13 @@ public class LevelType : IDeserializable, ISerializable
         e.AddIfNotNull("FixedCamera", FixedCamera);
         e.AddIfNotNull("AllowItemSpawnOverlap", AllowItemSpawnOverlap);
 
-        if (ColorExclusionList.Count > 0)
-            e.Add(new XElement("ColorExclusionList", string.Join(',', ColorExclusionList)));
+        if (ColorExclusionList.Length > 0)
+            e.AddChild("ColorExclusionList", string.Join(',', ColorExclusionList));
 
         e.AddIfNotNull("AIGroundLine", AIGroundLine);
         e.AddIfNotNull("AIPanicLine", AIPanicLine);
 
         if (ShadowTint is not null)
-            e.Add(new XElement("ShadowTint", ShadowTint));
+            e.AddChild("ShadowTint", ShadowTint);
     }
 }

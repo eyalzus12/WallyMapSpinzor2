@@ -1,12 +1,11 @@
 using System;
-using System.Collections.Generic;
 using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
 
 public class LevelAnimation : IDeserializable, ISerializable, IDrawable
 {
-    public List<string> AnimationName { get; set; } = null!;
+    public string[] AnimationName { get; set; } = null!;
     public bool PlayMidground { get; set; }
     public bool Flip { get; set; }
     public string FileName { get; set; } = null!;
@@ -28,7 +27,7 @@ public class LevelAnimation : IDeserializable, ISerializable, IDrawable
 
     public void Deserialize(XElement e)
     {
-        AnimationName = [.. e.GetAttribute("AnimationName").Split(',')];
+        AnimationName = e.GetAttribute("AnimationName").Split(',');
         PlayMidground = e.GetBoolAttribute("PlayMidground", false);
         Flip = e.GetBoolAttribute("Flip", false);
         FileName = e.GetAttribute("FileName");
@@ -145,7 +144,7 @@ public class LevelAnimation : IDeserializable, ISerializable, IDrawable
 
             double positionX = platformX + PositionX + 2 * random.NextF() * RandX - RandX;
             double positionY = platformY + PositionY + 2 * random.NextF() * RandY - RandY;
-            int animIndex = (int)Math.Floor(AnimationName.Count * random.NextF());
+            int animIndex = (int)Math.Floor(AnimationName.Length * random.NextF());
             string anim = AnimationName[animIndex];
 
             state.Gfx = new()

@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 
@@ -13,10 +12,10 @@ public abstract class AbstractPressurePlateCollision : AbstractCollision
     public string AssetName { get; set; } = null!;
     public int Cooldown { get; set; }
     public bool FaceLeft { get; set; }
-    public List<double> FireOffsetX { get; set; } = null!;
-    public List<double> FireOffsetY { get; set; } = null!;
+    public double[] FireOffsetX { get; set; } = null!;
+    public double[] FireOffsetY { get; set; } = null!;
     public string? PlatID { get; set; }
-    public List<string> TrapPowers { get; set; } = null!;
+    public string[] TrapPowers { get; set; } = null!;
 
     public override void Deserialize(XElement e)
     {
@@ -27,11 +26,11 @@ public abstract class AbstractPressurePlateCollision : AbstractCollision
         AssetName = e.GetAttribute("AssetName");
         Cooldown = e.GetIntAttribute("Cooldown", 3000);
         FaceLeft = e.GetBoolAttribute("FaceLeft", false);
-        FireOffsetX = e.GetAttribute("FireOffsetX").Split(',').Select(double.Parse).ToList();
-        FireOffsetY = e.GetAttribute("FireOffsetY").Split(',').Select(double.Parse).ToList();
-        if (FireOffsetY.Count == 0) FireOffsetY = [-10]; //the game defaults it to -10
+        FireOffsetX = [.. e.GetAttribute("FireOffsetX").Split(',').Select(double.Parse)];
+        FireOffsetY = [.. e.GetAttribute("FireOffsetY").Split(',').Select(double.Parse)];
+        if (FireOffsetY.Length == 0) FireOffsetY = [-10]; //the game defaults it to -10
         PlatID = e.GetAttributeOrNull("PlatID");
-        TrapPowers = [.. e.GetAttribute("TrapPowers").Split(',')];
+        TrapPowers = e.GetAttribute("TrapPowers").Split(',');
     }
 
     public override void Serialize(XElement e)
@@ -42,7 +41,7 @@ public abstract class AbstractPressurePlateCollision : AbstractCollision
             e.SetAttributeValue("AnimRotation", AnimRotation);
         e.SetAttributeValue("AssetName", AssetName);
         e.SetAttributeValue("Cooldown", Cooldown);
-        e.SetAttributeValue("FaceLeft", FaceLeft.ToString().ToLower());
+        e.SetAttributeValue("FaceLeft", FaceLeft.ToString().ToLowerInvariant());
         e.SetAttributeValue("FireOffsetX", string.Join(',', FireOffsetX));
         e.SetAttributeValue("FireOffsetY", string.Join(',', FireOffsetY));
         if (PlatID is not null)
@@ -60,7 +59,7 @@ public abstract class AbstractPressurePlateCollision : AbstractCollision
         if (AnchorX is not null || AnchorY is not null)
             return;
 
-        for (int i = 0; i < TrapPowers.Count; ++i)
+        for (int i = 0; i < TrapPowers.Length; ++i)
         {
             double fireOffsetX = GetOffset(FireOffsetX, i);
             double fireOffsetY = GetOffset(FireOffsetY, i);
@@ -97,11 +96,11 @@ public abstract class AbstractPressurePlateCollision : AbstractCollision
     }
 
     // this is how it's done ingame
-    private double GetOffset(List<double> offset, int i)
+    private double GetOffset(double[] offset, int i)
     {
-        if (offset.Count == 0)
+        if (offset.Length == 0)
             return 0;
-        else if (offset.Count == TrapPowers.Count)
+        else if (offset.Length == TrapPowers.Length)
             return offset[i];
         else
             return offset[0];

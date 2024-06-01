@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 
@@ -37,9 +36,9 @@ public class Gfx : IDeserializable, ISerializable
     public bool Desynch { get; set; } = false; //yes it's actually called Desynch
     public bool IgnoreCachedWeapon { get; set; } = false;
     public uint Tint { get; set; } = 0; //packed
-    public List<AsymmetrySwapFlagEnum> AsymmetrySwapFlags { get; set; } = [];
-    public List<CustomArt> CustomArts { get; set; } = [];
-    public List<ColorSwap> ColorSwaps { get; set; } = [];
+    public AsymmetrySwapFlagEnum[] AsymmetrySwapFlags { get; set; } = [];
+    public CustomArt[] CustomArts { get; set; } = [];
+    public ColorSwap[] ColorSwaps { get; set; } = [];
 
     public void Deserialize(XElement e)
     {
@@ -57,18 +56,14 @@ public class Gfx : IDeserializable, ISerializable
         Tint = Utils.ParseUIntOrNull(e.GetElementValue("Tint")) ?? 0;
 
         AsymmetrySwapFlags =
-            e.GetElementValue("AsymmetrySwapFlags")?.Split(',')
-            .Select(Enum.Parse<AsymmetrySwapFlagEnum>).ToList() ?? [];
-
-        CustomArts = e.Elements()
+            [.. e.GetElementValue("AsymmetrySwapFlags")?.Split(',')
+            .Select(Enum.Parse<AsymmetrySwapFlagEnum>) ?? []];
+        CustomArts = [.. e.Elements()
             .Where(e => e.Name.LocalName.StartsWith("CustomArt"))
-            .Select(e => e.DeserializeTo<CustomArt>())
-            .ToList();
-
-        ColorSwaps = e.Elements()
+            .Select(e => e.DeserializeTo<CustomArt>())];
+        ColorSwaps = [.. e.Elements()
             .Where(e => e.Name.LocalName.StartsWith("ColorSwap"))
-            .Select(e => e.DeserializeTo<ColorSwap>())
-            .ToList();
+            .Select(e => e.DeserializeTo<ColorSwap>())];
     }
 
     public void Serialize(XElement e)
@@ -95,7 +90,7 @@ public class Gfx : IDeserializable, ISerializable
             e.Add(new XElement("IgnoreCachedWeapon", IgnoreCachedWeapon));
         if (Tint != 0)
             e.Add(new XElement("Tint", Tint));
-        if (AsymmetrySwapFlags.Count != 0)
+        if (AsymmetrySwapFlags.Length != 0)
             e.Add(new XElement("AsymmetrySwapFlags", string.Join(',', AsymmetrySwapFlags)));
         e.AddManySerialized(CustomArts);
         e.AddManySerialized(ColorSwaps);

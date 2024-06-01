@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
@@ -80,14 +78,14 @@ public abstract class AbstractCollision : IDeserializable, ISerializable, IDrawa
 
         Flag =
             e.HasAttribute("Flag")
-            ? Enum.TryParse(e.GetAttribute("Flag").ToUpper(), out FlagEnum flag)
+            ? Enum.TryParse(e.GetAttribute("Flag").ToUpperInvariant(), out FlagEnum flag)
                 ? flag
                 : FlagEnum.DEFAULT
             : null;
 
         ColorFlag =
             e.HasAttribute("ColorFlag")
-            ? Enum.TryParse(e.GetAttribute("ColorFlag")?.ToUpper(), out ColorFlagEnum colorFlag)
+            ? Enum.TryParse(e.GetAttribute("ColorFlag")?.ToUpperInvariant(), out ColorFlagEnum colorFlag)
                 ? colorFlag
                 : ColorFlagEnum.DEFAULT
             : null;
@@ -133,13 +131,13 @@ public abstract class AbstractCollision : IDeserializable, ISerializable, IDrawa
         }
 
         if (Flag is not null)
-            e.SetAttributeValue("Flag", Flag?.ToString().ToLower());
+            e.SetAttributeValue("Flag", Flag?.ToString().ToLowerInvariant());
 
         if (ColorFlag is not null)
-            e.SetAttributeValue("ColorFlag", ColorFlag?.ToString().ToLower());
+            e.SetAttributeValue("ColorFlag", ColorFlag?.ToString().ToLowerInvariant());
     }
 
-    private List<(double, double)>? _curve = null;
+    private (double, double)[]? _curve = null;
 
     public void CalculateCurve(double xOff, double yOff)
     {
@@ -154,16 +152,14 @@ public abstract class AbstractCollision : IDeserializable, ISerializable, IDrawa
         if (_curve is not null)
             return;
 
-        _curve = BrawlhallaMath.CollisionQuad(X1, Y1, X2, Y2, (AnchorX ?? 0) - xOff, (AnchorY ?? 0) - yOff)
-            .Prepend((X1, Y1)) //to start the curve from X1,Y1
-            .ToList();
+        _curve = [(X1, Y1), .. BrawlhallaMath.CollisionQuad(X1, Y1, X2, Y2, (AnchorX ?? 0) - xOff, (AnchorY ?? 0) - yOff)];
     }
 
     public virtual void DrawOn(ICanvas canvas, Transform trans, RenderConfig config, RenderContext context, RenderState state)
     {
         if (!config.ShowCollision) return;
 
-        if ((AnchorX is not null && AnchorY is not null) && _curve is null)
+        if (AnchorX is not null && AnchorY is not null && _curve is null)
             throw new InvalidOperationException("Collision has non null anchor, but cached curve is null. Make sure CalculateCurve is called.");
         if ((AnchorX is null || AnchorY is null) && _curve is not null)
             throw new InvalidOperationException("Collision has null anchor, but cached curve is non null. Make sure CalculateCurve is called.");
@@ -171,7 +167,7 @@ public abstract class AbstractCollision : IDeserializable, ISerializable, IDrawa
         //if no curve, make curve just one line
         _curve ??= [(X1, Y1), (X2, Y2)];
 
-        for (int i = 0; i < _curve.Count - 1; ++i)
+        for (int i = 0; i < _curve.Length - 1; ++i)
         {
             (double prevX, double prevY) = _curve[i];
             (double nextX, double nextY) = _curve[i + 1];

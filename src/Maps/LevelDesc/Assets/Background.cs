@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
@@ -14,7 +13,7 @@ public class Background : IDeserializable, ISerializable, IDrawable
     public string? AssetName { get; set; }
     public string? AnimatedAssetName { get; set; }
     public bool HasSkulls { get; set; }
-    public List<string>? Theme { get; set; }
+    public string[]? Theme { get; set; }
     public double H { get; set; }
     public double W { get; set; }
 
@@ -23,7 +22,7 @@ public class Background : IDeserializable, ISerializable, IDrawable
         AssetName = e.GetAttributeOrNull("AssetName");
         AnimatedAssetName = e.GetAttributeOrNull("AnimatedAssetName");
         HasSkulls = e.GetBoolAttribute("HasSkulls", false);
-        Theme = e.GetAttributeOrNull("Theme")?.Split(',').ToList();
+        Theme = e.GetAttributeOrNull("Theme")?.Split(',');
         H = e.GetFloatAttribute("H");
         W = e.GetFloatAttribute("W");
     }
@@ -56,8 +55,8 @@ public class Background : IDeserializable, ISerializable, IDrawable
         {
             int matchCount1 = Theme?.Count(t => t == Enum.GetName(config.Theme)) ?? 0;
             int matchCount2 = data.CurrentBackground.Theme?.Count(t => t == Enum.GetName(config.Theme)) ?? 0;
-            int themeCount1 = Theme?.Count ?? 0;
-            int themeCount2 = data.CurrentBackground.Theme?.Count ?? 0;
+            int themeCount1 = Theme?.Length ?? 0;
+            int themeCount2 = data.CurrentBackground.Theme?.Length ?? 0;
             if (matchCount1 > matchCount2 || (matchCount1 == matchCount2 && themeCount1 < themeCount2))
                 data.CurrentBackground = this;
         }

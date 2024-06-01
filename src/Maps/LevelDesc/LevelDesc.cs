@@ -19,23 +19,23 @@ public class LevelDesc : IDeserializable, ISerializable, IDrawable
 
     public CameraBounds CameraBounds { get; set; } = null!;
     public SpawnBotBounds SpawnBotBounds { get; set; } = null!;
-    public List<Background> Backgrounds { get; set; } = null!;
-    public List<LevelSound> LevelSounds { get; set; } = null!;
+    public Background[] Backgrounds { get; set; } = null!;
+    public LevelSound[] LevelSounds { get; set; } = null!;
     public TeamScoreboard? TeamScoreboard { get; set; }
-    public List<AbstractAsset> Assets { get; set; } = null!;
-    public List<LevelAnim> LevelAnims { get; set; } = null!;
-    public List<LevelAnimation> LevelAnimations { get; set; } = null!;
-    public List<AbstractVolume> Volumes { get; set; } = null!;
-    public List<AbstractCollision> Collisions { get; set; } = null!;
-    public List<DynamicCollision> DynamicCollisions { get; set; } = null!;
-    public List<Respawn> Respawns { get; set; } = null!;
-    public List<DynamicRespawn> DynamicRespawns { get; set; } = null!;
-    public List<AbstractItemSpawn> ItemSpawns { get; set; } = null!;
-    public List<DynamicItemSpawn> DynamicItemSpawns { get; set; } = null!;
-    public List<NavNode> NavNodes { get; set; } = null!;
-    public List<DynamicNavNode> DynamicNavNodes { get; set; } = null!;
-    public List<WaveData> WaveDatas { get; set; } = null!;
-    public List<AnimatedBackground> AnimatedBackgrounds { get; set; } = null!;
+    public AbstractAsset[] Assets { get; set; } = null!;
+    public LevelAnim[] LevelAnims { get; set; } = null!;
+    public LevelAnimation[] LevelAnimations { get; set; } = null!;
+    public AbstractVolume[] Volumes { get; set; } = null!;
+    public AbstractCollision[] Collisions { get; set; } = null!;
+    public DynamicCollision[] DynamicCollisions { get; set; } = null!;
+    public Respawn[] Respawns { get; set; } = null!;
+    public DynamicRespawn[] DynamicRespawns { get; set; } = null!;
+    public AbstractItemSpawn[] ItemSpawns { get; set; } = null!;
+    public DynamicItemSpawn[] DynamicItemSpawns { get; set; } = null!;
+    public NavNode[] NavNodes { get; set; } = null!;
+    public DynamicNavNode[] DynamicNavNodes { get; set; } = null!;
+    public WaveData[] WaveDatas { get; set; } = null!;
+    public AnimatedBackground[] AnimatedBackgrounds { get; set; } = null!;
 
     public virtual void Deserialize(XElement e)
     {
@@ -122,7 +122,10 @@ public class LevelDesc : IDeserializable, ISerializable, IDrawable
         SpawnBotBounds.DrawOn(canvas, trans, config, context, state);
         foreach (Background b in Backgrounds)
             b.DrawOn(canvas, trans, config, context, state);
-        //foreach(LevelSound ls in LevelSounds)
+        /*
+        foreach(LevelSound ls in LevelSounds)
+            ls.DrawOn(canvas, trans, config, context, state);
+        */
         TeamScoreboard?.DrawOn(canvas, trans, config, context, state);
         foreach (AbstractAsset a in Assets)
             a.DrawOn(canvas, trans, config, context, state);
@@ -243,9 +246,9 @@ public class LevelDesc : IDeserializable, ISerializable, IDrawable
         if (config.HordePathType != RenderConfig.PathConfigEnum.NONE &&
             config.HordePathType != RenderConfig.PathConfigEnum.CUSTOM)
         {
-            List<Goal> goals = Volumes.OfType<Goal>().ToList();
+            Goal[] goals = [.. Volumes.OfType<Goal>()];
 
-            if (goals.Count >= 2)
+            if (goals.Length >= 2)
             {
                 double door1CX = goals[0].X + goals[0].W / 2;
                 double door1CY = goals[0].Y + goals[0].H / 2;
@@ -253,7 +256,7 @@ public class LevelDesc : IDeserializable, ISerializable, IDrawable
                 double door2CY = goals[1].Y + goals[1].H / 2;
                 GenerateRandomHordePaths(config.HordeRandomSeed, CameraBounds.X, CameraBounds.Y, CameraBounds.W, CameraBounds.H, door1CX, door1CY, door2CX, door2CY);
 
-                List<List<(double, double)>> pathList = config.HordePathType switch
+                List<(double, double)[]> pathList = config.HordePathType switch
                 {
                     RenderConfig.PathConfigEnum.LEFT => _leftPaths,
                     RenderConfig.PathConfigEnum.RIGHT => _rightPaths,
@@ -262,13 +265,13 @@ public class LevelDesc : IDeserializable, ISerializable, IDrawable
                     _ => throw new ArgumentException(nameof(config.HordePathType))
                 };
                 int pathIndex = BrawlhallaMath.SafeMod(config.HordePathIndex, 20);
-                List<(double, double)> path = pathList[pathIndex];
+                (double, double)[] path = pathList[pathIndex];
                 foreach ((double x, double y) in path)
                 {
                     canvas.DrawCircle(x, y, config.RadiusHordePathPoint, config.ColorHordePath, trans, DrawPriorityEnum.DATA, null);
                 }
 
-                for (int i = 0; i < path.Count - 1; ++i)
+                for (int i = 0; i < path.Length - 1; ++i)
                 {
                     canvas.DrawArrow(
                         path[i].Item1, path[i].Item2,
@@ -282,10 +285,10 @@ public class LevelDesc : IDeserializable, ISerializable, IDrawable
         }
     }
 
-    private readonly List<List<(double, double)>> _topPaths = [];
-    private readonly List<List<(double, double)>> _leftPaths = [];
-    private readonly List<List<(double, double)>> _rightPaths = [];
-    private readonly List<List<(double, double)>> _bottomPaths = [];
+    private readonly List<(double, double)[]> _topPaths = [];
+    private readonly List<(double, double)[]> _leftPaths = [];
+    private readonly List<(double, double)[]> _rightPaths = [];
+    private readonly List<(double, double)[]> _bottomPaths = [];
 
     private void GenerateRandomHordePaths(
         uint hordeSeed, // seed
@@ -296,15 +299,15 @@ public class LevelDesc : IDeserializable, ISerializable, IDrawable
     {
         BrawlhallaRandom rand = new(hordeSeed);
         _topPaths.Clear();
-        for (int i = 0; i < 10; ++i) _topPaths.Add(BrawlhallaMath.GenerateHordePath(rand, boundX, boundY, boundW, boundH, door1CX, door1CY, door2CX, door2CY, DirEnum.TOP, PathEnum.CLOSE, i).ToList());
-        for (int i = 0; i < 10; ++i) _topPaths.Add(BrawlhallaMath.GenerateHordePath(rand, boundX, boundY, boundW, boundH, door1CX, door1CY, door2CX, door2CY, DirEnum.TOP, PathEnum.FAR, i).ToList());
+        for (int i = 0; i < 10; ++i) _topPaths.Add([.. BrawlhallaMath.GenerateHordePath(rand, boundX, boundY, boundW, boundH, door1CX, door1CY, door2CX, door2CY, DirEnum.TOP, PathEnum.CLOSE, i)]);
+        for (int i = 0; i < 10; ++i) _topPaths.Add([.. BrawlhallaMath.GenerateHordePath(rand, boundX, boundY, boundW, boundH, door1CX, door1CY, door2CX, door2CY, DirEnum.TOP, PathEnum.FAR, i)]);
         _leftPaths.Clear();
-        for (int i = 0; i < 10; ++i) _leftPaths.Add(BrawlhallaMath.GenerateHordePath(rand, boundX, boundY, boundW, boundH, door1CX, door1CY, door2CX, door2CY, DirEnum.LEFT, PathEnum.CLOSE, i).ToList());
-        for (int i = 0; i < 10; ++i) _leftPaths.Add(BrawlhallaMath.GenerateHordePath(rand, boundX, boundY, boundW, boundH, door1CX, door1CY, door2CX, door2CY, DirEnum.LEFT, PathEnum.FAR, i).ToList());
+        for (int i = 0; i < 10; ++i) _leftPaths.Add([.. BrawlhallaMath.GenerateHordePath(rand, boundX, boundY, boundW, boundH, door1CX, door1CY, door2CX, door2CY, DirEnum.LEFT, PathEnum.CLOSE, i)]);
+        for (int i = 0; i < 10; ++i) _leftPaths.Add([.. BrawlhallaMath.GenerateHordePath(rand, boundX, boundY, boundW, boundH, door1CX, door1CY, door2CX, door2CY, DirEnum.LEFT, PathEnum.FAR, i)]);
         _rightPaths.Clear();
-        for (int i = 0; i < 10; ++i) _rightPaths.Add(BrawlhallaMath.GenerateHordePath(rand, boundX, boundY, boundW, boundH, door1CX, door1CY, door2CX, door2CY, DirEnum.RIGHT, PathEnum.CLOSE, i).ToList());
-        for (int i = 0; i < 10; ++i) _rightPaths.Add(BrawlhallaMath.GenerateHordePath(rand, boundX, boundY, boundW, boundH, door1CX, door1CY, door2CX, door2CY, DirEnum.RIGHT, PathEnum.FAR, i).ToList());
+        for (int i = 0; i < 10; ++i) _rightPaths.Add([.. BrawlhallaMath.GenerateHordePath(rand, boundX, boundY, boundW, boundH, door1CX, door1CY, door2CX, door2CY, DirEnum.RIGHT, PathEnum.CLOSE, i)]);
+        for (int i = 0; i < 10; ++i) _rightPaths.Add([.. BrawlhallaMath.GenerateHordePath(rand, boundX, boundY, boundW, boundH, door1CX, door1CY, door2CX, door2CY, DirEnum.RIGHT, PathEnum.FAR, i)]);
         _bottomPaths.Clear();
-        for (int i = 0; i < 20; ++i) _bottomPaths.Add(BrawlhallaMath.GenerateHordePath(rand, boundX, boundY, boundW, boundH, door1CX, door1CY, door2CX, door2CY, DirEnum.BOTTOM, PathEnum.ANY, i).ToList());
+        for (int i = 0; i < 20; ++i) _bottomPaths.Add([.. BrawlhallaMath.GenerateHordePath(rand, boundX, boundY, boundW, boundH, door1CX, door1CY, door2CX, door2CY, DirEnum.BOTTOM, PathEnum.ANY, i)]);
     }
 }

@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
@@ -7,7 +6,7 @@ public class Phase : AbstractKeyFrame
 {
     public int StartFrame { get; set; }
 
-    public List<AbstractKeyFrame> KeyFrames { get; set; } = null!;
+    public AbstractKeyFrame[] KeyFrames { get; set; } = null!;
 
     public override void Deserialize(XElement e)
     {
@@ -34,13 +33,13 @@ public class Phase : AbstractKeyFrame
 
         //find the keyframe pair
         int i = 0;
-        for (; i < KeyFrames.Count; ++i)
+        for (; i < KeyFrames.Length; ++i)
         {
             if (StartFrame + KeyFrames[i].GetStartFrame() >= frameInRange) break;
         }
 
         //need to interpolate from phase end
-        if (i == KeyFrames.Count)
+        if (i == KeyFrames.Length)
         {
             return KeyFrames[^1].LerpTo(keyFrame, defaults, numframes, frame, fromTimeOffset + StartFrame, toTimeOffset);
         }

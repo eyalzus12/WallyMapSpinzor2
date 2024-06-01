@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 
@@ -17,10 +16,10 @@ public class Platform : AbstractAsset
 
     public string InstanceName { get; set; } = null!;
     public string? PlatformAssetSwap { get; set; }
-    public List<string>? Theme { get; set; }
+    public string[]? Theme { get; set; }
     public string? ScoringType { get; set; }
 
-    public List<AbstractAsset>? AssetChildren { get; set; }
+    public AbstractAsset[]? AssetChildren { get; set; } = null!;
 
     public bool NoSkulls => InstanceName == NO_SKULLS;
     public string? Hotkey => InstanceName.StartsWith(HOTKEY) ? InstanceName[(InstanceName.LastIndexOf('_') + 1)..] : null;
@@ -32,10 +31,9 @@ public class Platform : AbstractAsset
         base.Deserialize(e);
         InstanceName = e.GetAttribute("InstanceName");
         PlatformAssetSwap = e.GetAttributeOrNull("PlatformAssetSwap");
-        Theme = e.GetAttributeOrNull("Theme")?.Split(',').ToList();
+        Theme = e.GetAttributeOrNull("Theme")?.Split(',');
         ScoringType = e.GetAttributeOrNull("ScoringType");
-        if (AssetName is null)
-            AssetChildren = e.DeserializeAssetChildren();
+        AssetChildren = AssetName is null ? e.DeserializeAssetChildren() : null;
     }
 
     public override void Serialize(XElement e)

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace WallyMapSpinzor2;
 
@@ -17,7 +18,7 @@ public static class MapUtils
         ? PathEnum.ANY
         : Enum.TryParse(s.ToUpperInvariant(), out PathEnum p)
             ? p
-            : (PathEnum)int.Parse(s);
+            : (PathEnum)int.Parse(s, CultureInfo.InvariantCulture);
 
     public static BehaviorEnum ParseBehavior(string? s) =>
         (s is null)

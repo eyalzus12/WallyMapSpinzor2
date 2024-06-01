@@ -31,11 +31,11 @@ public class Level : IDeserializable, ISerializable, IDrawable
         {
             if (!Playlists.Contains(lst.LevelSetName))
                 continue;
-            int idx = lst.LevelTypes.IndexOf(Desc.LevelName);
+            int idx = Array.FindIndex(lst.LevelTypes, l => l == Desc.LevelName);
             if (idx != -1)
                 lst.LevelTypes[idx] = name;
             else
-                lst.LevelTypes.Add(name);
+                lst.LevelTypes = [.. lst.LevelTypes, name];
         }
         //update desc and type
         Desc.LevelName = name;

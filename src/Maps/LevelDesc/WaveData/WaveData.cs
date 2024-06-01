@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
@@ -11,8 +9,8 @@ public class WaveData : IDeserializable, ISerializable, IDrawable
     public double? Speed3 { get; set; }
     public double? Speed4 { get; set; }
     public int LoopIdx { get; set; }
-    public List<CustomPath> CustomPaths { get; set; } = null!;
-    public List<Group> Groups { get; set; } = null!;
+    public CustomPath[] CustomPaths { get; set; } = null!;
+    public Group[] Groups { get; set; } = null!;
 
     public void Deserialize(XElement e)
     {
@@ -47,9 +45,9 @@ public class WaveData : IDeserializable, ISerializable, IDrawable
     {
         if (ID != config.HordeWave)
             return;
-        if (config.HordePathType == RenderConfig.PathConfigEnum.CUSTOM && CustomPaths.Count != 0)
+        if (config.HordePathType == RenderConfig.PathConfigEnum.CUSTOM && CustomPaths.Length != 0)
         {
-            int pathIndex = BrawlhallaMath.SafeMod(config.HordePathIndex, CustomPaths.Count);
+            int pathIndex = BrawlhallaMath.SafeMod(config.HordePathIndex, CustomPaths.Length);
             CustomPaths[pathIndex].DrawOn(canvas, trans, config, context, state);
         }
     }

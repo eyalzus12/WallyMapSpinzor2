@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
@@ -20,7 +19,7 @@ public class MovingPlatform : AbstractAsset
 {
     public string PlatID { get; set; } = null!;
     public Animation Animation { get; set; } = null!;
-    public List<AbstractAsset> Assets { get; set; } = null!;
+    public AbstractAsset[] Assets { get; set; } = null!;
 
     public override void Deserialize(XElement e)
     {

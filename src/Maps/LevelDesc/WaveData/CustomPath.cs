@@ -1,12 +1,10 @@
-using System;
-using System.Collections.Generic;
 using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
 
 public class CustomPath : IDeserializable, ISerializable, IDrawable
 {
-    public List<Point> Points { get; set; } = null!;
+    public Point[] Points { get; set; } = null!;
 
     public void Deserialize(XElement e)
     {
@@ -25,7 +23,7 @@ public class CustomPath : IDeserializable, ISerializable, IDrawable
             p.DrawOn(canvas, trans, config, context, state);
         }
 
-        for (int i = 0; i < Points.Count - 1; ++i)
+        for (int i = 0; i < Points.Length - 1; ++i)
         {
             canvas.DrawArrow(
                 Points[i].X, Points[i].Y,

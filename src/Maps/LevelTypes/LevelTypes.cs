@@ -1,11 +1,10 @@
-using System.Collections.Generic;
 using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
 
 public class LevelTypes : IDeserializable, ISerializable
 {
-    public List<LevelType> Levels { get; set; } = null!;
+    public LevelType[] Levels { get; set; } = null!;
 
     public void Deserialize(XElement e)
     {

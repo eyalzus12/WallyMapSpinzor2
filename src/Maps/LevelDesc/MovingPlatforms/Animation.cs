@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
@@ -15,7 +14,7 @@ public class Animation : IDeserializable, ISerializable
     public bool EaseOut { get; set; }
     public int EasePower { get; set; }
     public int StartFrame { get; set; }
-    public List<AbstractKeyFrame> KeyFrames { get; set; } = null!;
+    public AbstractKeyFrame[] KeyFrames { get; set; } = null!;
 
     public bool HasCenter => CenterX is not null || CenterY is not null;
     public void Deserialize(XElement e)
@@ -48,9 +47,9 @@ public class Animation : IDeserializable, ISerializable
                 e.SetAttributeValue("CenterY", (CenterY ?? 0).ToString());
         }
         if (EaseIn)
-            e.SetAttributeValue("EaseIn", EaseIn.ToString().ToLower());
+            e.SetAttributeValue("EaseIn", EaseIn.ToString().ToLowerInvariant());
         if (EaseOut)
-            e.SetAttributeValue("EaseOut", EaseOut.ToString().ToLower());
+            e.SetAttributeValue("EaseOut", EaseOut.ToString().ToLowerInvariant());
         if (EasePower != 2)
             e.SetAttributeValue("EasePower", EasePower.ToString());
         if (StartFrame != 0)
@@ -80,13 +79,13 @@ public class Animation : IDeserializable, ISerializable
         double frameInRange = BrawlhallaMath.SafeMod(frame, numframes);
         //find the keyframe pair
         int i = 0;
-        for (; i < KeyFrames.Count; ++i)
+        for (; i < KeyFrames.Length; ++i)
         {
             if (KeyFrames[i].GetStartFrame() >= frameInRange) break;
         }
 
-        if (i == KeyFrames.Count) i = 0;
-        int j = (i == 0 ? KeyFrames.Count : i) - 1;
+        if (i == KeyFrames.Length) i = 0;
+        int j = (i == 0 ? KeyFrames.Length : i) - 1;
         //lerp
         return KeyFrames[j].LerpTo(KeyFrames[i],
             new(CenterX, CenterY, EaseIn, EaseOut, EasePower),

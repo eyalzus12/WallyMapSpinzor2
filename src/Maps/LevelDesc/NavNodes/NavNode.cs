@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.Linq;
 using System.Xml.Linq;
 
@@ -17,7 +18,7 @@ public class NavNode : IDeserializable, ISerializable, IDrawable
     {
         (NavID, Type) = ParseNavID(e.GetAttribute("NavID"));
         //the "not empty" is a guard against an empty path, where an empty string would be passed to ParseNavID
-        Path = e.GetAttribute("Path").Split(',').Where(s => s != "").Select(ParseNavID).ToArray();
+        Path = [.. e.GetAttribute("Path").Split(',').Where(s => s != "").Select(ParseNavID)];
         X = e.GetFloatAttribute("X");
         Y = e.GetFloatAttribute("Y");
     }
@@ -25,8 +26,8 @@ public class NavNode : IDeserializable, ISerializable, IDrawable
     private static (int, NavNodeTypeEnum) ParseNavID(string navId)
     {
         return '0' <= navId[0] && navId[0] <= '9'
-            ? (int.Parse(navId), NavNodeTypeEnum._)
-            : (int.Parse(navId[1..]), Enum.TryParse(
+            ? (int.Parse(navId, CultureInfo.InvariantCulture), NavNodeTypeEnum._)
+            : (int.Parse(navId[1..], CultureInfo.InvariantCulture), Enum.TryParse(
                 navId[0].ToString(), out NavNodeTypeEnum type)
                     ? type
                     : NavNodeTypeEnum._

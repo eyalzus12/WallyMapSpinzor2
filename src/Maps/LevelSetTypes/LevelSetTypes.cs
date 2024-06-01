@@ -1,11 +1,10 @@
-using System.Collections.Generic;
 using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
 
 public class LevelSetTypes : IDeserializable, ISerializable
 {
-    public List<LevelSetType> Playlists { get; set; } = null!;
+    public LevelSetType[] Playlists { get; set; } = null!;
 
     public void Deserialize(XElement e)
     {

@@ -68,9 +68,9 @@ public class Group : IDeserializable, ISerializable
         if (Behavior != BehaviorEnum._)
             e.SetAttributeValue("Behavior", Behavior);
         if (!MapUtils.IsSharedDir(Dir) && Shared)
-            e.SetAttributeValue("Shared", Shared.ToString().ToUpper());
+            e.SetAttributeValue("Shared", Shared.ToString().ToUpperInvariant());
         if (!MapUtils.IsSharedPath(Path) && SharedPath)
-            e.SetAttributeValue("SharedPath", SharedPath.ToString().ToUpper());
+            e.SetAttributeValue("SharedPath", SharedPath.ToString().ToUpperInvariant());
     }
 
     public int GetCount(int players) => players switch

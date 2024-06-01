@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
@@ -23,7 +24,7 @@ public class ColorSwap : IDeserializable, ISerializable
         }
         else
         {
-            OldColor = int.Parse(oldColor);
+            OldColor = int.Parse(oldColor, CultureInfo.InvariantCulture);
         }
 
         string newColor = parts[1];
@@ -33,7 +34,7 @@ public class ColorSwap : IDeserializable, ISerializable
         }
         else
         {
-            NewColor = int.Parse(newColor);
+            NewColor = int.Parse(newColor, CultureInfo.InvariantCulture);
         }
     }
 

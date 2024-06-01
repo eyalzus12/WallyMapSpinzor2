@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
@@ -10,7 +9,7 @@ public abstract class AbstractDynamic<T> : ISerializable, IDeserializable, IDraw
     public string PlatID { get; set; } = null!;
     public double X { get; set; }
     public double Y { get; set; }
-    public List<T> Children { get; set; } = null!;
+    public T[] Children { get; set; } = null!;
 
     public abstract void DeserializeChildren(XElement element);
 
