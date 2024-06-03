@@ -28,7 +28,7 @@ public class LevelTypes : IDeserializable, ISerializable
             int id = GetLargestLevelId() + 1;
             if (id > MAX_LEVEL_ID)
             {
-                throw new InvalidOperationException($"Tried to add a leveltype with id bigger than {MAX_LEVEL_ID}");
+                throw new ArgumentException($"Tried to add a leveltype with id bigger than {MAX_LEVEL_ID}");
             }
 
             lt.LevelID = id;
