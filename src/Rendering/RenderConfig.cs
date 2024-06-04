@@ -394,7 +394,7 @@ public class RenderConfig : IDeserializable, ISerializable
         e.AddChild(nameof(ColorHordePath), "0x" + ColorHordePath.ToHex().ToString("X8"));
     }
 
-    public static readonly RenderConfig Default = new()
+    public static RenderConfig Default => new()
     {
         RenderSpeed = 1,
         ScoringType = ScoringTypeEnum.None,
