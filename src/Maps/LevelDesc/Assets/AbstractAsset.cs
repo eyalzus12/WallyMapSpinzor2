@@ -10,8 +10,8 @@ public abstract class AbstractAsset : ISerializable, IDeserializable, IDrawable
     public double Rotation { get; set; }
     public double ScaleX { get; set; }
     public double ScaleY { get; set; }
-    public double H { get; set; }
-    public double W { get; set; }
+    public double? W { get; set; }
+    public double? H { get; set; }
     public double X { get; set; }
     public double Y { get; set; }
 
@@ -22,8 +22,8 @@ public abstract class AbstractAsset : ISerializable, IDeserializable, IDrawable
         double scale = e.GetFloatAttribute("Scale", 1);
         ScaleX = e.GetFloatAttribute("ScaleX", scale);
         ScaleY = e.GetFloatAttribute("ScaleY", scale);
-        H = e.GetFloatAttribute("H", 0);
-        W = e.GetFloatAttribute("W", 0);
+        W = e.GetFloatAttributeOrNull("W");
+        H = e.GetFloatAttributeOrNull("H");
         X = e.GetFloatAttribute("X", 0);
         Y = e.GetFloatAttribute("Y", 0);
     }
@@ -49,9 +49,9 @@ public abstract class AbstractAsset : ISerializable, IDeserializable, IDrawable
                 e.SetAttributeValue("ScaleY", ScaleY);
         }
 
-        if (H != 0)
+        if (H is not null)
             e.SetAttributeValue("H", H);
-        if (W != 0)
+        if (W is not null)
             e.SetAttributeValue("W", W);
         if (X != 0)
             e.SetAttributeValue("X", X);
@@ -70,15 +70,25 @@ public abstract class AbstractAsset : ISerializable, IDeserializable, IDrawable
             throw new InvalidOperationException("Attempting to draw an asset, but the render context is missing the AssetDir.");
 
         string path = Path.Combine(context.AssetDir, AssetName);
-        canvas.DrawTextureRect(path, 0, 0, W, H, trans * Transform, DrawPriorityEnum.MIDGROUND, this);
+        double? w = AssetName is not null ? W : null;
+        double? h = AssetName is not null ? H : null;
+        canvas.DrawTextureRect(path, 0, 0, w, h, trans * Transform, DrawPriorityEnum.MIDGROUND, this);
     }
 
     public Transform Transform =>
-        Transform.CreateFrom(
+        AssetName is null
+        ? Transform.CreateFrom(
             x: X,
             y: Y,
             rot: Rotation * Math.PI / 180,
             scaleX: ScaleX,
             scaleY: ScaleY
+        )
+        : Transform.CreateFrom(
+            x: X,
+            y: Y,
+            rot: Rotation * Math.PI / 180,
+            scaleX: W is not null ? 1 : ScaleX,
+            scaleY: H is not null ? 1 : ScaleY
         );
 }
