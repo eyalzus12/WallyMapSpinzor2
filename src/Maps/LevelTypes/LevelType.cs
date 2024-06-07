@@ -25,7 +25,7 @@ public class LevelType : IDeserializable, ISerializable
 
     public string DisplayName { get; set; } = null!;
     public int LevelID { get; set; } //max 255
-    public TeamColorEnum[] TeamColorOrder { get; set; } = null!;
+    public TeamColorEnum[] TeamColorOrder { get; set; } = DEFAULT_TEAM_COLOR_ORDER;
     public TeamColorEnum AvoidTeamColor { get; set; }
     public string? FileName { get; set; }
     public string? AssetName { get; set; }
@@ -60,7 +60,7 @@ public class LevelType : IDeserializable, ISerializable
     public int? StartFrame { get; set; }
     public bool? FixedCamera { get; set; }
     public bool? AllowItemSpawnOverlap { get; set; }
-    public string[] ColorExclusionList { get; set; } = null!;
+    public string[] ColorExclusionList { get; set; } = [];
     public bool? FixedWidth { get; set; }
     public double? AIPanicLine { get; set; }
     public double? AIGroundLine { get; set; }
@@ -76,9 +76,9 @@ public class LevelType : IDeserializable, ISerializable
         LevelID = Utils.ParseIntOrNull(e.GetElementValue("LevelID")) ?? 0;
         TeamColorOrder =
         [
-            ..e.GetElementValue("TeamColorOrder")?.Split(',')
-            .Select((s) => Utils.ParseEnumOrDefault<TeamColorEnum>(s))
-            ?? DEFAULT_TEAM_COLOR_ORDER
+            .. e.GetElementValue("TeamColorOrder")?.Split(',')
+                .Select((s) => Utils.ParseEnumOrDefault<TeamColorEnum>(s))
+                ?? DEFAULT_TEAM_COLOR_ORDER
         ];
         AvoidTeamColor = Utils.ParseEnumOrDefault<TeamColorEnum>(e.GetElementValue("AvoidTeamColor"));
         FileName = e.GetElementValue("FileName");
