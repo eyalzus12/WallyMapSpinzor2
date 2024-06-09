@@ -9,8 +9,7 @@ public class Background : IDeserializable, ISerializable, IDrawable
 {
     private const string BACKGROUND_FOLDER = "Backgrounds";
 
-    //AssetName and AnimatedAssetName cannot both be non-null at the same time
-    public string? AssetName { get; set; }
+    public string AssetName { get; set; } = null!;
     public string? AnimatedAssetName { get; set; }
     public bool HasSkulls { get; set; }
     public string[]? Theme { get; set; }
@@ -19,7 +18,7 @@ public class Background : IDeserializable, ISerializable, IDrawable
 
     public void Deserialize(XElement e)
     {
-        AssetName = e.GetAttributeOrNull("AssetName");
+        AssetName = e.GetAttribute("AssetName");
         AnimatedAssetName = e.GetAttributeOrNull("AnimatedAssetName");
         HasSkulls = e.GetBoolAttribute("HasSkulls", false);
         Theme = e.GetAttributeOrNull("Theme")?.Split(',');
@@ -70,7 +69,7 @@ public class Background : IDeserializable, ISerializable, IDrawable
         if (context.BackgroundRect_H is null || context.BackgroundRect_W is null || context.BackgroundRect_X is null || context.BackgroundRect_Y is null)
             throw new InvalidOperationException("Attempting to draw background, but render context is missing the background rect. Make sure the camera bounds are drawn before the background.");
 
-        string assetName = ((config.AnimatedBackgrounds ? AnimatedAssetName : null) ?? AssetName)!;
+        string assetName = (config.AnimatedBackgrounds ? AnimatedAssetName : null) ?? AssetName;
         canvas.DrawTextureRect(
             Path.Combine(BACKGROUND_FOLDER, assetName),
             context.BackgroundRect_X ?? 0, context.BackgroundRect_Y ?? 0, context.BackgroundRect_W ?? 0, context.BackgroundRect_H ?? 0,
