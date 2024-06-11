@@ -83,17 +83,18 @@ public abstract class AbstractPressurePlateCollision : AbstractCollision
             double assetX = platformX + AnimOffsetX;
             double assetY = platformY + AnimOffsetY;
             Transform spriteTrans = Transform.CreateFrom(x: assetX, y: assetY, rot: AnimRotation * Math.PI / 180);
-            Gfx gfx = new()
-            {
-                AnimFile = "Animation_GameModes.swf",
-                AnimClass = "a__AnimationPressurePlate",
-                AnimScale = 1,
-                FireAndForget = true,
-                CustomArts = AssetName.Length > 26 ? [new CustomArt() { FileName = "Animation_GameModes.swf", Name = AssetName[25..] }] : [],
-            };
-            canvas.DrawAnim(gfx, "Ready", 0, spriteTrans, DrawPriorityEnum.MIDGROUND, this);
+            canvas.DrawAnim(Gfx, "Ready", 0, spriteTrans, DrawPriorityEnum.MIDGROUND, this);
         }
     }
+
+    public Gfx Gfx => new()
+    {
+        AnimFile = "Animation_GameModes.swf",
+        AnimClass = "a__AnimationPressurePlate",
+        AnimScale = 1,
+        FireAndForget = true,
+        CustomArts = AssetName.Length > 26 ? [new CustomArt() { FileName = "Animation_GameModes.swf", Name = AssetName[25..] }] : [],
+    };
 
     // this is how it's done ingame
     private double GetOffset(double[] offset, int i)
