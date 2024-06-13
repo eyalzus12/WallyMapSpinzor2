@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 
@@ -15,13 +16,16 @@ public class Gfx : IDeserializable, ISerializable
         LEG = 5,
         SHIN = 6,
         FOOT = 7,
-        //8 is missing?
+        // 8 isn't settable through xml. it is TORSO.
         GAUNTLETHAND = 9,
         GAUNTLETFOREARM = 10,
         PISTOL = 11,
         KATAR = 12,
         JAW = 13,
         EYES = 14
+        // 15 isn't settable through xml. might be BOOTS.
+        // 16 isn't settable through xml. it is MOUTH.
+        // 17 isn't settable through xml. it is HAIR.
     }
 
     public string AnimFile { get; set; } = "";
@@ -39,6 +43,19 @@ public class Gfx : IDeserializable, ISerializable
     public AsymmetrySwapFlagEnum[] AsymmetrySwapFlags { get; set; } = [];
     public CustomArt[] CustomArts { get; set; } = [];
     public ColorSwap[] ColorSwaps { get; set; } = [];
+
+    // these are set in costumeTypes.csv.
+    public bool UseRightTorso { get; set; } = false;
+    public bool UseRightJaw { get; set; } = false;
+    public bool UseRightEyes { get; set; } = false;
+    public bool UseRightMouth { get; set; } = false;
+    public bool UseRightHair { get; set; } = false;
+    public bool UseRightForearm { get; set; } = false;
+    public bool UseTrueLeftRightHands { get; set; } = false;
+    public Dictionary<string, string> BoneOverrides { get; set; } = [];
+    // these are set in weaponSkinType.csv
+    public bool UseRightGauntlet { get; set; } = false;
+    public bool UseRightKatar { get; set; } = false;
 
     public void Deserialize(XElement e)
     {

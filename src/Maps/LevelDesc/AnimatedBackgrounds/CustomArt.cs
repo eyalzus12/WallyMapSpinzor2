@@ -5,11 +5,18 @@ namespace WallyMapSpinzor2;
 public class CustomArt : IDeserializable, ISerializable
 {
     public bool Right { get; set; } = false;
+    /*
+    types:
+    0 - none
+    1 - weapon
+    2 - costume
+    3 - pickup (can't be set in xml)
+    4 - flag? (can't be set in xml)
+    5 - bot? (can't be set in xml)
+    */
     public int Type { get; set; } = 0;
     public string FileName { get; set; } = null!;
     public string Name { get; set; } = null!;
-
-    //idfk what's going on here
 
     public void Deserialize(XElement e)
     {
