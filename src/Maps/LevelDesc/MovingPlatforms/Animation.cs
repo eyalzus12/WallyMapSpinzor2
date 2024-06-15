@@ -79,11 +79,40 @@ public class Animation : IDeserializable, ISerializable
         desiredFrame = BrawlhallaMath.SafeMod(desiredFrame, numframes);
         desiredFrame += 1; //keyframes start at 1*/
 
-        List<(double, double)> positions = [];
+        // calculate the actual number of frames
         int currentFrame = 1;
         List<KeyFrame> keyframes = GetImplicitKeyFrames();
         for (int i = 0; i < keyframes.Count; ++i)
         {
+            int frame2 = i == keyframes.Count - 1
+                ? (NumFrames ?? context.DefaultNumFrames ?? 0) + 1
+                : keyframes[i + 1].FrameNum;
+            if (currentFrame < frame2)
+                currentFrame = frame2;
+        }
+        int positionsCount = currentFrame - 1;
+
+        // find the two position indices
+        double brawlhallaTime = Math.Floor(time.TotalSeconds * 60.0) * 16.0;
+        double frames = 1000 * (positionsCount / 60.0) * (SlowMult ?? context.DefaultSlowMult ?? 1);
+        double clampedTime = brawlhallaTime * 0.05 % frames;
+        double positionIndex = StartFrame + clampedTime / frames * positionsCount;
+        int wholeIndex = (int)Math.Floor(positionIndex + 1e-7);
+        int nextIndex = (wholeIndex + 1) % positionsCount;
+        int index = wholeIndex % positionsCount;
+        double smallDiff = positionIndex - wholeIndex;
+
+        // go through the keyframes again, and find the positions
+        bool gotP1 = false, gotP2 = false;
+        (double p1x, double p1y) = (double.NaN, double.NaN);
+        (double p2x, double p2y) = (double.NaN, double.NaN);
+        int frameForNextIndex = nextIndex + 1;
+        int frameForIndex = index + 1;
+        currentFrame = 1;
+        for (int i = 0; i < keyframes.Count; ++i)
+        {
+            if (gotP1 && gotP2) break;
+
             KeyFrame k = keyframes[i];
             KeyFrame k2; int frame2;
             if (i == keyframes.Count - 1)
@@ -97,32 +126,38 @@ public class Animation : IDeserializable, ISerializable
                 frame2 = k2.FrameNum;
             }
 
-            while (currentFrame < frame2)
+            if (currentFrame >= frame2)
+                continue;
+
+            (double, double) LerpForFrame(int frame)
             {
-                double w = (currentFrame - k.FrameNum) / (double)(frame2 - k.FrameNum);
+                double w = (frame - k.FrameNum) / (double)(frame2 - k.FrameNum);
                 w = BrawlhallaMath.EaseWeight(w,
-                   k.EaseIn ?? EaseIn,
-                   k.EaseOut ?? EaseOut,
-                   k.EasePower ?? EasePower
+                    k.EaseIn ?? EaseIn,
+                    k.EaseOut ?? EaseOut,
+                    k.EasePower ?? EasePower
                 );
                 if (k.CenterX is not null || k.CenterY is not null || CenterX is not null || CenterY is not null)
-                    positions.Add(BrawlhallaMath.BrawlhallaLerpWithCenter(k.X, k.Y, k2.X, k2.Y, k.CenterX ?? CenterX ?? 0, k.CenterY ?? CenterY ?? 0, w));
+                    return BrawlhallaMath.BrawlhallaLerpWithCenter(k.X, k.Y, k2.X, k2.Y, k.CenterX ?? CenterX ?? 0, k.CenterY ?? CenterY ?? 0, w);
                 else
-                    positions.Add(BrawlhallaMath.BrawlhallaLerp(k.X, k.Y, k2.X, k2.Y, w));
-                currentFrame++;
+                    return BrawlhallaMath.BrawlhallaLerp(k.X, k.Y, k2.X, k2.Y, w);
             }
+
+            if (!gotP1 && currentFrame <= frameForNextIndex && frameForNextIndex < frame2)
+            {
+                (p1x, p1y) = LerpForFrame(frameForNextIndex);
+                gotP1 = true;
+            }
+
+            if (!gotP2 && currentFrame <= frameForIndex && frameForIndex < frame2)
+            {
+                (p2x, p2y) = LerpForFrame(frameForIndex);
+                gotP2 = true;
+            }
+
+            currentFrame = frame2;
         }
 
-        double brawlhallaTime = time.TotalSeconds * 60.0 * 16.0;
-        double frames = 1000 * (positions.Count / 60.0) * (SlowMult ?? context.DefaultSlowMult ?? 1);
-        double clampedTime = brawlhallaTime * 0.05 % frames;
-        double positionIndex = StartFrame + clampedTime / frames * positions.Count;
-        int wholeIndex = (int)Math.Floor(positionIndex + 1e-7);
-        int nextIndex = (wholeIndex + 1) % positions.Count;
-        int index = wholeIndex % positions.Count;
-        double smallDiff = positionIndex - wholeIndex;
-        (double p1x, double p1y) = positions[nextIndex];
-        (double p2x, double p2y) = positions[index];
         return (p1x * smallDiff + p2x * (1 - smallDiff), p1y * smallDiff + p2y * (1 - smallDiff));
     }
 
