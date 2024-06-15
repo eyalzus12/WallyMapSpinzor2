@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
@@ -80,7 +81,7 @@ public class KeyFrame : AbstractKeyFrame
         else if (keyFrame is Phase p)
         {
             //has 0 frame num on first keyframe
-            if (p.KeyFrames[0].GetStartFrame() == 0)
+            if (p.KeyFrames.Length >= 1 && p.KeyFrames[0].GetStartFrame() == 0)
             {
                 return LerpTo(p.KeyFrames[0], defaults, numframes, frame, fromTimeOffset, toTimeOffset + p.StartFrame);
             }
@@ -97,13 +98,44 @@ public class KeyFrame : AbstractKeyFrame
                 {
                     //use -FrameNum to fake a keyframe at the start of the phase.
                     //this will be as if we are interpolating from keyframe with framenum 0.
-                    //we pass toTimeOffset + p.StartFrame to ensure that interpolation into a phase
+                    //p.StartFrame to ensure that interpolation into a phase
                     //will be able to know if the phase started.
-                    return LerpTo(p.KeyFrames[0], defaults, numframes, frame, toTimeOffset + p.StartFrame - FrameNum, toTimeOffset + p.StartFrame);
+                    return LerpTo(p.KeyFrames[0], defaults, numframes, frame, p.StartFrame - FrameNum, p.StartFrame);
                 }
             }
         }
         else
             throw new ArgumentException($"Keyframe cannot interpolate to unknown abstract keyframe type {keyFrame.GetType().Name}");
+    }
+
+    public override void GetImplicitKeyFrames(List<KeyFrame> output, int index, int startFrame)
+    {
+        if (startFrame > 0 && index == 0 && FrameNum + startFrame > startFrame && output.Count > 0)
+        {
+            KeyFrame last = output[^1];
+            if (last.X != X || last.Y != Y || last.Rotation != Rotation)
+            {
+                output.Add(new KeyFrame()
+                {
+                    X = last.X,
+                    Y = last.Y,
+                    Rotation = last.Rotation,
+                    FrameNum = startFrame
+                });
+            }
+        }
+
+        output.Add(new KeyFrame()
+        {
+            X = X,
+            Y = Y,
+            Rotation = Rotation,
+            CenterX = CenterX,
+            CenterY = CenterY,
+            EaseIn = EaseIn,
+            EaseOut = EaseOut,
+            EasePower = EasePower,
+            FrameNum = FrameNum + startFrame,
+        });
     }
 }

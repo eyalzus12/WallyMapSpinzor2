@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
@@ -41,12 +42,18 @@ public class Phase : AbstractKeyFrame
         //need to interpolate from phase end
         if (i == KeyFrames.Length)
         {
-            return KeyFrames[^1].LerpTo(keyFrame, defaults, numframes, frame, fromTimeOffset + StartFrame, toTimeOffset);
+            return KeyFrames[^1].LerpTo(keyFrame, defaults, numframes, frame, StartFrame, toTimeOffset);
         }
         //interpolation is inside phase
         else
         {
-            return KeyFrames[i - 1].LerpTo(KeyFrames[i], defaults, numframes, frame, fromTimeOffset + StartFrame, toTimeOffset + StartFrame);
+            return KeyFrames[i - 1].LerpTo(KeyFrames[i], defaults, numframes, frame, StartFrame, StartFrame);
         }
+    }
+
+    public override void GetImplicitKeyFrames(List<KeyFrame> output, int index, int startFrame)
+    {
+        for (int i = 0; i < KeyFrames.Length; ++i)
+            KeyFrames[i].GetImplicitKeyFrames(output, i, StartFrame);
     }
 }

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
@@ -11,4 +12,6 @@ public abstract class AbstractKeyFrame : IDeserializable, ISerializable
     public abstract (double, double) GetPosition();
 
     public abstract (double, double) LerpTo(AbstractKeyFrame keyframe, Animation.ValueDefaults defaults, double numframes, double frame, double fromTimeOffset, double toTimeOffset);
+
+    public abstract void GetImplicitKeyFrames(List<KeyFrame> output, int index, int startFrame);
 }

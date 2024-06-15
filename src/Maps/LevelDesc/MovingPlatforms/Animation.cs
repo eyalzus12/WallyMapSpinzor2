@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
@@ -70,29 +71,66 @@ public class Animation : IDeserializable, ISerializable
 
     public (double, double) GetOffset(RenderContext context, TimeSpan time)
     {
-        double numframes = NumFrames ?? context.DefaultNumFrames ?? 0;
+        /*double numframes = NumFrames ?? context.DefaultNumFrames ?? 0;
         double slowmult = SlowMult ?? context.DefaultSlowMult ?? 1;
-        double frame = FRAME_MULTIPLIER * (60.0 * time.TotalSeconds);
-        frame /= slowmult; //slow mult
-        frame += StartFrame; //apply start frame
-        frame += 1; //frames start at 1
-        double frameInRange = BrawlhallaMath.SafeMod(frame, numframes);
-        //find the keyframe pair
-        int i = 0;
-        for (; i < KeyFrames.Length; ++i)
+        double desiredFrame = FRAME_MULTIPLIER * (60.0 * time.TotalSeconds);
+        desiredFrame /= slowmult; //slow mult
+        desiredFrame += StartFrame; //apply start frame
+        desiredFrame = BrawlhallaMath.SafeMod(desiredFrame, numframes);
+        desiredFrame += 1; //keyframes start at 1*/
+
+        List<(double, double)> positions = [];
+        int currentFrame = 1;
+        List<KeyFrame> keyframes = GetImplicitKeyFrames();
+        for (int i = 0; i < keyframes.Count; ++i)
         {
-            if (KeyFrames[i].GetStartFrame() >= frameInRange) break;
+            KeyFrame k = keyframes[i];
+            KeyFrame k2; int frame2;
+            if (i == keyframes.Count - 1)
+            {
+                k2 = keyframes[0];
+                frame2 = (NumFrames ?? context.DefaultNumFrames ?? 0) + 1;
+            }
+            else
+            {
+                k2 = keyframes[i + 1];
+                frame2 = k2.FrameNum;
+            }
+
+            while (currentFrame < frame2)
+            {
+                double w = (currentFrame - k.FrameNum) / (double)(frame2 - k.FrameNum);
+                w = BrawlhallaMath.EaseWeight(w,
+                   k.EaseIn ?? EaseIn,
+                   k.EaseOut ?? EaseOut,
+                   k.EasePower ?? EasePower
+                );
+                if (k.CenterX is not null || k.CenterY is not null || CenterX is not null || CenterY is not null)
+                    positions.Add(BrawlhallaMath.BrawlhallaLerpWithCenter(k.X, k.Y, k2.X, k2.Y, k.CenterX ?? CenterX ?? 0, k.CenterY ?? CenterY ?? 0, w));
+                else
+                    positions.Add(BrawlhallaMath.BrawlhallaLerp(k.X, k.Y, k2.X, k2.Y, w));
+                currentFrame++;
+            }
         }
 
-        if (i == KeyFrames.Length) i = 0;
-        int j = (i == 0 ? KeyFrames.Length : i) - 1;
-        //lerp
-        return KeyFrames[j].LerpTo(KeyFrames[i],
-            new(CenterX, CenterY, EaseIn, EaseOut, EasePower),
-            numframes,
-            frame,
-            0,
-            0
-        );
+        double brawlhallaTime = time.TotalSeconds * 60.0 * 16.0;
+        double frames = 1000 * (positions.Count / 60.0) * (SlowMult ?? context.DefaultSlowMult ?? 1);
+        double clampedTime = brawlhallaTime * 0.05 % frames;
+        double positionIndex = StartFrame + clampedTime / frames * positions.Count;
+        int wholeIndex = (int)Math.Floor(positionIndex + 1e-7);
+        int nextIndex = (wholeIndex + 1) % positions.Count;
+        int index = wholeIndex % positions.Count;
+        double smallDiff = positionIndex - wholeIndex;
+        (double p1x, double p1y) = positions[nextIndex];
+        (double p2x, double p2y) = positions[index];
+        return (p1x * smallDiff + p2x * (1 - smallDiff), p1y * smallDiff + p2y * (1 - smallDiff));
+    }
+
+    public List<KeyFrame> GetImplicitKeyFrames()
+    {
+        List<KeyFrame> result = [];
+        foreach (AbstractKeyFrame akf in KeyFrames)
+            akf.GetImplicitKeyFrames(result, 0, 0);
+        return result;
     }
 }
