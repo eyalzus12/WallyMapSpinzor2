@@ -21,8 +21,6 @@ public class Phase : AbstractKeyFrame
         e.AddManySerialized(KeyFrames);
     }
 
-    public override (double, double) GetPosition() => KeyFrames[0].GetPosition();
-
     public override void GetImplicitKeyFrames(List<KeyFrame> output, int index, int startFrame)
     {
         for (int i = 0; i < KeyFrames.Length; ++i)

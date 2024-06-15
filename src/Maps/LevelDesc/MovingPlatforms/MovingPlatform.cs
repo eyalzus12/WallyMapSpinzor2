@@ -43,11 +43,9 @@ public class MovingPlatform : AbstractAsset
 
     public void StoreMovingPlatformOffset(RenderContext ctx, TimeSpan time)
     {
-        (double offX, double offY) = Animation.GetOffset(ctx, time);
-        //for some reason, dynamics need the first keyframe position of the animation removed
-        (double anmX, double anmY) = Animation.KeyFrames[0].GetPosition();
+        ((double offX, double offY), (double anmX, double anmY)) = Animation.GetOffset(ctx, time);
         ctx.PlatIDDynamicOffset[PlatID] = (offX - anmX, offY - anmY);
-        ctx.PlatIDMovingPlatformOffset[PlatID] = (offX + X, offY + Y);
+        ctx.PlatIDMovingPlatformOffset[PlatID] = (offX + Math.Round(X * 100) / 100, offY + Math.Round(Y * 100) / 100);
     }
 
     public override void DrawOn(ICanvas canvas, Transform trans, RenderConfig config, RenderContext context, RenderState state)

@@ -53,8 +53,6 @@ public class KeyFrame : AbstractKeyFrame
             e.SetAttributeValue("Y", Y);
     }
 
-    public override (double, double) GetPosition() => (X, Y);
-
     public override void GetImplicitKeyFrames(List<KeyFrame> output, int index, int startFrame)
     {
         if (startFrame > 0 && index == 0 && FrameNum + startFrame > startFrame && output.Count > 0)
