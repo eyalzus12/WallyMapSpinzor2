@@ -90,13 +90,13 @@ public class Animation : IDeserializable, ISerializable
         int positionsCount = currentFrame - 1;
 
         // find the two position indices
-        double brawlhallaTime = Math.Floor(time.TotalSeconds * 60.0) * 16.0;
+        double brawlhallaTime = time.TotalSeconds * 60.0 * 16.0;
         double frames = 1000 * (positionsCount / 60.0) * (SlowMult ?? context.DefaultSlowMult ?? 1);
-        double clampedTime = brawlhallaTime * 0.05 % frames;
+        double clampedTime = BrawlhallaMath.SafeMod(brawlhallaTime * 0.05, frames);
         double positionIndex = StartFrame + clampedTime / frames * positionsCount;
-        int wholeIndex = (int)Math.Floor(positionIndex + 1e-7);
-        int nextIndex = (wholeIndex + 1) % positionsCount;
-        int index = wholeIndex % positionsCount;
+        uint wholeIndex = (uint)Math.Floor(positionIndex + 1e-7);
+        uint nextIndex = (uint)((wholeIndex + 1) % positionsCount);
+        uint index = (uint)(wholeIndex % positionsCount);
         double smallDiff = positionIndex - wholeIndex;
 
         // go through the keyframes again, and find the positions
@@ -104,8 +104,8 @@ public class Animation : IDeserializable, ISerializable
         (double ax, double ay) = (double.NaN, double.NaN);
         (double p1x, double p1y) = (double.NaN, double.NaN);
         (double p2x, double p2y) = (double.NaN, double.NaN);
-        int frameForNextIndex = nextIndex + 1;
-        int frameForIndex = index + 1;
+        uint frameForNextIndex = nextIndex + 1;
+        uint frameForIndex = index + 1;
         currentFrame = 1;
         for (int i = 0; i < keyframes.Count; ++i)
         {
@@ -127,7 +127,7 @@ public class Animation : IDeserializable, ISerializable
             if (currentFrame >= frame2)
                 continue;
 
-            (double, double) LerpForFrame(int frame)
+            (double, double) LerpForFrame(uint frame)
             {
                 double w = (frame - k.FrameNum) / (double)(frame2 - k.FrameNum);
                 w = BrawlhallaMath.EaseWeight(w,
@@ -143,7 +143,7 @@ public class Animation : IDeserializable, ISerializable
 
             if (!gotA)
             {
-                (ax, ay) = LerpForFrame(currentFrame);
+                (ax, ay) = LerpForFrame((uint)currentFrame);
                 gotA = true;
             }
 
