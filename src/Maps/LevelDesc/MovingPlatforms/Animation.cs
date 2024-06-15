@@ -59,26 +59,8 @@ public class Animation : IDeserializable, ISerializable
         e.AddManySerialized(KeyFrames);
     }
 
-    public readonly record struct ValueDefaults(double? CenterX, double? CenterY, bool EaseIn, bool EaseOut, int EasePower)
-    {
-
-    }
-
-    //the game wants to do 0.05, but there's a 0.96 multiplier on top of that
-    //because brawlhalla stores time as 16*frames, which is 1/960th of a second (almost, but not exactly, a millisecond)
-    //but instead of dividing by 16 to get the frame count, they multiply by 60/1000.
-    public const double FRAME_MULTIPLIER = 0.048;
-
     public (double, double) GetOffset(RenderContext context, TimeSpan time)
     {
-        /*double numframes = NumFrames ?? context.DefaultNumFrames ?? 0;
-        double slowmult = SlowMult ?? context.DefaultSlowMult ?? 1;
-        double desiredFrame = FRAME_MULTIPLIER * (60.0 * time.TotalSeconds);
-        desiredFrame /= slowmult; //slow mult
-        desiredFrame += StartFrame; //apply start frame
-        desiredFrame = BrawlhallaMath.SafeMod(desiredFrame, numframes);
-        desiredFrame += 1; //keyframes start at 1*/
-
         // calculate the actual number of frames
         int currentFrame = 1;
         List<KeyFrame> keyframes = GetImplicitKeyFrames();
