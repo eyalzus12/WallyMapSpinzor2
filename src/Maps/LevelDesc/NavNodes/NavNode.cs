@@ -23,7 +23,7 @@ public class NavNode : IDeserializable, ISerializable, IDrawable
         Y = e.GetFloatAttribute("Y");
     }
 
-    private static (int, NavNodeTypeEnum) ParseNavID(string navId)
+    public static (int, NavNodeTypeEnum) ParseNavID(string navId)
     {
         return '0' <= navId[0] && navId[0] <= '9'
             ? (int.Parse(navId, CultureInfo.InvariantCulture), NavNodeTypeEnum._)
@@ -34,7 +34,7 @@ public class NavNode : IDeserializable, ISerializable, IDrawable
             );
     }
 
-    private static string NavIDToString(int id, NavNodeTypeEnum type)
+    public static string NavIDToString(int id, NavNodeTypeEnum type)
     {
         return type == NavNodeTypeEnum._
             ? id.ToString()
