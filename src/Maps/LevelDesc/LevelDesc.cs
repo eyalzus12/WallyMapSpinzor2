@@ -204,6 +204,53 @@ public class LevelDesc : IDeserializable, ISerializable, IDrawable
             }
         }
 
+        if (config.ShowBombsketballBombTimers.Any(x => x))
+        {
+            (double, double)[] timerLocations = [.. ItemSpawns
+                .OfType<ItemSpawn>()
+                .Select(i => (i.X + i.W / 2, i.Y + i.H / 2))
+                .OrderBy
+                (
+                    _ => _,
+                    Comparer<(double, double)>.Create(((double, double) a, (double, double) b) =>
+                    {
+                        int result = (int)(a.Item1 - b.Item1);
+                        if (result == 0) result = (int)(a.Item2 - b.Item2);
+                        return result;
+                    })
+                )
+            ];
+
+            if (timerLocations.Length >= 3)
+            {
+                timerLocations = timerLocations[..3];
+                Gfx gfx = new()
+                {
+                    AnimFile = "Animation_GameModes.swf",
+                    AnimClass = "a__AnimationPieTimer",
+                    AnimScale = 1,
+                };
+
+                double[] yOff = [-100, -200, -100];
+                double[] frames = [7500 / 16.0, 3000 / 10.0, 7500 / 16.0];
+                for (int i = 0; i < 3; ++i)
+                {
+                    if (!config.ShowBombsketballBombTimers[i])
+                        continue;
+                    int? frameCount_ = canvas.GetAnimationFrameCount(gfx, "Ready");
+                    if (frameCount_ is not null)
+                    {
+                        int frameCount = frameCount_.Value;
+                        int frame = (int)Math.Floor(config.BombsketballBombTimerFrames[i] / frames[i] * frameCount);
+                        canvas.DrawAnim(gfx, "Ready", frame,
+                        trans * Transform.CreateTranslate(timerLocations[i].Item1, timerLocations[i].Item2 + yOff[i]),
+                        DrawPriorityEnum.FOREGROUND, null
+                        );
+                    }
+                }
+            }
+        }
+
         if (config.ShowHordeDoors)
         {
             Gfx doorGfx = new()

@@ -45,10 +45,15 @@ public class RenderConfig : IDeserializable, ISerializable
     public required bool ShowRingRopes { get; set; }
     //whether to show the zombie spawn points
     public required bool ShowZombieSpawns { get; set; }
+
     //whether to show the bombsketball tagets
     public required bool ShowBombsketballTargets { get; set; }
     //whether to use the bombsketball-specific size for TeamScoreboard digits
     public required bool UseBombsketballDigitSize { get; set; }
+    //whether to show each bombsketball bomb timer
+    public required bool[] ShowBombsketballBombTimers { get; set; }
+    //the time in frames spent on each bombsketball bomb timer
+    public required double[] BombsketballBombTimerFrames { get; set; }
 
     //whether to show the horde doors
     public required bool ShowHordeDoors { get; set; }
@@ -192,6 +197,18 @@ public class RenderConfig : IDeserializable, ISerializable
         ShowZombieSpawns = Utils.ParseBoolOrNull(e.GetElementValue(nameof(ShowZombieSpawns))) ?? @default.ShowZombieSpawns;
         ShowBombsketballTargets = Utils.ParseBoolOrNull(e.GetElementValue(nameof(ShowBombsketballTargets))) ?? @default.ShowBombsketballTargets;
         UseBombsketballDigitSize = Utils.ParseBoolOrNull(e.GetElementValue(nameof(UseBombsketballDigitSize))) ?? @default.UseBombsketballDigitSize;
+        ShowBombsketballBombTimers =
+        [
+            Utils.ParseBoolOrNull(e.Element(nameof(ShowBombsketballBombTimers))?.GetElementValue("Index0")) ?? @default.ShowBombsketballBombTimers[0],
+            Utils.ParseBoolOrNull(e.Element(nameof(ShowBombsketballBombTimers))?.GetElementValue("Index1")) ?? @default.ShowBombsketballBombTimers[1],
+            Utils.ParseBoolOrNull(e.Element(nameof(ShowBombsketballBombTimers))?.GetElementValue("Index2")) ?? @default.ShowBombsketballBombTimers[2],
+        ];
+        BombsketballBombTimerFrames =
+        [
+            Utils.ParseFloatOrNull(e.Element(nameof(BombsketballBombTimerFrames))?.GetElementValue("Index0")) ?? @default.BombsketballBombTimerFrames[0],
+            Utils.ParseFloatOrNull(e.Element(nameof(BombsketballBombTimerFrames))?.GetElementValue("Index1")) ?? @default.BombsketballBombTimerFrames[1],
+            Utils.ParseFloatOrNull(e.Element(nameof(BombsketballBombTimerFrames))?.GetElementValue("Index2")) ?? @default.BombsketballBombTimerFrames[2],
+        ];
         ShowHordeDoors = Utils.ParseBoolOrNull(e.GetElementValue(nameof(ShowHordeDoors))) ?? @default.ShowHordeDoors;
         DamageHordeDoors =
         [
@@ -303,6 +320,7 @@ public class RenderConfig : IDeserializable, ISerializable
         e.AddChild(nameof(ShowZombieSpawns), ShowZombieSpawns);
         e.AddChild(nameof(ShowBombsketballTargets), ShowBombsketballTargets);
         e.AddChild(nameof(UseBombsketballDigitSize), UseBombsketballDigitSize);
+        e.AddChild(nameof(ShowBombsketballBombTimers), ShowBombsketballBombTimers);
         e.AddChild(nameof(ShowHordeDoors), ShowHordeDoors);
         XElement damageHordeDoorsElement = new(nameof(DamageHordeDoors));
         damageHordeDoorsElement.AddChild("Index0", DamageHordeDoors[0]);
@@ -411,6 +429,8 @@ public class RenderConfig : IDeserializable, ISerializable
         ShowZombieSpawns = false,
         ShowBombsketballTargets = false,
         UseBombsketballDigitSize = false,
+        ShowBombsketballBombTimers = [false, false, false],
+        BombsketballBombTimerFrames = [0, 0, 0],
         ShowHordeDoors = false,
         DamageHordeDoors = [0, 0],
         HordePathType = PathConfigEnum.NONE,
