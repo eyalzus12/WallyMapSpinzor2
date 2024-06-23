@@ -256,7 +256,7 @@ public class LevelDesc : IDeserializable, ISerializable, IDrawable
                 double door2CY = goals[1].Y + goals[1].H / 2;
                 GenerateRandomHordePaths(config.HordeRandomSeed, CameraBounds.X, CameraBounds.Y, CameraBounds.W, CameraBounds.H, door1CX, door1CY, door2CX, door2CY);
 
-                List<(double, double)[]> pathList = config.HordePathType switch
+                (double, double)[][] pathList = config.HordePathType switch
                 {
                     RenderConfig.PathConfigEnum.LEFT => _leftPaths,
                     RenderConfig.PathConfigEnum.RIGHT => _rightPaths,
@@ -285,10 +285,10 @@ public class LevelDesc : IDeserializable, ISerializable, IDrawable
         }
     }
 
-    private readonly List<(double, double)[]> _topPaths = [];
-    private readonly List<(double, double)[]> _leftPaths = [];
-    private readonly List<(double, double)[]> _rightPaths = [];
-    private readonly List<(double, double)[]> _bottomPaths = [];
+    private readonly (double, double)[][] _topPaths = new (double, double)[20][];
+    private readonly (double, double)[][] _leftPaths = new (double, double)[20][];
+    private readonly (double, double)[][] _rightPaths = new (double, double)[20][];
+    private readonly (double, double)[][] _bottomPaths = new (double, double)[20][];
 
     private void GenerateRandomHordePaths(
         uint hordeSeed, // seed
@@ -298,16 +298,12 @@ public class LevelDesc : IDeserializable, ISerializable, IDrawable
     )
     {
         BrawlhallaRandom rand = new(hordeSeed);
-        _topPaths.Clear();
-        for (int i = 0; i < 10; ++i) _topPaths.Add([.. BrawlhallaMath.GenerateHordePath(rand, boundX, boundY, boundW, boundH, door1CX, door1CY, door2CX, door2CY, DirEnum.TOP, PathEnum.CLOSE, i)]);
-        for (int i = 0; i < 10; ++i) _topPaths.Add([.. BrawlhallaMath.GenerateHordePath(rand, boundX, boundY, boundW, boundH, door1CX, door1CY, door2CX, door2CY, DirEnum.TOP, PathEnum.FAR, i)]);
-        _leftPaths.Clear();
-        for (int i = 0; i < 10; ++i) _leftPaths.Add([.. BrawlhallaMath.GenerateHordePath(rand, boundX, boundY, boundW, boundH, door1CX, door1CY, door2CX, door2CY, DirEnum.LEFT, PathEnum.CLOSE, i)]);
-        for (int i = 0; i < 10; ++i) _leftPaths.Add([.. BrawlhallaMath.GenerateHordePath(rand, boundX, boundY, boundW, boundH, door1CX, door1CY, door2CX, door2CY, DirEnum.LEFT, PathEnum.FAR, i)]);
-        _rightPaths.Clear();
-        for (int i = 0; i < 10; ++i) _rightPaths.Add([.. BrawlhallaMath.GenerateHordePath(rand, boundX, boundY, boundW, boundH, door1CX, door1CY, door2CX, door2CY, DirEnum.RIGHT, PathEnum.CLOSE, i)]);
-        for (int i = 0; i < 10; ++i) _rightPaths.Add([.. BrawlhallaMath.GenerateHordePath(rand, boundX, boundY, boundW, boundH, door1CX, door1CY, door2CX, door2CY, DirEnum.RIGHT, PathEnum.FAR, i)]);
-        _bottomPaths.Clear();
-        for (int i = 0; i < 20; ++i) _bottomPaths.Add([.. BrawlhallaMath.GenerateHordePath(rand, boundX, boundY, boundW, boundH, door1CX, door1CY, door2CX, door2CY, DirEnum.BOTTOM, PathEnum.ANY, i)]);
+        for (int i = 0; i < 10; ++i) _topPaths[i] = [.. BrawlhallaMath.GenerateHordePath(rand, boundX, boundY, boundW, boundH, door1CX, door1CY, door2CX, door2CY, DirEnum.TOP, PathEnum.CLOSE, i)];
+        for (int i = 0; i < 10; ++i) _topPaths[i + 10] = [.. BrawlhallaMath.GenerateHordePath(rand, boundX, boundY, boundW, boundH, door1CX, door1CY, door2CX, door2CY, DirEnum.TOP, PathEnum.FAR, i)];
+        for (int i = 0; i < 10; ++i) _leftPaths[i] = [.. BrawlhallaMath.GenerateHordePath(rand, boundX, boundY, boundW, boundH, door1CX, door1CY, door2CX, door2CY, DirEnum.LEFT, PathEnum.CLOSE, i)];
+        for (int i = 0; i < 10; ++i) _leftPaths[i + 10] = [.. BrawlhallaMath.GenerateHordePath(rand, boundX, boundY, boundW, boundH, door1CX, door1CY, door2CX, door2CY, DirEnum.LEFT, PathEnum.FAR, i)];
+        for (int i = 0; i < 10; ++i) _rightPaths[i] = [.. BrawlhallaMath.GenerateHordePath(rand, boundX, boundY, boundW, boundH, door1CX, door1CY, door2CX, door2CY, DirEnum.RIGHT, PathEnum.CLOSE, i)];
+        for (int i = 0; i < 10; ++i) _rightPaths[i + 10] = [.. BrawlhallaMath.GenerateHordePath(rand, boundX, boundY, boundW, boundH, door1CX, door1CY, door2CX, door2CY, DirEnum.RIGHT, PathEnum.FAR, i)];
+        for (int i = 0; i < 20; ++i) _bottomPaths[i] = [.. BrawlhallaMath.GenerateHordePath(rand, boundX, boundY, boundW, boundH, door1CX, door1CY, door2CX, door2CY, DirEnum.BOTTOM, PathEnum.ANY, i)];
     }
 }
