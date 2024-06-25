@@ -7,6 +7,8 @@ public class DynamicCollision : AbstractDynamic<AbstractCollision>
     public override void DeserializeChildren(XElement element)
     {
         Children = element.DeserializeCollisionChildren();
+        foreach (AbstractCollision c in Children)
+            c.Parent = this;
     }
 
     public override void DrawOn(ICanvas canvas, Transform trans, RenderConfig config, RenderContext context, RenderState state)

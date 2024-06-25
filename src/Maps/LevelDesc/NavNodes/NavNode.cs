@@ -14,6 +14,8 @@ public class NavNode : IDeserializable, ISerializable, IDrawable
     public double X { get; set; }
     public double Y { get; set; }
 
+    public DynamicNavNode? Parent { get; set; }
+
     public void Deserialize(XElement e)
     {
         (NavID, Type) = ParseNavID(e.GetAttribute("NavID"));

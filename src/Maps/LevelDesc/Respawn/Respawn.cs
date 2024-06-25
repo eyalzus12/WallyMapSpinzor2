@@ -9,6 +9,8 @@ public class Respawn : IDeserializable, ISerializable, IDrawable
     public double X { get; set; }
     public double Y { get; set; }
 
+    public DynamicRespawn? Parent { get; set; }
+
     public void Deserialize(XElement e)
     {
         Initial = e.GetBoolAttribute("Initial", false);

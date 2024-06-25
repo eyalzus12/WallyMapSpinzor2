@@ -7,6 +7,8 @@ public class DynamicNavNode : AbstractDynamic<NavNode>
     public override void DeserializeChildren(XElement element)
     {
         Children = element.DeserializeChildrenOfType<NavNode>();
+        foreach (NavNode n in Children)
+            n.Parent = this;
     }
 
     public void RegisterNavNodes(RenderContext context)

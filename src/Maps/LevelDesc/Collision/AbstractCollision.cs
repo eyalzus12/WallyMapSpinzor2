@@ -37,6 +37,8 @@ public abstract class AbstractCollision : IDeserializable, ISerializable, IDrawa
     public FlagEnum? Flag { get; set; }
     public ColorFlagEnum? ColorFlag { get; set; }
 
+    public DynamicCollision? Parent { get; set; }
+
     public virtual void Deserialize(XElement e)
     {
         TauntEvent = e.GetAttributeOrNull("TauntEvent");
