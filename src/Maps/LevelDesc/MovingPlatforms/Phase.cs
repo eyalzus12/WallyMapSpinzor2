@@ -13,6 +13,8 @@ public class Phase : AbstractKeyFrame
     {
         StartFrame = e.GetIntAttribute("StartFrame", 0);
         KeyFrames = e.DeserializeKeyFrameChildren();
+        foreach (AbstractKeyFrame k in KeyFrames)
+            k.Parent = this;
     }
 
     public override void Serialize(XElement e)

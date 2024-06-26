@@ -9,6 +9,8 @@ public abstract class AbstractItemSpawn : IDeserializable, ISerializable, IDrawa
     public double X { get; set; }
     public double Y { get; set; }
 
+    public DynamicItemSpawn? Parent { get; set; }
+
     public void Deserialize(XElement e)
     {
         H = e.GetFloatAttribute("H", DefaultH);

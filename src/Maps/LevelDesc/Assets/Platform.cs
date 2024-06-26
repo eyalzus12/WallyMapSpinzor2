@@ -34,6 +34,8 @@ public class Platform : AbstractAsset
         Theme = e.GetAttributeOrNull("Theme")?.Split(',');
         ScoringType = e.GetAttributeOrNull("ScoringType");
         AssetChildren = AssetName is null ? e.DeserializeAssetChildren() : null;
+        foreach (AbstractAsset a in AssetChildren ?? [])
+            a.Parent = this;
     }
 
     public override void Serialize(XElement e)

@@ -30,6 +30,8 @@ public class MovingPlatform : AbstractAsset
         //In which case the moving platform doesn't exist
         Animation = e.DeserializeChildOfType<Animation>()!;
         Assets = e.DeserializeAssetChildren();
+        foreach (AbstractAsset a in Assets)
+            a.Parent = this;
     }
 
     public override void Serialize(XElement e)

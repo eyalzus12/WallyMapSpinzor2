@@ -15,6 +15,8 @@ public abstract class AbstractAsset : ISerializable, IDeserializable, IDrawable
     public double X { get; set; }
     public double Y { get; set; }
 
+    public AbstractAsset? Parent { get; set; }
+
     public virtual void Deserialize(XElement e)
     {
         AssetName = e.GetAttributeOrNull("AssetName");
