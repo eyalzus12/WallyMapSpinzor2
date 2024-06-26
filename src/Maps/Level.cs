@@ -10,14 +10,12 @@ public class Level : IDeserializable, ISerializable, IDrawable
 {
     public LevelDesc Desc { get; set; }
     public LevelType? Type { get; set; }
-    public HashSet<string> Playlists { get; set; } = null!;
+    public HashSet<string> Playlists { get; set; }
 
     public Level(LevelDesc ld, LevelTypes lt, LevelSetTypes lst)
     {
         Desc = ld;
-        Type = lt.Levels
-            .Where(l => l.LevelName == Desc.LevelName)
-            .FirstOrDefault();// ?? throw new KeyNotFoundException($"Cannot find LevelType {Desc.LevelName} in given LevelTypes");
+        Type = Array.Find(lt.Levels, l => l.LevelName == Desc.LevelName);
         Playlists = lst.Playlists
             .Where(l => l.LevelTypes.Contains(Desc.LevelName))
             .Select(l => l.LevelSetName)
@@ -45,7 +43,7 @@ public class Level : IDeserializable, ISerializable, IDrawable
     public void Deserialize(XElement e)
     {
         Desc = e.DeserializeChildOfType<LevelDesc>() ?? throw new ArgumentException("Given XML file does not contain a LevelDesc element. Invalid save format.");
-        Type = e.DeserializeChildOfType<LevelType>();// ?? throw new ArgumentException("Given XML file does not contain a LevelType element. Invalid save format.");
+        Type = e.DeserializeChildOfType<LevelType>();
         Playlists = e.GetElementValue("Playlists")?.Split(",").ToHashSet() ?? throw new ArgumentException("Given XML file does not contain a Playlists element. Invalid save format.");
     }
 

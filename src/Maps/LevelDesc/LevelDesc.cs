@@ -178,7 +178,7 @@ public class LevelDesc : IDeserializable, ISerializable, IDrawable
 
         if (config.ShowBombsketballTargets)
         {
-            Goal? goalblue = Volumes.OfType<Goal>().Where(g => g.Team == 1).FirstOrDefault();
+            Goal? goalblue = Volumes.OfType<Goal>().FirstOrDefault(g => g.Team == 1);
             if (goalblue is not null)
             {
                 Gfx gfx = new()
@@ -190,7 +190,7 @@ public class LevelDesc : IDeserializable, ISerializable, IDrawable
                 };
                 canvas.DrawAnim(gfx, "Ready", 0, trans * Transform.CreateTranslate(goalblue.X + 85, goalblue.Y + 85), DrawPriorityEnum.FOREGROUND, null);
             }
-            Goal? goalred = Volumes.OfType<Goal>().Where(g => g.Team == 2).FirstOrDefault();
+            Goal? goalred = Volumes.OfType<Goal>().FirstOrDefault(g => g.Team == 2);
             if (goalred is not null)
             {
                 Gfx gfx = new()
@@ -204,7 +204,7 @@ public class LevelDesc : IDeserializable, ISerializable, IDrawable
             }
         }
 
-        if (config.ShowBombsketballBombTimers.Any(x => x))
+        if (Array.Exists(config.ShowBombsketballBombTimers, x => x))
         {
             (double, double)[] timerLocations = [.. ItemSpawns
                 .OfType<ItemSpawn>()

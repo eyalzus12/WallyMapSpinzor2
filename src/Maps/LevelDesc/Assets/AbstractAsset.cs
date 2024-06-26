@@ -72,9 +72,7 @@ public abstract class AbstractAsset : ISerializable, IDeserializable, IDrawable
             throw new InvalidOperationException("Attempting to draw an asset, but the render context is missing the AssetDir.");
 
         string path = Path.Combine(context.AssetDir, AssetName);
-        double? w = AssetName is not null ? W : null;
-        double? h = AssetName is not null ? H : null;
-        canvas.DrawTextureRect(path, 0, 0, w, h, trans * Transform, DrawPriorityEnum.MIDGROUND, this);
+        canvas.DrawTextureRect(path, 0, 0, W, H, trans * Transform, DrawPriorityEnum.MIDGROUND, this);
     }
 
     public Transform Transform =>

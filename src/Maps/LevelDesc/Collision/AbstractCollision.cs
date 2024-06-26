@@ -133,10 +133,10 @@ public abstract class AbstractCollision : IDeserializable, ISerializable, IDrawa
         }
 
         if (Flag is not null)
-            e.SetAttributeValue("Flag", Flag?.ToString().ToLowerInvariant());
+            e.SetAttributeValue("Flag", Flag.Value.ToString().ToLowerInvariant());
 
         if (ColorFlag is not null)
-            e.SetAttributeValue("ColorFlag", ColorFlag?.ToString().ToLowerInvariant());
+            e.SetAttributeValue("ColorFlag", ColorFlag.Value.ToString().ToLowerInvariant());
     }
 
     private (double, double)[]? _curve = null;
@@ -154,7 +154,7 @@ public abstract class AbstractCollision : IDeserializable, ISerializable, IDrawa
         if (_curve is not null)
             return;
 
-        _curve = [(X1, Y1), .. BrawlhallaMath.CollisionQuad(X1, Y1, X2, Y2, (AnchorX ?? 0) - xOff, (AnchorY ?? 0) - yOff)];
+        _curve = [(X1, Y1), .. BrawlhallaMath.CollisionQuad(X1, Y1, X2, Y2, AnchorX.Value - xOff, AnchorY.Value - yOff)];
     }
 
     public virtual void DrawOn(ICanvas canvas, Transform trans, RenderConfig config, RenderContext context, RenderState state)
@@ -216,7 +216,7 @@ public abstract class AbstractCollision : IDeserializable, ISerializable, IDrawa
         _curve = null;
     }
 
-    public abstract Color GetColor(RenderConfig rs);
+    public abstract Color GetColor(RenderConfig config);
 
     [Flags]
     public enum CollisionTypeEnum

@@ -5,6 +5,8 @@ namespace WallyMapSpinzor2;
 
 public class RenderConfig : IDeserializable, ISerializable
 {
+    private const string INDEX = "Index";
+
     public enum PathConfigEnum
     {
         NONE,
@@ -199,21 +201,21 @@ public class RenderConfig : IDeserializable, ISerializable
         UseBombsketballDigitSize = Utils.ParseBoolOrNull(e.GetElementValue(nameof(UseBombsketballDigitSize))) ?? @default.UseBombsketballDigitSize;
         ShowBombsketballBombTimers =
         [
-            Utils.ParseBoolOrNull(e.Element(nameof(ShowBombsketballBombTimers))?.GetElementValue("Index0")) ?? @default.ShowBombsketballBombTimers[0],
-            Utils.ParseBoolOrNull(e.Element(nameof(ShowBombsketballBombTimers))?.GetElementValue("Index1")) ?? @default.ShowBombsketballBombTimers[1],
-            Utils.ParseBoolOrNull(e.Element(nameof(ShowBombsketballBombTimers))?.GetElementValue("Index2")) ?? @default.ShowBombsketballBombTimers[2],
+            Utils.ParseBoolOrNull(e.Element(nameof(ShowBombsketballBombTimers))?.GetElementValue(INDEX + "0")) ?? @default.ShowBombsketballBombTimers[0],
+            Utils.ParseBoolOrNull(e.Element(nameof(ShowBombsketballBombTimers))?.GetElementValue(INDEX + "1")) ?? @default.ShowBombsketballBombTimers[1],
+            Utils.ParseBoolOrNull(e.Element(nameof(ShowBombsketballBombTimers))?.GetElementValue(INDEX + "2")) ?? @default.ShowBombsketballBombTimers[2],
         ];
         BombsketballBombTimerFrames =
         [
-            Utils.ParseFloatOrNull(e.Element(nameof(BombsketballBombTimerFrames))?.GetElementValue("Index0")) ?? @default.BombsketballBombTimerFrames[0],
-            Utils.ParseFloatOrNull(e.Element(nameof(BombsketballBombTimerFrames))?.GetElementValue("Index1")) ?? @default.BombsketballBombTimerFrames[1],
-            Utils.ParseFloatOrNull(e.Element(nameof(BombsketballBombTimerFrames))?.GetElementValue("Index2")) ?? @default.BombsketballBombTimerFrames[2],
+            Utils.ParseFloatOrNull(e.Element(nameof(BombsketballBombTimerFrames))?.GetElementValue(INDEX + "0")) ?? @default.BombsketballBombTimerFrames[0],
+            Utils.ParseFloatOrNull(e.Element(nameof(BombsketballBombTimerFrames))?.GetElementValue(INDEX + "1")) ?? @default.BombsketballBombTimerFrames[1],
+            Utils.ParseFloatOrNull(e.Element(nameof(BombsketballBombTimerFrames))?.GetElementValue(INDEX + "2")) ?? @default.BombsketballBombTimerFrames[2],
         ];
         ShowHordeDoors = Utils.ParseBoolOrNull(e.GetElementValue(nameof(ShowHordeDoors))) ?? @default.ShowHordeDoors;
         DamageHordeDoors =
         [
-            Utils.ParseIntOrNull(e.Element(nameof(DamageHordeDoors))?.GetElementValue("Index0")) ?? @default.DamageHordeDoors[0],
-            Utils.ParseIntOrNull(e.Element(nameof(DamageHordeDoors))?.GetElementValue("Index1")) ?? @default.DamageHordeDoors[1],
+            Utils.ParseIntOrNull(e.Element(nameof(DamageHordeDoors))?.GetElementValue(INDEX + "0")) ?? @default.DamageHordeDoors[0],
+            Utils.ParseIntOrNull(e.Element(nameof(DamageHordeDoors))?.GetElementValue(INDEX + "1")) ?? @default.DamageHordeDoors[1],
         ];
         HordePathType = Utils.ParseEnumOrNull<PathConfigEnum>(e.GetElementValue(nameof(HordePathType))) ?? @default.HordePathType;
         HordePathIndex = Utils.ParseIntOrNull(e.GetElementValue(nameof(HordePathIndex))) ?? @default.HordePathIndex;
@@ -277,20 +279,20 @@ public class RenderConfig : IDeserializable, ISerializable
         ColorTeamItemInitSpawn = Color.FromHex(Utils.ParseUIntOrNull(e.GetElementValue(nameof(ColorTeamItemInitSpawn))) ?? @default.ColorTeamItemInitSpawn.ToHex());
         ColorCollisionTeam =
         [
-            Color.FromHex(Utils.ParseUIntOrNull(e.Element(nameof(ColorCollisionTeam))?.GetElementValue("Index1")) ?? @default.ColorCollisionTeam[0].ToHex()),
-            Color.FromHex(Utils.ParseUIntOrNull(e.Element(nameof(ColorCollisionTeam))?.GetElementValue("Index2")) ?? @default.ColorCollisionTeam[1].ToHex()),
-            Color.FromHex(Utils.ParseUIntOrNull(e.Element(nameof(ColorCollisionTeam))?.GetElementValue("Index3")) ?? @default.ColorCollisionTeam[2].ToHex()),
-            Color.FromHex(Utils.ParseUIntOrNull(e.Element(nameof(ColorCollisionTeam))?.GetElementValue("Index4")) ?? @default.ColorCollisionTeam[3].ToHex()),
-            Color.FromHex(Utils.ParseUIntOrNull(e.Element(nameof(ColorCollisionTeam))?.GetElementValue("Index5")) ?? @default.ColorCollisionTeam[4].ToHex()),
+            Color.FromHex(Utils.ParseUIntOrNull(e.Element(nameof(ColorCollisionTeam))?.GetElementValue(INDEX + "1")) ?? @default.ColorCollisionTeam[0].ToHex()),
+            Color.FromHex(Utils.ParseUIntOrNull(e.Element(nameof(ColorCollisionTeam))?.GetElementValue(INDEX + "2")) ?? @default.ColorCollisionTeam[1].ToHex()),
+            Color.FromHex(Utils.ParseUIntOrNull(e.Element(nameof(ColorCollisionTeam))?.GetElementValue(INDEX + "3")) ?? @default.ColorCollisionTeam[2].ToHex()),
+            Color.FromHex(Utils.ParseUIntOrNull(e.Element(nameof(ColorCollisionTeam))?.GetElementValue(INDEX + "4")) ?? @default.ColorCollisionTeam[3].ToHex()),
+            Color.FromHex(Utils.ParseUIntOrNull(e.Element(nameof(ColorCollisionTeam))?.GetElementValue(INDEX + "5")) ?? @default.ColorCollisionTeam[4].ToHex()),
         ];
         ColorVolumeTeam =
         [
-            Color.FromHex(Utils.ParseUIntOrNull(e.Element(nameof(ColorVolumeTeam))?.GetElementValue("Index0")) ?? @default.ColorVolumeTeam[0].ToHex()),
-            Color.FromHex(Utils.ParseUIntOrNull(e.Element(nameof(ColorVolumeTeam))?.GetElementValue("Index1")) ?? @default.ColorVolumeTeam[1].ToHex()),
-            Color.FromHex(Utils.ParseUIntOrNull(e.Element(nameof(ColorVolumeTeam))?.GetElementValue("Index2")) ?? @default.ColorVolumeTeam[2].ToHex()),
-            Color.FromHex(Utils.ParseUIntOrNull(e.Element(nameof(ColorVolumeTeam))?.GetElementValue("Index3")) ?? @default.ColorVolumeTeam[3].ToHex()),
-            Color.FromHex(Utils.ParseUIntOrNull(e.Element(nameof(ColorVolumeTeam))?.GetElementValue("Index4")) ?? @default.ColorVolumeTeam[4].ToHex()),
-            Color.FromHex(Utils.ParseUIntOrNull(e.Element(nameof(ColorVolumeTeam))?.GetElementValue("Index5")) ?? @default.ColorVolumeTeam[5].ToHex()),
+            Color.FromHex(Utils.ParseUIntOrNull(e.Element(nameof(ColorVolumeTeam))?.GetElementValue(INDEX + "0")) ?? @default.ColorVolumeTeam[0].ToHex()),
+            Color.FromHex(Utils.ParseUIntOrNull(e.Element(nameof(ColorVolumeTeam))?.GetElementValue(INDEX + "1")) ?? @default.ColorVolumeTeam[1].ToHex()),
+            Color.FromHex(Utils.ParseUIntOrNull(e.Element(nameof(ColorVolumeTeam))?.GetElementValue(INDEX + "2")) ?? @default.ColorVolumeTeam[2].ToHex()),
+            Color.FromHex(Utils.ParseUIntOrNull(e.Element(nameof(ColorVolumeTeam))?.GetElementValue(INDEX + "3")) ?? @default.ColorVolumeTeam[3].ToHex()),
+            Color.FromHex(Utils.ParseUIntOrNull(e.Element(nameof(ColorVolumeTeam))?.GetElementValue(INDEX + "4")) ?? @default.ColorVolumeTeam[4].ToHex()),
+            Color.FromHex(Utils.ParseUIntOrNull(e.Element(nameof(ColorVolumeTeam))?.GetElementValue(INDEX + "5")) ?? @default.ColorVolumeTeam[5].ToHex()),
         ];
         ColorZombieSpawns = Color.FromHex(Utils.ParseUIntOrNull(e.GetElementValue(nameof(ColorZombieSpawns))) ?? @default.ColorZombieSpawns.ToHex());
         ColorNavNode = Color.FromHex(Utils.ParseUIntOrNull(e.GetElementValue(nameof(ColorNavNode))) ?? @default.ColorNavNode.ToHex());
@@ -320,11 +322,20 @@ public class RenderConfig : IDeserializable, ISerializable
         e.AddChild(nameof(ShowZombieSpawns), ShowZombieSpawns);
         e.AddChild(nameof(ShowBombsketballTargets), ShowBombsketballTargets);
         e.AddChild(nameof(UseBombsketballDigitSize), UseBombsketballDigitSize);
-        e.AddChild(nameof(ShowBombsketballBombTimers), ShowBombsketballBombTimers);
+        XElement showBombsketballBombTimersElement = new(nameof(ShowBombsketballBombTimers));
+        showBombsketballBombTimersElement.AddChild(INDEX + "0", ShowBombsketballBombTimers[0]);
+        showBombsketballBombTimersElement.AddChild(INDEX + "1", ShowBombsketballBombTimers[1]);
+        showBombsketballBombTimersElement.AddChild(INDEX + "2", ShowBombsketballBombTimers[2]);
+        e.Add(showBombsketballBombTimersElement);
+        XElement bombsketballBombTimerFramesElement = new(nameof(BombsketballBombTimerFrames));
+        bombsketballBombTimerFramesElement.AddChild(INDEX + "0", BombsketballBombTimerFrames[0]);
+        bombsketballBombTimerFramesElement.AddChild(INDEX + "1", BombsketballBombTimerFrames[1]);
+        bombsketballBombTimerFramesElement.AddChild(INDEX + "2", BombsketballBombTimerFrames[2]);
+        e.Add(bombsketballBombTimerFramesElement);
         e.AddChild(nameof(ShowHordeDoors), ShowHordeDoors);
         XElement damageHordeDoorsElement = new(nameof(DamageHordeDoors));
-        damageHordeDoorsElement.AddChild("Index0", DamageHordeDoors[0]);
-        damageHordeDoorsElement.AddChild("Index1", DamageHordeDoors[1]);
+        damageHordeDoorsElement.AddChild(INDEX + "0", DamageHordeDoors[0]);
+        damageHordeDoorsElement.AddChild(INDEX + "1", DamageHordeDoors[1]);
         e.Add(damageHordeDoorsElement);
         e.AddChild(nameof(HordePathType), HordePathType);
         e.AddChild(nameof(HordePathIndex), HordePathIndex);
@@ -387,19 +398,19 @@ public class RenderConfig : IDeserializable, ISerializable
         e.AddChild(nameof(ColorItemSet), "0x" + ColorItemSet.ToHex().ToString("X8"));
         e.AddChild(nameof(ColorTeamItemInitSpawn), "0x" + ColorTeamItemInitSpawn.ToHex().ToString("X8"));
         XElement colorCollisionTeamElement = new(nameof(ColorCollisionTeam));
-        colorCollisionTeamElement.AddChild("Index1", "0x" + ColorCollisionTeam[0].ToHex().ToString("X8"));
-        colorCollisionTeamElement.AddChild("Index2", "0x" + ColorCollisionTeam[1].ToHex().ToString("X8"));
-        colorCollisionTeamElement.AddChild("Index3", "0x" + ColorCollisionTeam[2].ToHex().ToString("X8"));
-        colorCollisionTeamElement.AddChild("Index4", "0x" + ColorCollisionTeam[3].ToHex().ToString("X8"));
-        colorCollisionTeamElement.AddChild("Index5", "0x" + ColorCollisionTeam[4].ToHex().ToString("X8"));
+        colorCollisionTeamElement.AddChild(INDEX + "1", "0x" + ColorCollisionTeam[0].ToHex().ToString("X8"));
+        colorCollisionTeamElement.AddChild(INDEX + "2", "0x" + ColorCollisionTeam[1].ToHex().ToString("X8"));
+        colorCollisionTeamElement.AddChild(INDEX + "3", "0x" + ColorCollisionTeam[2].ToHex().ToString("X8"));
+        colorCollisionTeamElement.AddChild(INDEX + "4", "0x" + ColorCollisionTeam[3].ToHex().ToString("X8"));
+        colorCollisionTeamElement.AddChild(INDEX + "5", "0x" + ColorCollisionTeam[4].ToHex().ToString("X8"));
         e.Add(colorCollisionTeamElement);
         XElement colorVolumeTeamElement = new(nameof(ColorVolumeTeam));
-        colorVolumeTeamElement.AddChild("Index0", "0x" + ColorVolumeTeam[0].ToHex().ToString("X8"));
-        colorVolumeTeamElement.AddChild("Index1", "0x" + ColorVolumeTeam[1].ToHex().ToString("X8"));
-        colorVolumeTeamElement.AddChild("Index2", "0x" + ColorVolumeTeam[2].ToHex().ToString("X8"));
-        colorVolumeTeamElement.AddChild("Index3", "0x" + ColorVolumeTeam[3].ToHex().ToString("X8"));
-        colorVolumeTeamElement.AddChild("Index4", "0x" + ColorVolumeTeam[4].ToHex().ToString("X8"));
-        colorVolumeTeamElement.AddChild("Index5", "0x" + ColorVolumeTeam[5].ToHex().ToString("X8"));
+        colorVolumeTeamElement.AddChild(INDEX + "0", "0x" + ColorVolumeTeam[0].ToHex().ToString("X8"));
+        colorVolumeTeamElement.AddChild(INDEX + "1", "0x" + ColorVolumeTeam[1].ToHex().ToString("X8"));
+        colorVolumeTeamElement.AddChild(INDEX + "2", "0x" + ColorVolumeTeam[2].ToHex().ToString("X8"));
+        colorVolumeTeamElement.AddChild(INDEX + "3", "0x" + ColorVolumeTeam[3].ToHex().ToString("X8"));
+        colorVolumeTeamElement.AddChild(INDEX + "4", "0x" + ColorVolumeTeam[4].ToHex().ToString("X8"));
+        colorVolumeTeamElement.AddChild(INDEX + "5", "0x" + ColorVolumeTeam[5].ToHex().ToString("X8"));
         e.Add(colorVolumeTeamElement);
         e.AddChild(nameof(ColorZombieSpawns), "0x" + ColorZombieSpawns.ToHex().ToString("X8"));
         e.AddChild(nameof(ColorNavNode), "0x" + ColorNavNode.ToHex().ToString("X8"));

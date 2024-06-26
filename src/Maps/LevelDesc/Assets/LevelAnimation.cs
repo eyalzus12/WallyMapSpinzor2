@@ -191,15 +191,6 @@ public class LevelAnimation : IDeserializable, ISerializable, IDrawable
         state_[this] = state;
     }
 
-    private static Transform CalculateBackgroundTransform(RenderContext context)
-    {
-        double backgroundX = context.BackgroundRect_X!.Value;
-        double backgroundY = context.BackgroundRect_Y!.Value;
-        double backgroundScaleX = context.BackgroundRect_W!.Value / context.CurrentBackground!.W;
-        double backgroundScaleY = context.BackgroundRect_H!.Value / context.CurrentBackground!.H;
-        return Transform.CreateFrom(x: backgroundX, y: backgroundY, scaleX: backgroundScaleX, scaleY: backgroundScaleY);
-    }
-
     internal class State
     {
         public bool Initialized = false;
