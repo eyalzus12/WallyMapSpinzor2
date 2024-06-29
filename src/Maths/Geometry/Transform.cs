@@ -46,12 +46,26 @@ public readonly record struct Transform(double ScaleX, double SkewX, double Skew
         t.SkewY * p.Item1 + t.ScaleY * p.Item2 + t.TranslateY
     );
 
-    public static Transform operator *(Transform t, double f) => new
-    (
+    public static Transform operator *(Transform t, double f) => new(
         t.ScaleX * f, t.SkewX * f,
         t.SkewY * f, t.ScaleY * f,
         t.TranslateX * f, t.TranslateY * f
     );
+    
+    public static Transform CreateInverse(Transform t)
+    {
+        double invDet = 1.0f / t.Determinant;
+
+        return new()
+        {
+            ScaleX = t.ScaleY * invDet,
+            SkewY = -t.SkewY * invDet,
+            SkewX = -t.SkewX * invDet,
+            ScaleY = t.ScaleX * invDet,
+            TranslateX = (t.SkewX * t.TranslateY - t.TranslateX * t.ScaleY) * invDet,
+            TranslateY = (t.TranslateX * t.SkewY - t.ScaleX * t.TranslateY) * invDet,
+        };
+    }
 
     public double Determinant => ScaleX * ScaleY - SkewX * SkewY;
 }
