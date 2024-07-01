@@ -10,11 +10,4 @@ public class DynamicCollision : AbstractDynamic<AbstractCollision>
         foreach (AbstractCollision c in Children)
             c.Parent = this;
     }
-
-    public override void DrawOn(ICanvas canvas, Transform trans, RenderConfig config, RenderContext context, RenderState state)
-    {
-        foreach (AbstractCollision c in Children)
-            c.CalculateCurve(X, Y);
-        base.DrawOn(canvas, trans, config, context, state);
-    }
 }
