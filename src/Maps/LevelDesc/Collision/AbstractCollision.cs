@@ -139,40 +139,27 @@ public abstract class AbstractCollision : IDeserializable, ISerializable, IDrawa
             e.SetAttributeValue("ColorFlag", ColorFlag.Value.ToString().ToLowerInvariant());
     }
 
-    private (double, double)[]? _curve = null;
-
-    public void CalculateCurve(double xOff, double yOff)
+    public (double, double)[] CalculateCurve()
     {
-        //no anchor
         if (AnchorX is null || AnchorY is null)
         {
-            _curve = null;
-            return;
+            return [(X1, Y1), (X2, Y2)];
         }
-
-        //already calculated anchor
-        if (_curve is not null)
-            return;
-
-        _curve = [(X1, Y1), .. BrawlhallaMath.CollisionQuad(X1, Y1, X2, Y2, AnchorX.Value - xOff, AnchorY.Value - yOff)];
+        double xOff = Parent?.X ?? 0;
+        double yOff = Parent?.Y ?? 0;
+        return [(X1, Y1), .. BrawlhallaMath.CollisionQuad(X1, Y1, X2, Y2, AnchorX.Value - xOff, AnchorY.Value - yOff)];
     }
 
     public virtual void DrawOn(ICanvas canvas, Transform trans, RenderConfig config, RenderContext context, RenderState state)
     {
         if (!config.ShowCollision) return;
 
-        if (AnchorX is not null && AnchorY is not null && _curve is null)
-            throw new InvalidOperationException("Collision has non null anchor, but cached curve is null. Make sure CalculateCurve is called.");
-        if ((AnchorX is null || AnchorY is null) && _curve is not null)
-            throw new InvalidOperationException("Collision has null anchor, but cached curve is non null. Make sure CalculateCurve is called.");
+        (double, double)[] anchorCurve = CalculateCurve();
 
-        //if no curve, make curve just one line
-        _curve ??= [(X1, Y1), (X2, Y2)];
-
-        for (int i = 0; i < _curve.Length - 1; ++i)
+        for (int i = 0; i < anchorCurve.Length - 1; ++i)
         {
-            (double prevX, double prevY) = _curve[i];
-            (double nextX, double nextY) = _curve[i + 1];
+            (double prevX, double prevY) = anchorCurve[i];
+            (double nextX, double nextY) = anchorCurve[i + 1];
             //draw current line
             if (Team == 0)
                 canvas.DrawLine(prevX, prevY, nextX, nextY, GetColor(config), trans, DrawPriorityEnum.DATA, this);
@@ -211,15 +198,12 @@ public abstract class AbstractCollision : IDeserializable, ISerializable, IDrawa
                 //We'll add this later if we need it
             }
         }
-
-        //mandate calling CalculateCurve
-        _curve = null;
     }
 
     public abstract Color GetColor(RenderConfig config);
 
     [Flags]
-    public enum CollisionTypeEnum
+    public enum CollisionTypeFlags
     {
         HARD = 1 << 0,
         SOFT = 1 << 1,
@@ -233,5 +217,5 @@ public abstract class AbstractCollision : IDeserializable, ISerializable, IDrawa
         LAVA = 1 << 9,
     }
 
-    public abstract CollisionTypeEnum CollisionType { get; }
+    public abstract CollisionTypeFlags CollisionType { get; }
 }
