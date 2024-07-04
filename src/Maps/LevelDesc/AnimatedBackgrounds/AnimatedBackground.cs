@@ -31,18 +31,18 @@ public class AnimatedBackground : IDeserializable, ISerializable, IDrawable
         Gfx = e.DeserializeChildOfType<Gfx>()!;
 
         string[]? position = e.GetElementValue("Position")?.Split(',', 2);
-        Position_X = Utils.ParseFloatOrNull(position?[0]) ?? 0;
-        Position_Y = Utils.ParseFloatOrNull(position?[1]) ?? 0;
+        Position_X = Utils.ParseDoubleOrNull(position?[0]) ?? 0;
+        Position_Y = Utils.ParseDoubleOrNull(position?[1]) ?? 0;
 
         string[]? skew = e.GetElementValue("Skew")?.Split(',', 2);
-        Skew_X = Utils.ParseFloatOrNull(skew?[0]) ?? 0;
-        Skew_Y = Utils.ParseFloatOrNull(skew?[1]) ?? 0;
+        Skew_X = Utils.ParseDoubleOrNull(skew?[0]) ?? 0;
+        Skew_Y = Utils.ParseDoubleOrNull(skew?[1]) ?? 0;
 
         string[]? scale = e.GetElementValue("Scale")?.Split(',', 2);
-        Scale_X = Utils.ParseFloatOrNull(scale?[0]) ?? 1;
-        Scale_Y = Utils.ParseFloatOrNull(scale?[1]) ?? 1;
+        Scale_X = Utils.ParseDoubleOrNull(scale?[0]) ?? 1;
+        Scale_Y = Utils.ParseDoubleOrNull(scale?[1]) ?? 1;
 
-        Rotation = Utils.ParseFloatOrNull(e.GetElementValue("Rotation")) ?? 0;
+        Rotation = Utils.ParseDoubleOrNull(e.GetElementValue("Rotation")) ?? 0;
 
         FrameOffset = Utils.ParseIntOrNull(e.GetElementValue("FrameOffset")) ?? 0;
 

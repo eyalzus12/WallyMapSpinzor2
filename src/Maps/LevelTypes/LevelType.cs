@@ -101,10 +101,10 @@ public class LevelType : IDeserializable, ISerializable
         AIStrictRecover = Utils.ParseBoolOrNull(e.GetElementValue("AIStrictRecover"));
         MidgroundTint = Utils.ParseUIntOrNull(e.GetElementValue("MidgroundTint"));
         MidgroundOffset = Utils.ParseUIntOrNull(e.GetElementValue("MidgroundOffset"));
-        MidgroundFraction = Utils.ParseFloatOrNull(e.GetElementValue("MidgroundFraction"));
+        MidgroundFraction = Utils.ParseDoubleOrNull(e.GetElementValue("MidgroundFraction"));
         BotTint = Utils.ParseUIntOrNull(e.GetElementValue("BotTint"));
         BotOffset = Utils.ParseUIntOrNull(e.GetElementValue("BotOffset"));
-        BotFraction = Utils.ParseFloatOrNull(e.GetElementValue("BotFraction"));
+        BotFraction = Utils.ParseDoubleOrNull(e.GetElementValue("BotFraction"));
         ShowPlatsDuringMove = Utils.ParseBoolOrNull(e.GetElementValue("ShowPlatsDuringMove"));
         NegateOverlaps = Utils.ParseBoolOrNull(e.GetElementValue("NegateOverlaps"));
         StartFrame = Utils.ParseIntOrNull(e.GetElementValue("StartFrame"));
@@ -112,8 +112,8 @@ public class LevelType : IDeserializable, ISerializable
         AllowItemSpawnOverlap = Utils.ParseBoolOrNull(e.GetElementValue("AllowItemSpawnOverlap"));
         ColorExclusionList = e.GetElementValue("ColorExclusionList")?.Split(',') ?? [];
         FixedWidth = Utils.ParseBoolOrNull(e.GetElementValue("FixedWidth"));
-        AIPanicLine = Utils.ParseFloatOrNull(e.GetElementValue("AIPanicLine"));
-        AIGroundLine = Utils.ParseFloatOrNull(e.GetElementValue("AIGroundLine"));
+        AIPanicLine = Utils.ParseDoubleOrNull(e.GetElementValue("AIPanicLine"));
+        AIGroundLine = Utils.ParseDoubleOrNull(e.GetElementValue("AIGroundLine"));
         ShadowTint = Utils.ParseIntOrNull(e.GetElementValue("ShadowTint"));
     }
 

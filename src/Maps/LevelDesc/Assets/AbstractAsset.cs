@@ -20,14 +20,14 @@ public abstract class AbstractAsset : ISerializable, IDeserializable, IDrawable
     public virtual void Deserialize(XElement e)
     {
         AssetName = e.GetAttributeOrNull("AssetName");
-        Rotation = e.GetFloatAttribute("Rotation", 0);
-        double scale = e.GetFloatAttribute("Scale", 1);
-        ScaleX = e.GetFloatAttribute("ScaleX", scale);
-        ScaleY = e.GetFloatAttribute("ScaleY", scale);
-        W = e.GetFloatAttributeOrNull("W");
-        H = e.GetFloatAttributeOrNull("H");
-        X = e.GetFloatAttribute("X", 0);
-        Y = e.GetFloatAttribute("Y", 0);
+        Rotation = e.GetDoubleAttribute("Rotation", 0);
+        double scale = e.GetDoubleAttribute("Scale", 1);
+        ScaleX = e.GetDoubleAttribute("ScaleX", scale);
+        ScaleY = e.GetDoubleAttribute("ScaleY", scale);
+        W = e.GetDoubleAttributeOrNull("W");
+        H = e.GetDoubleAttributeOrNull("H");
+        X = e.GetDoubleAttribute("X", 0);
+        Y = e.GetDoubleAttribute("Y", 0);
     }
 
     public virtual void Serialize(XElement e)

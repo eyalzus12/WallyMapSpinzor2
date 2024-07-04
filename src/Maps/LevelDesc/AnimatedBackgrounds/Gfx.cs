@@ -61,8 +61,8 @@ public class Gfx : IDeserializable, ISerializable
     {
         AnimFile = e.GetElementValue("AnimFile") ?? "";
         AnimClass = e.GetElementValue("AnimClass") ?? "a__Animation";
-        AnimScale = Utils.ParseFloatOrNull(e.GetElementValue("AnimScale")) ?? 1;
-        MoveAnimSpeed = Utils.ParseFloatOrNull(e.GetElementValue("MoveAnimSpeed")) ?? 1;
+        AnimScale = Utils.ParseDoubleOrNull(e.GetElementValue("AnimScale")) ?? 1;
+        MoveAnimSpeed = Utils.ParseDoubleOrNull(e.GetElementValue("MoveAnimSpeed")) ?? 1;
         BaseAnim = e.GetElementValue("BaseAnim") ?? "Ready";
         RunAnim = e.GetElementValue("RunAnim") ?? "Run";
         FlipAnim = Utils.ParseBoolOrNull(e.GetElementValue("FlipAnim")) ?? false;

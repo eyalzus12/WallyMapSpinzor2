@@ -49,33 +49,33 @@ public abstract class AbstractCollision : IDeserializable, ISerializable, IDrawa
         AnchorX = AnchorY = null;
         if (e.HasAttribute("AnchorX") && e.HasAttribute("AnchorY"))
         {
-            AnchorX = e.GetFloatAttribute("AnchorX");
-            AnchorY = e.GetFloatAttribute("AnchorY");
+            AnchorX = e.GetDoubleAttribute("AnchorX");
+            AnchorY = e.GetDoubleAttribute("AnchorY");
         }
 
-        NormalX = e.GetFloatAttribute("NormalX", 0);
-        NormalY = e.GetFloatAttribute("NormalY", 0);
+        NormalX = e.GetDoubleAttribute("NormalX", 0);
+        NormalY = e.GetDoubleAttribute("NormalY", 0);
 
         X2 = X1 = 0;
         if (e.HasAttribute("X"))
         {
-            X2 = X1 = e.GetFloatAttribute("X");
+            X2 = X1 = e.GetDoubleAttribute("X");
         }
         else if (e.HasAttribute("X1") && e.HasAttribute("X2"))
         {
-            X1 = e.GetFloatAttribute("X1");
-            X2 = e.GetFloatAttribute("X2");
+            X1 = e.GetDoubleAttribute("X1");
+            X2 = e.GetDoubleAttribute("X2");
         }
 
         Y2 = Y1 = 0;
         if (e.HasAttribute("Y"))
         {
-            Y2 = Y1 = e.GetFloatAttribute("Y");
+            Y2 = Y1 = e.GetDoubleAttribute("Y");
         }
         else if (e.HasAttribute("Y1") && e.HasAttribute("Y2"))
         {
-            Y1 = e.GetFloatAttribute("Y1");
-            Y2 = e.GetFloatAttribute("Y2");
+            Y1 = e.GetDoubleAttribute("Y1");
+            Y2 = e.GetDoubleAttribute("Y2");
         }
 
         Flag =

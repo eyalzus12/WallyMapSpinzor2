@@ -20,9 +20,9 @@ public abstract class AbstractPressurePlateCollision : AbstractCollision
     public override void Deserialize(XElement e)
     {
         base.Deserialize(e);
-        AnimOffsetX = e.GetFloatAttribute("AnimOffsetX", 0);
-        AnimOffsetY = e.GetFloatAttribute("AnimOffsetY", 0);
-        AnimRotation = e.GetFloatAttribute("AnimRotation");
+        AnimOffsetX = e.GetDoubleAttribute("AnimOffsetX", 0);
+        AnimOffsetY = e.GetDoubleAttribute("AnimOffsetY", 0);
+        AnimRotation = e.GetDoubleAttribute("AnimRotation");
         AssetName = e.GetAttribute("AssetName");
         Cooldown = e.GetIntAttribute("Cooldown", 3000);
         FaceLeft = e.GetBoolAttribute("FaceLeft", false);

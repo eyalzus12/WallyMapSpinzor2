@@ -15,10 +15,10 @@ public abstract class AbstractVolume : IDeserializable, ISerializable, IDrawable
     public virtual void Deserialize(XElement e)
     {
         // For some reason Horde stores one of those values as a float, despite the game converting it to an int.
-        X = (int)e.GetFloatAttribute("X");
-        Y = (int)e.GetFloatAttribute("Y");
-        W = (int)e.GetFloatAttribute("W");
-        H = (int)e.GetFloatAttribute("H");
+        X = (int)e.GetDoubleAttribute("X");
+        Y = (int)e.GetDoubleAttribute("Y");
+        W = (int)e.GetDoubleAttribute("W");
+        H = (int)e.GetDoubleAttribute("H");
         Team = e.GetIntAttribute("Team");
         ID = e.GetIntAttribute("ID", 0);
     }

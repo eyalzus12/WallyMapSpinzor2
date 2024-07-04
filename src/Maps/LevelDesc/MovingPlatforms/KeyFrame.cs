@@ -22,14 +22,14 @@ public class KeyFrame : AbstractKeyFrame
     {
         FrameNum = e.GetIntAttribute("FrameNum", 0);
         //Unlike other rotations, this one doesn't get translated to radians.
-        Rotation = e.GetFloatAttribute("Rotation", 0);
-        CenterX = e.GetFloatAttributeOrNull("CenterX");
-        CenterY = e.GetFloatAttributeOrNull("CenterY");
+        Rotation = e.GetDoubleAttribute("Rotation", 0);
+        CenterX = e.GetDoubleAttributeOrNull("CenterX");
+        CenterY = e.GetDoubleAttributeOrNull("CenterY");
         EaseIn = e.GetBoolAttributeOrNull("EaseIn");
         EaseOut = e.GetBoolAttributeOrNull("EaseOut");
         EasePower = e.GetIntAttributeOrNull("EasePower");
-        X = e.GetFloatAttribute("X", 0);
-        Y = e.GetFloatAttribute("Y", 0);
+        X = e.GetDoubleAttribute("X", 0);
+        Y = e.GetDoubleAttribute("Y", 0);
     }
 
     public override void Serialize(XElement e)

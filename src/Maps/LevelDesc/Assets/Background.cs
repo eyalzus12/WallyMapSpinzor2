@@ -22,8 +22,8 @@ public class Background : IDeserializable, ISerializable, IDrawable
         AnimatedAssetName = e.GetAttributeOrNull("AnimatedAssetName");
         HasSkulls = e.GetBoolAttribute("HasSkulls", false);
         Theme = e.GetAttributeOrNull("Theme")?.Split(',');
-        H = e.GetFloatAttribute("H");
-        W = e.GetFloatAttribute("W");
+        H = e.GetDoubleAttribute("H");
+        W = e.GetDoubleAttribute("W");
     }
 
     public void Serialize(XElement e)

@@ -15,9 +15,9 @@ public class WaveData : IDeserializable, ISerializable, IDrawable
     public void Deserialize(XElement e)
     {
         ID = e.GetIntAttribute("ID", 0);
-        Speed = e.GetFloatAttributeOrNull("Speed");
-        Speed3 = e.GetFloatAttributeOrNull("Speed3");
-        Speed4 = e.GetFloatAttributeOrNull("Speed4");
+        Speed = e.GetDoubleAttributeOrNull("Speed");
+        Speed3 = e.GetDoubleAttributeOrNull("Speed3");
+        Speed4 = e.GetDoubleAttributeOrNull("Speed4");
         LoopIdx = e.GetIntAttribute("LoopIdx", 0);
         CustomPaths = e.DeserializeChildrenOfType<CustomPath>();
         Groups = e.DeserializeChildrenOfType<Group>();

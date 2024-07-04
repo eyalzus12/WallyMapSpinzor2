@@ -16,8 +16,8 @@ public abstract class AbstractDynamic<T> : ISerializable, IDeserializable, IDraw
     public void Deserialize(XElement e)
     {
         PlatID = e.GetAttribute("PlatID");
-        X = e.GetFloatAttribute("X");
-        Y = e.GetFloatAttribute("Y");
+        X = e.GetDoubleAttribute("X");
+        Y = e.GetDoubleAttribute("Y");
         DeserializeChildren(e);
     }
 

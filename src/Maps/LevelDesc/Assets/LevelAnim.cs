@@ -34,8 +34,8 @@ public class LevelAnim : IDeserializable, ISerializable, IDrawable
     {
         InstanceName = e.GetAttribute("InstanceName");
         AssetName = e.GetAttribute("AssetName");
-        X = e.GetFloatAttribute("X");
-        Y = e.GetFloatAttribute("Y");
+        X = e.GetDoubleAttribute("X");
+        Y = e.GetDoubleAttribute("Y");
     }
 
     public void Serialize(XElement e)

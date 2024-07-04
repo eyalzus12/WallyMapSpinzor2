@@ -9,8 +9,8 @@ public class Point : IDeserializable, ISerializable, IDrawable
 
     public void Deserialize(XElement e)
     {
-        X = e.GetFloatAttribute("X");
-        Y = e.GetFloatAttribute("Y");
+        X = e.GetDoubleAttribute("X");
+        Y = e.GetDoubleAttribute("Y");
     }
 
     public void Serialize(XElement e)

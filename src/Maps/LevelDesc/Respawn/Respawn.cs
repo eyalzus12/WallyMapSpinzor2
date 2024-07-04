@@ -15,8 +15,8 @@ public class Respawn : IDeserializable, ISerializable, IDrawable
     {
         Initial = e.GetBoolAttribute("Initial", false);
         ExpandedInit = e.GetBoolAttribute("ExpandedInit", false);
-        X = e.GetFloatAttribute("X", 0);
-        Y = e.GetFloatAttribute("Y", 0);
+        X = e.GetDoubleAttribute("X", 0);
+        Y = e.GetDoubleAttribute("Y", 0);
     }
 
     public void Serialize(XElement e)

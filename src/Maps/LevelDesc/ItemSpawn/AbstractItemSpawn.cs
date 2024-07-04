@@ -13,10 +13,10 @@ public abstract class AbstractItemSpawn : IDeserializable, ISerializable, IDrawa
 
     public void Deserialize(XElement e)
     {
-        H = e.GetFloatAttribute("H", DefaultH);
-        W = e.GetFloatAttribute("W", DefaultW);
-        X = e.GetFloatAttribute("X", DefaultX);
-        Y = e.GetFloatAttribute("Y", DefaultY);
+        H = e.GetDoubleAttribute("H", DefaultH);
+        W = e.GetDoubleAttribute("W", DefaultW);
+        X = e.GetDoubleAttribute("X", DefaultX);
+        Y = e.GetDoubleAttribute("Y", DefaultY);
     }
 
     public void Serialize(XElement e)

@@ -185,7 +185,7 @@ public class RenderConfig : IDeserializable, ISerializable
     public void Deserialize(XElement e)
     {
         RenderConfig @default = Default;
-        RenderSpeed = Utils.ParseFloatOrNull(e.GetElementValue(nameof(RenderSpeed))) ?? @default.RenderSpeed;
+        RenderSpeed = Utils.ParseDoubleOrNull(e.GetElementValue(nameof(RenderSpeed))) ?? @default.RenderSpeed;
         ScoringType = Utils.ParseEnumOrNull<ScoringTypeEnum>(e.GetElementValue(nameof(ScoringType))) ?? @default.ScoringType;
         Theme = Utils.ParseEnumOrNull<ThemeEnum>(e.GetElementValue(nameof(Theme))) ?? @default.Theme;
         Hotkey = Utils.ParseEnumOrNull<HotkeyEnum>(e.GetElementValue(nameof(Hotkey))) ?? @default.Hotkey;
@@ -207,9 +207,9 @@ public class RenderConfig : IDeserializable, ISerializable
         ];
         BombsketballBombTimerFrames =
         [
-            Utils.ParseFloatOrNull(e.Element(nameof(BombsketballBombTimerFrames))?.GetElementValue(INDEX + "0")) ?? @default.BombsketballBombTimerFrames[0],
-            Utils.ParseFloatOrNull(e.Element(nameof(BombsketballBombTimerFrames))?.GetElementValue(INDEX + "1")) ?? @default.BombsketballBombTimerFrames[1],
-            Utils.ParseFloatOrNull(e.Element(nameof(BombsketballBombTimerFrames))?.GetElementValue(INDEX + "2")) ?? @default.BombsketballBombTimerFrames[2],
+            Utils.ParseDoubleOrNull(e.Element(nameof(BombsketballBombTimerFrames))?.GetElementValue(INDEX + "0")) ?? @default.BombsketballBombTimerFrames[0],
+            Utils.ParseDoubleOrNull(e.Element(nameof(BombsketballBombTimerFrames))?.GetElementValue(INDEX + "1")) ?? @default.BombsketballBombTimerFrames[1],
+            Utils.ParseDoubleOrNull(e.Element(nameof(BombsketballBombTimerFrames))?.GetElementValue(INDEX + "2")) ?? @default.BombsketballBombTimerFrames[2],
         ];
         ShowHordeDoors = Utils.ParseBoolOrNull(e.GetElementValue(nameof(ShowHordeDoors))) ?? @default.ShowHordeDoors;
         DamageHordeDoors =
@@ -237,19 +237,19 @@ public class RenderConfig : IDeserializable, ISerializable
         ShowRespawn = Utils.ParseBoolOrNull(e.GetElementValue(nameof(ShowRespawn))) ?? @default.ShowRespawn;
         ShowItemSpawn = Utils.ParseBoolOrNull(e.GetElementValue(nameof(ShowItemSpawn))) ?? @default.ShowItemSpawn;
         ShowNavNode = Utils.ParseBoolOrNull(e.GetElementValue(nameof(ShowNavNode))) ?? @default.ShowNavNode;
-        RadiusRespawn = Utils.ParseFloatOrNull(e.GetElementValue(nameof(RadiusRespawn))) ?? @default.RadiusRespawn;
-        RadiusZombieSpawn = Utils.ParseFloatOrNull(e.GetElementValue(nameof(RadiusZombieSpawn))) ?? @default.RadiusZombieSpawn;
-        RadiusNavNode = Utils.ParseFloatOrNull(e.GetElementValue(nameof(RadiusNavNode))) ?? @default.RadiusNavNode;
-        RadiusHordePathPoint = Utils.ParseFloatOrNull(e.GetElementValue(nameof(RadiusHordePathPoint))) ?? @default.RadiusHordePathPoint;
-        RadiusFireOffsetLocation = Utils.ParseFloatOrNull(e.GetElementValue(nameof(RadiusFireOffsetLocation))) ?? @default.RadiusFireOffsetLocation;
-        LengthCollisionNormal = Utils.ParseFloatOrNull(e.GetElementValue(nameof(LengthCollisionNormal))) ?? @default.LengthCollisionNormal;
-        LengthFireDirectionArrow = Utils.ParseFloatOrNull(e.GetElementValue(nameof(LengthFireDirectionArrow))) ?? @default.LengthFireDirectionArrow;
-        OffsetNavLineArrowSide = Utils.ParseFloatOrNull(e.GetElementValue(nameof(OffsetNavLineArrowSide))) ?? @default.OffsetNavLineArrowSide;
-        OffsetNavLineArrowBack = Utils.ParseFloatOrNull(e.GetElementValue(nameof(OffsetNavLineArrowBack))) ?? @default.OffsetNavLineArrowBack;
-        OffsetHordePathArrowSide = Utils.ParseFloatOrNull(e.GetElementValue(nameof(OffsetHordePathArrowSide))) ?? @default.OffsetHordePathArrowSide;
-        OffsetHordePathArrowBack = Utils.ParseFloatOrNull(e.GetElementValue(nameof(OffsetHordePathArrowBack))) ?? @default.OffsetHordePathArrowBack;
-        OffsetFireDirectionArrowSide = Utils.ParseFloatOrNull(e.GetElementValue(nameof(OffsetFireDirectionArrowSide))) ?? @default.OffsetFireDirectionArrowSide;
-        OffsetFireDirectionArrowBack = Utils.ParseFloatOrNull(e.GetElementValue(nameof(OffsetFireDirectionArrowBack))) ?? @default.OffsetFireDirectionArrowBack;
+        RadiusRespawn = Utils.ParseDoubleOrNull(e.GetElementValue(nameof(RadiusRespawn))) ?? @default.RadiusRespawn;
+        RadiusZombieSpawn = Utils.ParseDoubleOrNull(e.GetElementValue(nameof(RadiusZombieSpawn))) ?? @default.RadiusZombieSpawn;
+        RadiusNavNode = Utils.ParseDoubleOrNull(e.GetElementValue(nameof(RadiusNavNode))) ?? @default.RadiusNavNode;
+        RadiusHordePathPoint = Utils.ParseDoubleOrNull(e.GetElementValue(nameof(RadiusHordePathPoint))) ?? @default.RadiusHordePathPoint;
+        RadiusFireOffsetLocation = Utils.ParseDoubleOrNull(e.GetElementValue(nameof(RadiusFireOffsetLocation))) ?? @default.RadiusFireOffsetLocation;
+        LengthCollisionNormal = Utils.ParseDoubleOrNull(e.GetElementValue(nameof(LengthCollisionNormal))) ?? @default.LengthCollisionNormal;
+        LengthFireDirectionArrow = Utils.ParseDoubleOrNull(e.GetElementValue(nameof(LengthFireDirectionArrow))) ?? @default.LengthFireDirectionArrow;
+        OffsetNavLineArrowSide = Utils.ParseDoubleOrNull(e.GetElementValue(nameof(OffsetNavLineArrowSide))) ?? @default.OffsetNavLineArrowSide;
+        OffsetNavLineArrowBack = Utils.ParseDoubleOrNull(e.GetElementValue(nameof(OffsetNavLineArrowBack))) ?? @default.OffsetNavLineArrowBack;
+        OffsetHordePathArrowSide = Utils.ParseDoubleOrNull(e.GetElementValue(nameof(OffsetHordePathArrowSide))) ?? @default.OffsetHordePathArrowSide;
+        OffsetHordePathArrowBack = Utils.ParseDoubleOrNull(e.GetElementValue(nameof(OffsetHordePathArrowBack))) ?? @default.OffsetHordePathArrowBack;
+        OffsetFireDirectionArrowSide = Utils.ParseDoubleOrNull(e.GetElementValue(nameof(OffsetFireDirectionArrowSide))) ?? @default.OffsetFireDirectionArrowSide;
+        OffsetFireDirectionArrowBack = Utils.ParseDoubleOrNull(e.GetElementValue(nameof(OffsetFireDirectionArrowBack))) ?? @default.OffsetFireDirectionArrowBack;
         ColorCameraBounds = Color.FromHex(Utils.ParseUIntOrNull(e.GetElementValue(nameof(ColorCameraBounds))) ?? @default.ColorCameraBounds.ToHex());
         ColorKillBounds = Color.FromHex(Utils.ParseUIntOrNull(e.GetElementValue(nameof(ColorKillBounds))) ?? @default.ColorKillBounds.ToHex());
         ColorSpawnBotBounds = Color.FromHex(Utils.ParseUIntOrNull(e.GetElementValue(nameof(ColorSpawnBotBounds))) ?? @default.ColorSpawnBotBounds.ToHex());

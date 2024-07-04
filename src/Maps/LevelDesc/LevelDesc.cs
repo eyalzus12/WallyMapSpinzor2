@@ -42,7 +42,7 @@ public class LevelDesc : IDeserializable, ISerializable, IDrawable
         AssetDir = e.GetAttribute("AssetDir");
         LevelName = e.GetAttribute("LevelName");
         NumFrames = e.GetIntAttribute("NumFrames", 0);
-        SlowMult = e.GetFloatAttribute("SlowMult", 1);
+        SlowMult = e.GetDoubleAttribute("SlowMult", 1);
 
         CameraBounds = e.DeserializeChildOfType<CameraBounds>()!;
         SpawnBotBounds = e.DeserializeChildOfType<SpawnBotBounds>()!;

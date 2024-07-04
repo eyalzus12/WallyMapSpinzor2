@@ -21,11 +21,11 @@ public class Animation : IDeserializable, ISerializable
     public void Deserialize(XElement e)
     {
         NumFrames = e.GetIntAttributeOrNull("NumFrames");
-        SlowMult = e.GetFloatAttributeOrNull("SlowMult");
+        SlowMult = e.GetDoubleAttributeOrNull("SlowMult");
         if (e.HasAttribute("CenterX") || e.HasAttribute("CenterY"))
         {
-            CenterX = e.GetFloatAttribute("CenterX", 0);
-            CenterY = e.GetFloatAttribute("CenterY", 0);
+            CenterX = e.GetDoubleAttribute("CenterX", 0);
+            CenterY = e.GetDoubleAttribute("CenterY", 0);
         }
         EaseIn = e.GetBoolAttribute("EaseIn", false);
         EaseOut = e.GetBoolAttribute("EaseOut", false);

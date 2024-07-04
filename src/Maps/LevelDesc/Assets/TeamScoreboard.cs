@@ -22,9 +22,9 @@ public class TeamScoreboard : IDeserializable, ISerializable, IDrawable
         Y = e.GetIntAttribute("Y", 0);
         DoubleDigitsOnesX = e.GetIntAttribute("DoubleDigitsOnesX", 0);
         DoubleDigitsTensX = e.GetIntAttribute("DoubleDigitsTensX", 0);
-        DoubleDigitsY = e.GetFloatAttribute("DoubleDigitsY", 0);
+        DoubleDigitsY = e.GetDoubleAttribute("DoubleDigitsY", 0);
         //yes, this actually defaults to 0
-        DoubleDigitsScale = e.GetFloatAttribute("DoubleDigitsScale", 0);
+        DoubleDigitsScale = e.GetDoubleAttribute("DoubleDigitsScale", 0);
         RedDigitFont = e.GetAttribute("RedDigitFont");
         BlueDigitFont = e.GetAttribute("BlueDigitFont");
     }

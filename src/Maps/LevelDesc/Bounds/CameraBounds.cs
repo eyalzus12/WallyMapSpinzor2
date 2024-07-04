@@ -10,10 +10,10 @@ public class CameraBounds : IDeserializable, ISerializable, IDrawable
     public double Y { get; set; }
     public void Deserialize(XElement e)
     {
-        H = e.GetFloatAttribute("H", 0);
-        W = e.GetFloatAttribute("W", 0);
-        X = e.GetFloatAttribute("X", 0);
-        Y = e.GetFloatAttribute("Y", 0);
+        H = e.GetDoubleAttribute("H", 0);
+        W = e.GetDoubleAttribute("W", 0);
+        X = e.GetDoubleAttribute("X", 0);
+        Y = e.GetDoubleAttribute("Y", 0);
     }
 
     public void Serialize(XElement e)
