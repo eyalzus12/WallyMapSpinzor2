@@ -55,6 +55,7 @@ public class LevelType : IDeserializable, ISerializable
     public double? BotFraction { get; set; } // defaults to 0.5
 
     public bool? ShowPlatsDuringMove { get; set; }
+    public bool? ShowLavaLevelDuringMove { get; set; }
     public bool? NegateOverlaps { get; set; }
     public int? StartFrame { get; set; }
     public bool? FixedCamera { get; set; }
@@ -106,6 +107,7 @@ public class LevelType : IDeserializable, ISerializable
         BotOffset = Utils.ParseUIntOrNull(e.GetElementValue("BotOffset"));
         BotFraction = Utils.ParseDoubleOrNull(e.GetElementValue("BotFraction"));
         ShowPlatsDuringMove = Utils.ParseBoolOrNull(e.GetElementValue("ShowPlatsDuringMove"));
+        ShowLavaLevelDuringMove = Utils.ParseBoolOrNull(e.GetElementValue("ShowLavaLevelDuringMove"));
         NegateOverlaps = Utils.ParseBoolOrNull(e.GetElementValue("NegateOverlaps"));
         StartFrame = Utils.ParseIntOrNull(e.GetElementValue("StartFrame"));
         FixedCamera = Utils.ParseBoolOrNull(e.GetElementValue("FixedCamera"));
@@ -163,6 +165,9 @@ public class LevelType : IDeserializable, ISerializable
         e.AddIfNotNull("BotFraction", BotFraction);
 
         e.AddIfNotNull("ShowPlatsDuringMove", ShowPlatsDuringMove);
+        // if ShowPlatsDuringMove is true, ShowLavaLevelDuringMove is redundant
+        if(ShowPlatsDuringMove == false)
+            e.AddIfNotNull("ShowLavaLevelDuringMove", ShowLavaLevelDuringMove);
         e.AddIfNotNull("NegateOverlaps", NegateOverlaps);
         e.AddIfNotNull("StartFrame", StartFrame);
         e.AddIfNotNull("FixedCamera", FixedCamera);
