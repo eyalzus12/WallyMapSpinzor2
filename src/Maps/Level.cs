@@ -13,11 +13,9 @@ public class Level : IDeserializable, ISerializable, IDrawable
     public HashSet<string> Playlists { get; set; }
 
     public Level(LevelDesc ld, LevelType? lt, HashSet<string> playlists) =>
-        (Desc, Type, Playlists) = lt is null 
-            ? (ld, lt, playlists)
-            : ld.LevelName == lt.LevelName
-                ? (ld, lt, playlists)
-                : throw new ArgumentException("LevelName's of given LevelDesc and LevelType don't match");
+        (Desc, Type, Playlists) = lt is not null && ld.LevelName != lt.LevelName
+            ? throw new ArgumentException("LevelName's of given LevelDesc and LevelType don't match")
+            : (ld, lt, playlists);
 
     public Level(LevelDesc ld, LevelTypes lt, LevelSetTypes lst)
     {
