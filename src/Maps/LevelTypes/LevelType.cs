@@ -166,7 +166,7 @@ public class LevelType : IDeserializable, ISerializable
 
         e.AddIfNotNull("ShowPlatsDuringMove", ShowPlatsDuringMove);
         // if ShowPlatsDuringMove is true, ShowLavaLevelDuringMove is redundant
-        if(ShowPlatsDuringMove == false)
+        if (ShowPlatsDuringMove != true)
             e.AddIfNotNull("ShowLavaLevelDuringMove", ShowLavaLevelDuringMove);
         e.AddIfNotNull("NegateOverlaps", NegateOverlaps);
         e.AddIfNotNull("StartFrame", StartFrame);
