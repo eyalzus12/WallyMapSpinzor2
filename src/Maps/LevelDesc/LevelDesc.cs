@@ -107,8 +107,11 @@ public class LevelDesc : IDeserializable, ISerializable, IDrawable
             b.UpdateBackground(context, config);
         context.PlatIDDynamicOffset.Clear();
         context.PlatIDMovingPlatformOffset.Clear();
-        foreach (AbstractAsset a in Assets) if (a is MovingPlatform mp)
-                mp.StoreMovingPlatformOffset(context, config.Time);
+        foreach (MovingPlatform mp in Assets.OfType<MovingPlatform>())
+            mp.StoreMovingPlatformOffset(context, config.Time);
+        context.DynamicCollisionPlatIDOwner.Clear();
+        foreach (DynamicCollision dc in DynamicCollisions)
+            dc.ClaimPlatIDOwnership(context);
         context.NavIDDictionary.Clear();
         foreach (NavNode n in NavNodes)
             n.RegisterNavNode(context);

@@ -17,6 +17,12 @@ public class RenderContext
 
     public Dictionary<string, (double, double)> PlatIDDynamicOffset { get; set; } = [];
     public Dictionary<string, (double, double)> PlatIDMovingPlatformOffset { get; set; } = [];
+    /*
+    DynamicCollision (and no other dynamics) have a "bug",
+    where only the last DynamicCollision will actually get offset by the moving platform.
+    This emulates that behavior.
+    */
+    public Dictionary<string, DynamicCollision> DynamicCollisionPlatIDOwner { get; set; } = [];
 
     public Dictionary<int, (double, double)> NavIDDictionary { get; set; } = [];
 }

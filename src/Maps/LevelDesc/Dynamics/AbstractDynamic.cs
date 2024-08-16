@@ -29,13 +29,14 @@ public abstract class AbstractDynamic<T> : ISerializable, IDeserializable, IDraw
         e.AddManySerialized(Children);
     }
 
+    public virtual (double, double) GetOffset(RenderContext context) =>
+        context.PlatIDDynamicOffset.TryGetValue(PlatID, out (double, double) dynOffset)
+            ? dynOffset
+            : (0, 0);
+
     public virtual void DrawOn(ICanvas canvas, Transform trans, RenderConfig config, RenderContext context, RenderState state)
     {
-        if (context.PlatIDDynamicOffset is null)
-            throw new InvalidOperationException($"Plat ID dictionary was null when attempting to draw {GetType().Name}");
-        if (!context.PlatIDDynamicOffset.TryGetValue(PlatID, out (double, double) dynOffset))
-            throw new InvalidOperationException($"Plat ID dictionary did not contain plat id {PlatID} when attempting to draw {GetType().Name}. Make sure to call StoreOffset on all MovingPlatforms.");
-        (double dynX, double dynY) = dynOffset;
+        (double dynX, double dynY) = GetOffset(context);
         Transform childTrans = trans * Transform.CreateTranslate(X + dynX, Y + dynY);
         foreach (T child in Children)
             child.DrawOn(canvas, childTrans, config, context, state);
