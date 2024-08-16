@@ -77,7 +77,10 @@ public abstract class AbstractPressurePlateCollision : AbstractCollision
 
         if (config.ShowAssets)
         {
-            (double platformX, double platformY) = (PlatID is null) ? (0, 0) : context.PlatIDMovingPlatformOffset[PlatID];
+            (double platformX, double platformY) = PlatID is not null && context.PlatIDMovingPlatformOffset.TryGetValue(PlatID, out (double, double) platOffset)
+                ? platOffset
+                : (0, 0);
+
             double assetX = platformX + AnimOffsetX;
             double assetY = platformY + AnimOffsetY;
             Transform spriteTrans = Transform.CreateFrom(x: assetX, y: assetY, rot: AnimRotation * Math.PI / 180);
