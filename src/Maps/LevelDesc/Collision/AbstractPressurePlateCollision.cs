@@ -77,9 +77,10 @@ public abstract class AbstractPressurePlateCollision : AbstractCollision
 
         if (config.ShowAssets)
         {
-            if (PlatID is not null && !context.PlatIDMovingPlatformOffset.ContainsKey(PlatID))
-                throw new InvalidOperationException($"Plat ID dictionary did not contain plat id {PlatID} when attempting to draw pressure plate. Make sure to call {nameof(MovingPlatform.StoreMovingPlatformOffset)}.");
-            (double platformX, double platformY) = (PlatID is null) ? (0, 0) : context.PlatIDMovingPlatformOffset[PlatID];
+            (double platformX, double platformY) = PlatID is not null && context.PlatIDMovingPlatformOffset.TryGetValue(PlatID, out (double, double) platOffset)
+                ? platOffset
+                : (0, 0);
+
             double assetX = platformX + AnimOffsetX;
             double assetY = platformY + AnimOffsetY;
             Transform spriteTrans = Transform.CreateFrom(x: assetX, y: assetY, rot: AnimRotation * Math.PI / 180);
