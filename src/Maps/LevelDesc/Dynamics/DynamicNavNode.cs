@@ -13,7 +13,7 @@ public class DynamicNavNode : AbstractDynamic<NavNode>
 
     public void RegisterNavNodes(RenderContext context)
     {
-        (double dynX, double dynY) = context.PlatIDDynamicOffset[PlatID];
+        (double dynX, double dynY) = GetOffset(context);
         foreach (NavNode n in Children)
             n.RegisterNavNode(context, X + dynX, Y + dynY);
     }
