@@ -12,6 +12,9 @@ public class Level : IDeserializable, ISerializable, IDrawable
     public LevelType? Type { get; set; }
     public HashSet<string> Playlists { get; set; }
 
+    // this exists to be able to use Deserialize<T>
+    public Level() { Desc = null!; Playlists = []; }
+
     public Level(LevelDesc ld, LevelType? lt, HashSet<string> playlists) =>
         (Desc, Type, Playlists) = lt is not null && ld.LevelName != lt.LevelName
             ? throw new ArgumentException("LevelName's of given LevelDesc and LevelType don't match")
