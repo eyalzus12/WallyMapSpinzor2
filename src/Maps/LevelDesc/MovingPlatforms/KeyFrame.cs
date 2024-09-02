@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Xml.Linq;
 
@@ -21,7 +20,7 @@ public class KeyFrame : AbstractKeyFrame
     public override void Deserialize(XElement e)
     {
         FrameNum = e.GetIntAttribute("FrameNum", 0);
-        //Unlike other rotations, this one doesn't get translated to radians.
+        //Unlike other rotations, this one doesn't get translated to radians until it's used.
         Rotation = e.GetDoubleAttribute("Rotation", 0);
         CenterX = e.GetDoubleAttributeOrNull("CenterX");
         CenterY = e.GetDoubleAttributeOrNull("CenterY");

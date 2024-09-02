@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
@@ -138,12 +139,8 @@ public class LevelAnimation : IDeserializable, ISerializable, IDrawable
         // needs a while loop because high speeds can make the global time overshoot
         while (forcePlayNew || config.Time >= state.NextAnimationStartTime)
         {
-            if (PlatID is not null && !context.PlatIDMovingPlatformOffset.ContainsKey(PlatID))
-                throw new InvalidOperationException($"Plat ID dictionary did not contain plat id {PlatID} when attempting to draw level animation. Make sure to call {nameof(MovingPlatform.StoreMovingPlatformOffset)}.");
-            (double platformX, double platformY) = (PlatID is null) ? (0, 0) : context.PlatIDMovingPlatformOffset[PlatID];
-
-            double positionX = platformX + PositionX + 2 * random.NextF() * RandX - RandX;
-            double positionY = platformY + PositionY + 2 * random.NextF() * RandY - RandY;
+            double positionX = PositionX + 2 * random.NextF() * RandX - RandX;
+            double positionY = PositionY + 2 * random.NextF() * RandY - RandY;
             int animIndex = (int)Math.Floor(AnimationName.Length * random.NextF());
             string anim = AnimationName[animIndex];
 
@@ -184,8 +181,14 @@ public class LevelAnimation : IDeserializable, ISerializable, IDrawable
 
         if (state.Gfx is not null)
         {
+            Transform platTrans = PlatID is null
+                ? Transform.IDENTITY
+                : context.PlatIDMovingPlatformTransform.GetValueOrDefault(PlatID, Transform.IDENTITY);
+            // LevelAnimation is not affected by keyframe Rotation
+            platTrans = Transform.CreateTranslate(platTrans.TranslateX, platTrans.TranslateY);
+
             int frame = LevelDesc.GET_ANIM_FRAME(config.Time - state.AnimationStartTime);
-            canvas.DrawAnim(state.Gfx, "Ready", frame, trans * state.Trans, state.Layer, this, loopLimit: LoopIterations != 0 ? LoopIterations + 1 : 1);
+            canvas.DrawAnim(state.Gfx, "Ready", frame, trans * state.Trans * platTrans, state.Layer, this, loopLimit: LoopIterations != 0 ? LoopIterations + 1 : 1);
         }
 
         state_[this] = state;

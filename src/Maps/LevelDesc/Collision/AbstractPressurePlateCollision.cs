@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 
@@ -77,14 +78,12 @@ public abstract class AbstractPressurePlateCollision : AbstractCollision
 
         if (config.ShowAssets)
         {
-            (double platformX, double platformY) = PlatID is not null && context.PlatIDMovingPlatformOffset.TryGetValue(PlatID, out (double, double) platOffset)
-                ? platOffset
-                : (0, 0);
+            Transform platTrans = PlatID is not null
+                ? context.PlatIDMovingPlatformTransform.GetValueOrDefault(PlatID, Transform.IDENTITY)
+                : Transform.IDENTITY;
 
-            double assetX = platformX + AnimOffsetX;
-            double assetY = platformY + AnimOffsetY;
-            Transform spriteTrans = Transform.CreateFrom(x: assetX, y: assetY, rot: AnimRotation * Math.PI / 180);
-            canvas.DrawAnim(Gfx, "Ready", 0, spriteTrans, DrawPriorityEnum.MIDGROUND, this);
+            Transform spriteTrans = Transform.CreateFrom(x: AnimOffsetX, y: AnimOffsetY, rot: AnimRotation * Math.PI / 180);
+            canvas.DrawAnim(Gfx, "Ready", 0, spriteTrans * platTrans, DrawPriorityEnum.MIDGROUND, this);
         }
     }
 

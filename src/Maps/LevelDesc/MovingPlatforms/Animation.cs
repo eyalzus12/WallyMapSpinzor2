@@ -74,7 +74,7 @@ public class Animation : IDeserializable, ISerializable
     This should be 100% accurate to the game.
     */
 
-    public ((double, double), (double, double)) GetOffset(RenderContext context, TimeSpan time)
+    public ((double, double, double), (double, double)) GetOffset(RenderContext context, TimeSpan time)
     {
         // calculate the actual number of frames
         int currentFrame = 1;
@@ -102,8 +102,8 @@ public class Animation : IDeserializable, ISerializable
         // go through the keyframes again, and find the positions
         bool gotA = false, gotP1 = false, gotP2 = false;
         (double ax, double ay) = (double.NaN, double.NaN);
-        (double p1x, double p1y) = (double.NaN, double.NaN);
-        (double p2x, double p2y) = (double.NaN, double.NaN);
+        (double p1x, double p1y, double p1rot) = (double.NaN, double.NaN, double.NaN);
+        (double p2x, double p2y, double p2rot) = (double.NaN, double.NaN, double.NaN);
         uint frameForNextIndex = nextIndex + 1;
         uint frameForIndex = index + 1;
         currentFrame = 1;
@@ -127,7 +127,7 @@ public class Animation : IDeserializable, ISerializable
             if (currentFrame >= frame2)
                 continue;
 
-            (double, double) LerpForFrame(uint frame)
+            (double x, double y, double rot) LerpForFrame(uint frame)
             {
                 double w = (frame - k.FrameNum) / (double)(frame2 - k.FrameNum);
                 w = BrawlhallaMath.EaseWeight(w,
@@ -135,34 +135,51 @@ public class Animation : IDeserializable, ISerializable
                     k.EaseOut ?? EaseOut,
                     k.EasePower ?? EasePower
                 );
-                if (k.CenterX is not null || k.CenterY is not null || CenterX is not null || CenterY is not null)
-                    return BrawlhallaMath.BrawlhallaLerpWithCenter(k.X, k.Y, k2.X, k2.Y, k.CenterX ?? CenterX ?? 0, k.CenterY ?? CenterY ?? 0, w);
-                else
-                    return BrawlhallaMath.BrawlhallaLerp(k.X, k.Y, k2.X, k2.Y, w);
+                (double x, double y) = k.CenterX is not null || k.CenterY is not null || CenterX is not null || CenterY is not null
+                    ? BrawlhallaMath.BrawlhallaLerpWithCenter(k.X, k.Y, k2.X, k2.Y, k.CenterX ?? CenterX ?? 0, k.CenterY ?? CenterY ?? 0, w)
+                    : BrawlhallaMath.BrawlhallaLerp(k.X, k.Y, k2.X, k2.Y, w);
+                double rot = k.Rotation * (1 - w) + k2.Rotation * w;
+                return (x, y, rot);
             }
 
             if (!gotA)
             {
-                (ax, ay) = LerpForFrame((uint)currentFrame);
+                (ax, ay, _) = LerpForFrame((uint)currentFrame);
                 gotA = true;
             }
 
             if (!gotP1 && currentFrame <= frameForNextIndex && frameForNextIndex < frame2)
             {
-                (p1x, p1y) = LerpForFrame(frameForNextIndex);
+                (p1x, p1y, p1rot) = LerpForFrame(frameForNextIndex);
                 gotP1 = true;
             }
 
             if (!gotP2 && currentFrame <= frameForIndex && frameForIndex < frame2)
             {
-                (p2x, p2y) = LerpForFrame(frameForIndex);
+                (p2x, p2y, p2rot) = LerpForFrame(frameForIndex);
                 gotP2 = true;
             }
 
             currentFrame = frame2;
         }
 
-        return ((p1x * smallDiff + p2x * (1 - smallDiff), p1y * smallDiff + p2y * (1 - smallDiff)), (ax, ay));
+        double x = p1x * smallDiff + p2x * (1 - smallDiff);
+        double y = p1y * smallDiff + p2y * (1 - smallDiff);
+
+        if (Math.Abs(p1rot - p2rot) >= 180)
+        {
+            if (p1rot == 180 || p1rot == -180)
+            {
+                p1rot *= -1;
+            }
+            else if (p2rot == 180 || p2rot == -180)
+            {
+                p2rot *= -1;
+            }
+        }
+        double rot = p1rot * smallDiff + p2rot * (1 - smallDiff);
+
+        return ((x, y, rot), (ax, ay));
     }
 
     public List<KeyFrame> GetImplicitKeyFrames()

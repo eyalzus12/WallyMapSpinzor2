@@ -45,18 +45,21 @@ public class MovingPlatform : AbstractAsset
 
     public void StoreMovingPlatformOffset(RenderContext ctx, TimeSpan time)
     {
-        ((double offX, double offY), (double anmX, double anmY)) = Animation.GetOffset(ctx, time);
+        ((double offX, double offY, double rot), (double anmX, double anmY)) = Animation.GetOffset(ctx, time);
         ctx.PlatIDDynamicOffset[PlatID] = (offX - anmX, offY - anmY);
-        ctx.PlatIDMovingPlatformOffset[PlatID] = (offX + Math.Round(X * 100) / 100, offY + Math.Round(Y * 100) / 100);
+        ctx.PlatIDMovingPlatformTransform[PlatID] = Transform.CreateFrom(
+            x: offX + Math.Round(X * 100) / 100,
+            y: offY + Math.Round(Y * 100) / 100,
+            rot: rot * Math.PI / 180
+        );
     }
 
     public override void DrawOn(ICanvas canvas, Transform trans, RenderConfig config, RenderContext context, RenderState state)
     {
-        if (!context.PlatIDMovingPlatformOffset.TryGetValue(PlatID, out (double, double) platOffset))
+        if (!context.PlatIDMovingPlatformTransform.TryGetValue(PlatID, out Transform platTrans))
             throw new InvalidOperationException($"Plat ID dictionary did not contain plat id {PlatID} when attempting to draw MovingPlatform. Make sure to call {nameof(StoreMovingPlatformOffset)}.");
 
-        (double offX, double offY) = platOffset;
-        Transform childTrans = trans * Transform.CreateTranslate(offX, offY);
+        Transform childTrans = trans * platTrans;
         foreach (AbstractAsset a in Assets)
             a.DrawOn(canvas, childTrans, config, context, state);
     }
