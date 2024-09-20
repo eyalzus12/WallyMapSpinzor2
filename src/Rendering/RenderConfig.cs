@@ -464,7 +464,7 @@ public class RenderConfig : IDeserializable, ISerializable
         ShowRespawn = true,
         ShowItemSpawn = true,
         ShowNavNode = false,
-        RadiusRespawn = 10,
+        RadiusRespawn = 30,
         RadiusZombieSpawn = 20,
         RadiusNavNode = 5,
         RadiusHordePathPoint = 15,
