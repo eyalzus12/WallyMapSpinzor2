@@ -58,6 +58,7 @@ public class LevelType : IDeserializable, ISerializable
     public bool? ShowLavaLevelDuringMove { get; set; }
     public bool? NegateOverlaps { get; set; }
     public int? StartFrame { get; set; }
+    public bool? IsClimbMap { get; set; }
     public bool? FixedCamera { get; set; }
     public bool? AllowItemSpawnOverlap { get; set; }
     public string[] ColorExclusionList { get; set; } = [];
@@ -110,6 +111,7 @@ public class LevelType : IDeserializable, ISerializable
         ShowLavaLevelDuringMove = Utils.ParseBoolOrNull(e.GetElementValue("ShowLavaLevelDuringMove"));
         NegateOverlaps = Utils.ParseBoolOrNull(e.GetElementValue("NegateOverlaps"));
         StartFrame = Utils.ParseIntOrNull(e.GetElementValue("StartFrame"));
+        IsClimbMap = Utils.ParseBoolOrNull(e.GetElementValue("IsClimbMap"));
         FixedCamera = Utils.ParseBoolOrNull(e.GetElementValue("FixedCamera"));
         AllowItemSpawnOverlap = Utils.ParseBoolOrNull(e.GetElementValue("AllowItemSpawnOverlap"));
         ColorExclusionList = e.GetElementValue("ColorExclusionList")?.Split(',') ?? [];
@@ -170,6 +172,7 @@ public class LevelType : IDeserializable, ISerializable
             e.AddIfNotNull("ShowLavaLevelDuringMove", ShowLavaLevelDuringMove);
         e.AddIfNotNull("NegateOverlaps", NegateOverlaps);
         e.AddIfNotNull("StartFrame", StartFrame);
+        e.AddIfNotNull("IsClimbMap", IsClimbMap);
         e.AddIfNotNull("FixedCamera", FixedCamera);
         e.AddIfNotNull("AllowItemSpawnOverlap", AllowItemSpawnOverlap);
 

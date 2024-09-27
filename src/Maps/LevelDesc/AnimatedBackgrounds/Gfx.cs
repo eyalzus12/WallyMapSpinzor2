@@ -21,8 +21,8 @@ public class Gfx : IDeserializable, ISerializable
         GAUNTLETFOREARM = 10,
         PISTOL = 11,
         KATAR = 12,
-        JAW = 13,
-        EYES = 14
+        // 13 isn't settable through xml. it is JAW.
+        // 14 isn't settable through xml. it is EYES.
         // 15 isn't settable through xml. might be BOOTS.
         // 16 isn't settable through xml. it is MOUTH.
         // 17 isn't settable through xml. it is HAIR.
@@ -51,6 +51,9 @@ public class Gfx : IDeserializable, ISerializable
     public bool UseRightMouth { get; set; } = false;
     public bool UseRightHair { get; set; } = false;
     public bool UseRightForearm { get; set; } = false;
+    public bool UseRightShoulder1 { get; set; } = false;
+    public bool UseRightLeg1 { get; set; } = false;
+    public bool UseRightShin { get; set; } = false;
     public bool UseTrueLeftRightHands { get; set; } = false;
     public Dictionary<string, string> BoneOverrides { get; set; } = [];
     // these are set in weaponSkinType.csv
