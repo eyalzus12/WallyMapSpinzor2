@@ -65,13 +65,18 @@ public class Level : IDeserializable, ISerializable, IDrawable
     public void DrawOn(ICanvas canvas, Transform trans, RenderConfig config, RenderContext context, RenderState state)
     {
         Desc.DrawOn(canvas, trans, config, context, state);
+        if (Type is null) return;
 
-        if (Type is null || !config.ShowKillBounds) return;
-        double killX = Desc.CameraBounds.X - Type.LeftKill ?? 0;
-        double killY = Desc.CameraBounds.Y - Type.TopKill ?? 0;
-        double killW = Desc.CameraBounds.W + Type.RightKill + Type.LeftKill ?? 0;
-        double killH = Desc.CameraBounds.H + Type.BottomKill + Type.TopKill ?? 0;
+        if (config.ShowKillBounds)
+        {
+            double killX = Desc.CameraBounds.X - Type.LeftKill ?? 0;
+            double killY = Desc.CameraBounds.Y - Type.TopKill ?? 0;
+            double killW = Desc.CameraBounds.W + Type.RightKill + Type.LeftKill ?? 0;
+            double killH = Desc.CameraBounds.H + Type.BottomKill + Type.TopKill ?? 0;
 
-        canvas.DrawRect(killX, killY, killW, killH, false, config.ColorKillBounds, trans, DrawPriorityEnum.DATA, this);
+            canvas.DrawRect(killX, killY, killW, killH, false, config.ColorKillBounds, trans, DrawPriorityEnum.DATA, this);
+        }
+
+        
     }
 }
