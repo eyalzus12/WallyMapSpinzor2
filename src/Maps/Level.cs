@@ -67,16 +67,27 @@ public class Level : IDeserializable, ISerializable, IDrawable
         Desc.DrawOn(canvas, trans, config, context, state);
         if (Type is null) return;
 
+        double killX = Desc.CameraBounds.X - Type.LeftKill ?? 0;
+        double killY = Desc.CameraBounds.Y - Type.TopKill ?? 0;
+        double killW = Desc.CameraBounds.W + Type.RightKill + Type.LeftKill ?? 0;
+        double killH = Desc.CameraBounds.H + Type.BottomKill + Type.TopKill ?? 0;
+
         if (config.ShowKillBounds)
         {
-            double killX = Desc.CameraBounds.X - Type.LeftKill ?? 0;
-            double killY = Desc.CameraBounds.Y - Type.TopKill ?? 0;
-            double killW = Desc.CameraBounds.W + Type.RightKill + Type.LeftKill ?? 0;
-            double killH = Desc.CameraBounds.H + Type.BottomKill + Type.TopKill ?? 0;
-
             canvas.DrawRect(killX, killY, killW, killH, false, config.ColorKillBounds, trans, DrawPriorityEnum.DATA, this);
         }
 
-        
+        if (config.ShowBotPanicLine)
+        {
+            double finalPanicLine = Math.Max(
+                Type.AIPanicLine ?? 0,
+                Desc.NavNodes
+                    .Where(n => n.Type == NavNodeTypeEnum.W || n.Type == NavNodeTypeEnum.A)
+                    .Select(n => n.Y)
+                    .Max()
+            );
+
+            canvas.DrawLine(killX, finalPanicLine, killX + killW, finalPanicLine, config.ColorBotPanicLine, Transform.IDENTITY, DrawPriorityEnum.NAVLINE, this);
+        }
     }
 }
