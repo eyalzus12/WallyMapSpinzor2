@@ -5,6 +5,7 @@ namespace WallyMapSpinzor2;
 public class RenderContext
 {
     public string? AssetDir { get; set; }
+    public int? ExtraStartFrame { get; set; }
     public int? DefaultNumFrames { get; set; }
     public double? DefaultSlowMult { get; set; }
 

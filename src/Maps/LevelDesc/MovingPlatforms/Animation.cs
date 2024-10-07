@@ -93,7 +93,7 @@ public class Animation : IDeserializable, ISerializable
         double brawlhallaTime = time.TotalSeconds * 60.0 * 16.0;
         double frames = 1000 * (positionsCount / 60.0) * (SlowMult ?? context.DefaultSlowMult ?? 1);
         double clampedTime = BrawlhallaMath.SafeMod(brawlhallaTime * 0.05, frames);
-        double positionIndex = StartFrame + clampedTime / frames * positionsCount;
+        double positionIndex = (StartFrame + context.ExtraStartFrame ?? 0) + clampedTime / frames * positionsCount;
         uint wholeIndex = (uint)Math.Floor(positionIndex + 1e-7);
         uint nextIndex = (uint)((wholeIndex + 1) % positionsCount);
         uint index = (uint)(wholeIndex % positionsCount);

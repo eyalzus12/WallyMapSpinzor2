@@ -37,6 +37,11 @@ public abstract class AbstractCollision : IDeserializable, ISerializable, IDrawa
     public FlagEnum? Flag { get; set; }
     public ColorFlagEnum? ColorFlag { get; set; }
 
+    public double FromX => X1 > X2 ? X2 : X1;
+    public double FromY => X1 > X2 ? Y2 : Y1;
+    public double ToX => X1 > X2 ? X1 : X2;
+    public double ToY => X1 > X2 ? Y1 : Y2;
+
     public DynamicCollision? Parent { get; set; }
 
     public virtual void Deserialize(XElement e)
@@ -147,7 +152,7 @@ public abstract class AbstractCollision : IDeserializable, ISerializable, IDrawa
         }
         double xOff = Parent?.X ?? 0;
         double yOff = Parent?.Y ?? 0;
-        return [(X1, Y1), .. BrawlhallaMath.CollisionQuad(X1, Y1, X2, Y2, AnchorX.Value - xOff, AnchorY.Value - yOff)];
+        return [(FromX, FromY), .. BrawlhallaMath.CollisionQuad(FromX, FromY, ToX, ToY, AnchorX.Value - xOff, AnchorY.Value - yOff)];
     }
 
     public virtual void DrawOn(ICanvas canvas, Transform trans, RenderConfig config, RenderContext context, RenderState state)
@@ -201,21 +206,6 @@ public abstract class AbstractCollision : IDeserializable, ISerializable, IDrawa
     }
 
     public abstract Color GetColor(RenderConfig config);
-
-    [Flags]
-    public enum CollisionTypeFlags
-    {
-        HARD = 1 << 0,
-        SOFT = 1 << 1,
-        TRIGGER = 1 << 2,
-        STICKY = 1 << 3,
-        NO_SLIDE = 1 << 4,
-        ITEM_IGNORE = 1 << 5,
-        BOUNCY = 1 << 6,
-        GAMEMODE = 1 << 7,
-        PRESSURE_PLATE = 1 << 8,
-        LAVA = 1 << 9,
-    }
 
     public abstract CollisionTypeFlags CollisionType { get; }
 }

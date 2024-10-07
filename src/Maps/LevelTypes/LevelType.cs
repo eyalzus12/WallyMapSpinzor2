@@ -6,15 +6,6 @@ namespace WallyMapSpinzor2;
 
 public class LevelType : IDeserializable, ISerializable
 {
-    public enum TeamColorEnum
-    {
-        Default, // this is used as a fallback
-        Red,
-        Blue,
-        Yellow,
-        Purple,
-    }
-
     private const string TEMPLATE_LEVEL_TYPE = "Template";
     private static readonly TeamColorEnum[] DEFAULT_TEAM_COLOR_ORDER = [TeamColorEnum.Red, TeamColorEnum.Blue, TeamColorEnum.Yellow, TeamColorEnum.Purple];
 
@@ -46,6 +37,7 @@ public class LevelType : IDeserializable, ISerializable
     public bool? AIStrictRecover { get; set; }
 
     //used nowhere except in the template
+    //doesn't actually get serialized ingame
     public uint? MidgroundTint { get; set; }
     public uint? MidgroundOffset { get; set; } // default to 0
     public double? MidgroundFraction { get; set; }
@@ -60,7 +52,7 @@ public class LevelType : IDeserializable, ISerializable
     public int? StartFrame { get; set; }
     public bool? IsClimbMap { get; set; }
     public bool? FixedCamera { get; set; }
-    public bool? AllowItemSpawnOverlap { get; set; }
+    public bool? AllowItemSpawnOverlap { get; set; } // unused
     public string[] ColorExclusionList { get; set; } = [];
     public bool? FixedWidth { get; set; }
     public double? AIPanicLine { get; set; }
@@ -86,9 +78,9 @@ public class LevelType : IDeserializable, ISerializable
         AssetName = e.GetElementValue("AssetName");
 
         uint? colA = Utils.ParseUIntOrNull(e.GetElementValue("CrateColorA"));
-        CrateColorA = colA is null ? null : CrateColor.FromHex((uint)colA);
+        CrateColorA = colA is null ? null : CrateColor.FromHex(colA.Value);
         uint? colB = Utils.ParseUIntOrNull(e.GetElementValue("CrateColorB"));
-        CrateColorB = colB is null ? null : CrateColor.FromHex((uint)colB);
+        CrateColorB = colB is null ? null : CrateColor.FromHex(colB.Value);
 
         LeftKill = Utils.ParseIntOrNull(e.GetElementValue("LeftKill"));
         RightKill = Utils.ParseIntOrNull(e.GetElementValue("RightKill"));
@@ -144,9 +136,9 @@ public class LevelType : IDeserializable, ISerializable
         e.AddIfNotNull("SoftTopKill", SoftTopKill);
 
         if (HardLeftKill is not null)
-            e.AddChild("HardLeftKill", (bool)HardLeftKill && LeftKill >= 200);
+            e.AddChild("HardLeftKill", HardLeftKill.Value && LeftKill >= 200);
         if (HardRightKill is not null)
-            e.AddChild("HardRightKill", (bool)HardRightKill && RightKill >= 200);
+            e.AddChild("HardRightKill", HardRightKill.Value && RightKill >= 200);
 
         e.AddIfNotNull("BGMusic", BGMusic);
         e.AddIfNotNull("StreamerBGMusic", StreamerBGMusic);

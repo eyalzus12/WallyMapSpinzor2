@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
@@ -100,6 +101,10 @@ public class RenderConfig : IDeserializable, ISerializable
     public required bool ShowItemSpawn { get; set; }
     //whether to show navnodes
     public required bool ShowNavNode { get; set; }
+    //whether to show bot panic line
+    public required bool ShowBotPanicLine { get; set; }
+    //whether to show bot ground line
+    public required bool ShowBotGroundLine { get; set; }
 
     //circle radius to use for respawns
     public required double RadiusRespawn { get; set; }
@@ -180,248 +185,230 @@ public class RenderConfig : IDeserializable, ISerializable
 
     public required Color ColorNavPath { get; set; }
 
+    public required Color ColorBotPanicLine { get; set; }
+    public required Color ColorBotGroundLine { get; set; }
+
     public required Color ColorHordePath { get; set; }
 
     public void Deserialize(XElement e)
     {
+        bool getBool(string name, bool @default) => e.GetBoolElementOrNull(name) ?? @default;
+        int getInt(string name, int @default) => e.GetIntElementOrNull(name) ?? @default;
+        uint getUInt(string name, uint @default) => e.GetUIntElementOrNull(name) ?? @default;
+        double getDouble(string name, double @default) => e.GetDoubleElementOrNull(name) ?? @default;
+        E getEnum<E>(string name, E @default) where E : struct, Enum => e.GetEnumElementOrNull<E>(name) ?? @default;
+        Color getColor(string name, Color @default) => Color.FromHex(getUInt(name, @default.ToHex()));
+
+        T[] getArray<T>(string name, T[] @default, Func<string?, T?> f, int count, int offset = 0) where T : struct => Enumerable.Range(0, count).Select(i => f(e.Element(name)?.GetElementValue($"{INDEX}{i + offset}")) ?? @default[i]).ToArray();
+        bool[] getBoolArray(string name, bool[] @default, int count, int offset = 0) => getArray(name, @default, Utils.ParseBoolOrNull, count, offset);
+        int[] getIntArray(string name, int[] @default, int count, int offset = 0) => getArray(name, @default, Utils.ParseIntOrNull, count, offset);
+        uint[] getUIntArray(string name, uint[] @default, int count, int offset = 0) => getArray(name, @default, Utils.ParseUIntOrNull, count, offset);
+        double[] getDoubleArray(string name, double[] @default, int count, int offset = 0) => getArray(name, @default, Utils.ParseDoubleOrNull, count, offset);
+        Color[] getColorArray(string name, Color[] @default, int count, int offset = 0) => [.. getUIntArray(name, [.. @default.Select(c => c.ToHex())], count, offset).Select(Color.FromHex)];
+
         RenderConfig @default = Default;
-        RenderSpeed = Utils.ParseDoubleOrNull(e.GetElementValue(nameof(RenderSpeed))) ?? @default.RenderSpeed;
-        ScoringType = Utils.ParseEnumOrNull<ScoringTypeEnum>(e.GetElementValue(nameof(ScoringType))) ?? @default.ScoringType;
-        Theme = Utils.ParseEnumOrNull<ThemeEnum>(e.GetElementValue(nameof(Theme))) ?? @default.Theme;
-        Hotkey = Utils.ParseEnumOrNull<HotkeyEnum>(e.GetElementValue(nameof(Hotkey))) ?? @default.Hotkey;
-        AnimatedBackgrounds = Utils.ParseBoolOrNull(e.GetElementValue(nameof(AnimatedBackgrounds))) ?? @default.AnimatedBackgrounds;
-        NoSkulls = Utils.ParseBoolOrNull(e.GetElementValue(nameof(NoSkulls))) ?? @default.NoSkulls;
-        ShowPickedPlatform = Utils.ParseBoolOrNull(e.GetElementValue(nameof(ShowPickedPlatform))) ?? @default.ShowPickedPlatform;
-        PickedPlatform = Utils.ParseIntOrNull(e.GetElementValue(nameof(PickedPlatform))) ?? @default.PickedPlatform;
-        BlueScore = Utils.ParseIntOrNull(e.GetElementValue(nameof(BlueScore))) ?? @default.BlueScore;
-        RedScore = Utils.ParseIntOrNull(e.GetElementValue(nameof(RedScore))) ?? @default.RedScore;
-        ShowRingRopes = Utils.ParseBoolOrNull(e.GetElementValue(nameof(ShowRingRopes))) ?? @default.ShowRingRopes;
-        ShowZombieSpawns = Utils.ParseBoolOrNull(e.GetElementValue(nameof(ShowZombieSpawns))) ?? @default.ShowZombieSpawns;
-        ShowBombsketballTargets = Utils.ParseBoolOrNull(e.GetElementValue(nameof(ShowBombsketballTargets))) ?? @default.ShowBombsketballTargets;
-        UseBombsketballDigitSize = Utils.ParseBoolOrNull(e.GetElementValue(nameof(UseBombsketballDigitSize))) ?? @default.UseBombsketballDigitSize;
-        ShowBombsketballBombTimers =
-        [
-            Utils.ParseBoolOrNull(e.Element(nameof(ShowBombsketballBombTimers))?.GetElementValue(INDEX + "0")) ?? @default.ShowBombsketballBombTimers[0],
-            Utils.ParseBoolOrNull(e.Element(nameof(ShowBombsketballBombTimers))?.GetElementValue(INDEX + "1")) ?? @default.ShowBombsketballBombTimers[1],
-            Utils.ParseBoolOrNull(e.Element(nameof(ShowBombsketballBombTimers))?.GetElementValue(INDEX + "2")) ?? @default.ShowBombsketballBombTimers[2],
-        ];
-        BombsketballBombTimerFrames =
-        [
-            Utils.ParseDoubleOrNull(e.Element(nameof(BombsketballBombTimerFrames))?.GetElementValue(INDEX + "0")) ?? @default.BombsketballBombTimerFrames[0],
-            Utils.ParseDoubleOrNull(e.Element(nameof(BombsketballBombTimerFrames))?.GetElementValue(INDEX + "1")) ?? @default.BombsketballBombTimerFrames[1],
-            Utils.ParseDoubleOrNull(e.Element(nameof(BombsketballBombTimerFrames))?.GetElementValue(INDEX + "2")) ?? @default.BombsketballBombTimerFrames[2],
-        ];
-        ShowHordeDoors = Utils.ParseBoolOrNull(e.GetElementValue(nameof(ShowHordeDoors))) ?? @default.ShowHordeDoors;
-        DamageHordeDoors =
-        [
-            Utils.ParseIntOrNull(e.Element(nameof(DamageHordeDoors))?.GetElementValue(INDEX + "0")) ?? @default.DamageHordeDoors[0],
-            Utils.ParseIntOrNull(e.Element(nameof(DamageHordeDoors))?.GetElementValue(INDEX + "1")) ?? @default.DamageHordeDoors[1],
-        ];
-        HordePathType = Utils.ParseEnumOrNull<PathConfigEnum>(e.GetElementValue(nameof(HordePathType))) ?? @default.HordePathType;
-        HordePathIndex = Utils.ParseIntOrNull(e.GetElementValue(nameof(HordePathIndex))) ?? @default.HordePathIndex;
-        HordeWave = Utils.ParseIntOrNull(e.GetElementValue(nameof(HordeWave))) ?? @default.HordeWave;
-        HordeRandomSeed = Utils.ParseUIntOrNull(e.GetElementValue(nameof(HordeRandomSeed))) ?? @default.HordeRandomSeed;
-        ShowCameraBounds = Utils.ParseBoolOrNull(e.GetElementValue(nameof(ShowCameraBounds))) ?? @default.ShowCameraBounds;
-        ShowKillBounds = Utils.ParseBoolOrNull(e.GetElementValue(nameof(ShowKillBounds))) ?? @default.ShowKillBounds;
-        ShowSpawnBotBounds = Utils.ParseBoolOrNull(e.GetElementValue(nameof(ShowSpawnBotBounds))) ?? @default.ShowSpawnBotBounds;
-        ShowAssets = Utils.ParseBoolOrNull(e.GetElementValue(nameof(ShowAssets))) ?? @default.ShowAssets;
-        ShowBackground = Utils.ParseBoolOrNull(e.GetElementValue(nameof(ShowBackground))) ?? @default.ShowBackground;
-        ShowCollision = Utils.ParseBoolOrNull(e.GetElementValue(nameof(ShowCollision))) ?? @default.ShowCollision;
-        ShowCollisionNormalOverride = Utils.ParseBoolOrNull(e.GetElementValue(nameof(ShowCollisionNormalOverride))) ?? @default.ShowCollisionNormalOverride;
-        ShowFireOffsetLocation = Utils.ParseBoolOrNull(e.GetElementValue(nameof(ShowFireOffsetLocation))) ?? @default.ShowFireOffsetLocation;
-        ShowFireOffsetLine = Utils.ParseBoolOrNull(e.GetElementValue(nameof(ShowFireOffsetLine))) ?? @default.ShowFireOffsetLine;
-        ShowFireDirection = Utils.ParseBoolOrNull(e.GetElementValue(nameof(ShowFireDirection))) ?? @default.ShowFireDirection;
-        ShowGoal = Utils.ParseBoolOrNull(e.GetElementValue(nameof(ShowGoal))) ?? @default.ShowGoal;
-        ShowNoDodgeZone = Utils.ParseBoolOrNull(e.GetElementValue(nameof(ShowNoDodgeZone))) ?? @default.ShowNoDodgeZone;
-        ShowVolume = Utils.ParseBoolOrNull(e.GetElementValue(nameof(ShowVolume))) ?? @default.ShowVolume;
-        ShowRespawn = Utils.ParseBoolOrNull(e.GetElementValue(nameof(ShowRespawn))) ?? @default.ShowRespawn;
-        ShowItemSpawn = Utils.ParseBoolOrNull(e.GetElementValue(nameof(ShowItemSpawn))) ?? @default.ShowItemSpawn;
-        ShowNavNode = Utils.ParseBoolOrNull(e.GetElementValue(nameof(ShowNavNode))) ?? @default.ShowNavNode;
-        RadiusRespawn = Utils.ParseDoubleOrNull(e.GetElementValue(nameof(RadiusRespawn))) ?? @default.RadiusRespawn;
-        RadiusZombieSpawn = Utils.ParseDoubleOrNull(e.GetElementValue(nameof(RadiusZombieSpawn))) ?? @default.RadiusZombieSpawn;
-        RadiusNavNode = Utils.ParseDoubleOrNull(e.GetElementValue(nameof(RadiusNavNode))) ?? @default.RadiusNavNode;
-        RadiusHordePathPoint = Utils.ParseDoubleOrNull(e.GetElementValue(nameof(RadiusHordePathPoint))) ?? @default.RadiusHordePathPoint;
-        RadiusFireOffsetLocation = Utils.ParseDoubleOrNull(e.GetElementValue(nameof(RadiusFireOffsetLocation))) ?? @default.RadiusFireOffsetLocation;
-        LengthCollisionNormal = Utils.ParseDoubleOrNull(e.GetElementValue(nameof(LengthCollisionNormal))) ?? @default.LengthCollisionNormal;
-        LengthFireDirectionArrow = Utils.ParseDoubleOrNull(e.GetElementValue(nameof(LengthFireDirectionArrow))) ?? @default.LengthFireDirectionArrow;
-        OffsetNavLineArrowSide = Utils.ParseDoubleOrNull(e.GetElementValue(nameof(OffsetNavLineArrowSide))) ?? @default.OffsetNavLineArrowSide;
-        OffsetNavLineArrowBack = Utils.ParseDoubleOrNull(e.GetElementValue(nameof(OffsetNavLineArrowBack))) ?? @default.OffsetNavLineArrowBack;
-        OffsetHordePathArrowSide = Utils.ParseDoubleOrNull(e.GetElementValue(nameof(OffsetHordePathArrowSide))) ?? @default.OffsetHordePathArrowSide;
-        OffsetHordePathArrowBack = Utils.ParseDoubleOrNull(e.GetElementValue(nameof(OffsetHordePathArrowBack))) ?? @default.OffsetHordePathArrowBack;
-        OffsetFireDirectionArrowSide = Utils.ParseDoubleOrNull(e.GetElementValue(nameof(OffsetFireDirectionArrowSide))) ?? @default.OffsetFireDirectionArrowSide;
-        OffsetFireDirectionArrowBack = Utils.ParseDoubleOrNull(e.GetElementValue(nameof(OffsetFireDirectionArrowBack))) ?? @default.OffsetFireDirectionArrowBack;
-        ColorCameraBounds = Color.FromHex(Utils.ParseUIntOrNull(e.GetElementValue(nameof(ColorCameraBounds))) ?? @default.ColorCameraBounds.ToHex());
-        ColorKillBounds = Color.FromHex(Utils.ParseUIntOrNull(e.GetElementValue(nameof(ColorKillBounds))) ?? @default.ColorKillBounds.ToHex());
-        ColorSpawnBotBounds = Color.FromHex(Utils.ParseUIntOrNull(e.GetElementValue(nameof(ColorSpawnBotBounds))) ?? @default.ColorSpawnBotBounds.ToHex());
-        ColorHardCollision = Color.FromHex(Utils.ParseUIntOrNull(e.GetElementValue(nameof(ColorHardCollision))) ?? @default.ColorHardCollision.ToHex());
-        ColorSoftCollision = Color.FromHex(Utils.ParseUIntOrNull(e.GetElementValue(nameof(ColorSoftCollision))) ?? @default.ColorSoftCollision.ToHex());
-        ColorNoSlideCollision = Color.FromHex(Utils.ParseUIntOrNull(e.GetElementValue(nameof(ColorNoSlideCollision))) ?? @default.ColorNoSlideCollision.ToHex());
-        ColorGameModeHardCollision = Color.FromHex(Utils.ParseUIntOrNull(e.GetElementValue(nameof(ColorGameModeHardCollision))) ?? @default.ColorGameModeHardCollision.ToHex());
-        ColorBouncyHardCollision = Color.FromHex(Utils.ParseUIntOrNull(e.GetElementValue(nameof(ColorBouncyHardCollision))) ?? @default.ColorBouncyHardCollision.ToHex());
-        ColorBouncySoftCollision = Color.FromHex(Utils.ParseUIntOrNull(e.GetElementValue(nameof(ColorBouncySoftCollision))) ?? @default.ColorBouncySoftCollision.ToHex());
-        ColorBouncyNoSlideCollision = Color.FromHex(Utils.ParseUIntOrNull(e.GetElementValue(nameof(ColorBouncyNoSlideCollision))) ?? @default.ColorBouncyNoSlideCollision.ToHex());
-        ColorTriggerCollision = Color.FromHex(Utils.ParseUIntOrNull(e.GetElementValue(nameof(ColorTriggerCollision))) ?? @default.ColorTriggerCollision.ToHex());
-        ColorStickyCollision = Color.FromHex(Utils.ParseUIntOrNull(e.GetElementValue(nameof(ColorStickyCollision))) ?? @default.ColorStickyCollision.ToHex());
-        ColorItemIgnoreCollision = Color.FromHex(Utils.ParseUIntOrNull(e.GetElementValue(nameof(ColorItemIgnoreCollision))) ?? @default.ColorItemIgnoreCollision.ToHex());
-        ColorPressurePlateCollision = Color.FromHex(Utils.ParseUIntOrNull(e.GetElementValue(nameof(ColorPressurePlateCollision))) ?? @default.ColorPressurePlateCollision.ToHex());
-        ColorSoftPressurePlateCollision = Color.FromHex(Utils.ParseUIntOrNull(e.GetElementValue(nameof(ColorSoftPressurePlateCollision))) ?? @default.ColorSoftPressurePlateCollision.ToHex());
-        ColorLavaCollision = Color.FromHex(Utils.ParseUIntOrNull(e.GetElementValue(nameof(ColorLavaCollision))) ?? @default.ColorLavaCollision.ToHex());
-        ColorCollisionNormal = Color.FromHex(Utils.ParseUIntOrNull(e.GetElementValue(nameof(ColorCollisionNormal))) ?? @default.ColorCollisionNormal.ToHex());
-        ColorFireOffset = Color.FromHex(Utils.ParseUIntOrNull(e.GetElementValue(nameof(ColorFireOffset))) ?? @default.ColorFireOffset.ToHex());
-        ColorFireOffsetLine = Color.FromHex(Utils.ParseUIntOrNull(e.GetElementValue(nameof(ColorFireOffsetLine))) ?? @default.ColorFireOffsetLine.ToHex());
-        ColorFireDirection = Color.FromHex(Utils.ParseUIntOrNull(e.GetElementValue(nameof(ColorFireDirection))) ?? @default.ColorFireDirection.ToHex());
-        ColorRespawn = Color.FromHex(Utils.ParseUIntOrNull(e.GetElementValue(nameof(ColorRespawn))) ?? @default.ColorRespawn.ToHex());
-        ColorInitialRespawn = Color.FromHex(Utils.ParseUIntOrNull(e.GetElementValue(nameof(ColorInitialRespawn))) ?? @default.ColorInitialRespawn.ToHex());
-        ColorExpandedInitRespawn = Color.FromHex(Utils.ParseUIntOrNull(e.GetElementValue(nameof(ColorExpandedInitRespawn))) ?? @default.ColorExpandedInitRespawn.ToHex());
-        ColorItemSpawn = Color.FromHex(Utils.ParseUIntOrNull(e.GetElementValue(nameof(ColorItemSpawn))) ?? @default.ColorItemSpawn.ToHex());
-        ColorItemInitSpawn = Color.FromHex(Utils.ParseUIntOrNull(e.GetElementValue(nameof(ColorItemInitSpawn))) ?? @default.ColorItemInitSpawn.ToHex());
-        ColorItemSet = Color.FromHex(Utils.ParseUIntOrNull(e.GetElementValue(nameof(ColorItemSet))) ?? @default.ColorItemSet.ToHex());
-        ColorTeamItemInitSpawn = Color.FromHex(Utils.ParseUIntOrNull(e.GetElementValue(nameof(ColorTeamItemInitSpawn))) ?? @default.ColorTeamItemInitSpawn.ToHex());
-        ColorCollisionTeam =
-        [
-            Color.FromHex(Utils.ParseUIntOrNull(e.Element(nameof(ColorCollisionTeam))?.GetElementValue(INDEX + "1")) ?? @default.ColorCollisionTeam[0].ToHex()),
-            Color.FromHex(Utils.ParseUIntOrNull(e.Element(nameof(ColorCollisionTeam))?.GetElementValue(INDEX + "2")) ?? @default.ColorCollisionTeam[1].ToHex()),
-            Color.FromHex(Utils.ParseUIntOrNull(e.Element(nameof(ColorCollisionTeam))?.GetElementValue(INDEX + "3")) ?? @default.ColorCollisionTeam[2].ToHex()),
-            Color.FromHex(Utils.ParseUIntOrNull(e.Element(nameof(ColorCollisionTeam))?.GetElementValue(INDEX + "4")) ?? @default.ColorCollisionTeam[3].ToHex()),
-            Color.FromHex(Utils.ParseUIntOrNull(e.Element(nameof(ColorCollisionTeam))?.GetElementValue(INDEX + "5")) ?? @default.ColorCollisionTeam[4].ToHex()),
-        ];
-        ColorVolumeTeam =
-        [
-            Color.FromHex(Utils.ParseUIntOrNull(e.Element(nameof(ColorVolumeTeam))?.GetElementValue(INDEX + "0")) ?? @default.ColorVolumeTeam[0].ToHex()),
-            Color.FromHex(Utils.ParseUIntOrNull(e.Element(nameof(ColorVolumeTeam))?.GetElementValue(INDEX + "1")) ?? @default.ColorVolumeTeam[1].ToHex()),
-            Color.FromHex(Utils.ParseUIntOrNull(e.Element(nameof(ColorVolumeTeam))?.GetElementValue(INDEX + "2")) ?? @default.ColorVolumeTeam[2].ToHex()),
-            Color.FromHex(Utils.ParseUIntOrNull(e.Element(nameof(ColorVolumeTeam))?.GetElementValue(INDEX + "3")) ?? @default.ColorVolumeTeam[3].ToHex()),
-            Color.FromHex(Utils.ParseUIntOrNull(e.Element(nameof(ColorVolumeTeam))?.GetElementValue(INDEX + "4")) ?? @default.ColorVolumeTeam[4].ToHex()),
-            Color.FromHex(Utils.ParseUIntOrNull(e.Element(nameof(ColorVolumeTeam))?.GetElementValue(INDEX + "5")) ?? @default.ColorVolumeTeam[5].ToHex()),
-        ];
-        ColorZombieSpawns = Color.FromHex(Utils.ParseUIntOrNull(e.GetElementValue(nameof(ColorZombieSpawns))) ?? @default.ColorZombieSpawns.ToHex());
-        ColorNavNode = Color.FromHex(Utils.ParseUIntOrNull(e.GetElementValue(nameof(ColorNavNode))) ?? @default.ColorNavNode.ToHex());
-        ColorNavNodeW = Color.FromHex(Utils.ParseUIntOrNull(e.GetElementValue(nameof(ColorNavNodeW))) ?? @default.ColorNavNodeW.ToHex());
-        ColorNavNodeL = Color.FromHex(Utils.ParseUIntOrNull(e.GetElementValue(nameof(ColorNavNodeL))) ?? @default.ColorNavNodeL.ToHex());
-        ColorNavNodeA = Color.FromHex(Utils.ParseUIntOrNull(e.GetElementValue(nameof(ColorNavNodeA))) ?? @default.ColorNavNodeA.ToHex());
-        ColorNavNodeG = Color.FromHex(Utils.ParseUIntOrNull(e.GetElementValue(nameof(ColorNavNodeG))) ?? @default.ColorNavNodeG.ToHex());
-        ColorNavNodeT = Color.FromHex(Utils.ParseUIntOrNull(e.GetElementValue(nameof(ColorNavNodeT))) ?? @default.ColorNavNodeT.ToHex());
-        ColorNavNodeS = Color.FromHex(Utils.ParseUIntOrNull(e.GetElementValue(nameof(ColorNavNodeS))) ?? @default.ColorNavNodeS.ToHex());
-        ColorNavPath = Color.FromHex(Utils.ParseUIntOrNull(e.GetElementValue(nameof(ColorNavPath))) ?? @default.ColorNavPath.ToHex());
-        ColorHordePath = Color.FromHex(Utils.ParseUIntOrNull(e.GetElementValue(nameof(ColorHordePath))) ?? @default.ColorHordePath.ToHex());
+        RenderSpeed = getDouble(nameof(RenderSpeed), @default.RenderSpeed);
+        ScoringType = getEnum(nameof(ScoringType), @default.ScoringType);
+        Theme = getEnum(nameof(Theme), @default.Theme);
+        Hotkey = getEnum(nameof(Hotkey), @default.Hotkey);
+        AnimatedBackgrounds = getBool(nameof(AnimatedBackgrounds), @default.AnimatedBackgrounds);
+        NoSkulls = getBool(nameof(NoSkulls), @default.NoSkulls);
+        ShowPickedPlatform = getBool(nameof(ShowPickedPlatform), @default.ShowPickedPlatform);
+        PickedPlatform = getInt(nameof(PickedPlatform), @default.PickedPlatform);
+        BlueScore = getInt(nameof(BlueScore), @default.BlueScore);
+        RedScore = getInt(nameof(RedScore), @default.RedScore);
+        ShowRingRopes = getBool(nameof(ShowRingRopes), @default.ShowRingRopes);
+        ShowZombieSpawns = getBool(nameof(ShowZombieSpawns), @default.ShowZombieSpawns);
+        ShowBombsketballTargets = getBool(nameof(ShowBombsketballTargets), @default.ShowBombsketballTargets);
+        UseBombsketballDigitSize = getBool(nameof(UseBombsketballDigitSize), @default.UseBombsketballDigitSize);
+        ShowBombsketballBombTimers = getBoolArray(nameof(ShowBombsketballBombTimers), @default.ShowBombsketballBombTimers, 3);
+        BombsketballBombTimerFrames = getDoubleArray(nameof(BombsketballBombTimerFrames), @default.BombsketballBombTimerFrames, 3);
+        ShowHordeDoors = getBool(nameof(ShowHordeDoors), @default.ShowHordeDoors);
+        DamageHordeDoors = getIntArray(nameof(DamageHordeDoors), @default.DamageHordeDoors, 2);
+        HordePathType = getEnum(nameof(HordePathType), @default.HordePathType);
+        HordePathIndex = getInt(nameof(HordePathIndex), @default.HordePathIndex);
+        HordeWave = getInt(nameof(HordeWave), @default.HordeWave);
+        HordeRandomSeed = getUInt(nameof(HordeRandomSeed), @default.HordeRandomSeed);
+        ShowCameraBounds = getBool(nameof(ShowCameraBounds), @default.ShowCameraBounds);
+        ShowKillBounds = getBool(nameof(ShowKillBounds), @default.ShowKillBounds);
+        ShowSpawnBotBounds = getBool(nameof(ShowSpawnBotBounds), @default.ShowSpawnBotBounds);
+        ShowAssets = getBool(nameof(ShowAssets), @default.ShowAssets);
+        ShowBackground = getBool(nameof(ShowBackground), @default.ShowBackground);
+        ShowCollision = getBool(nameof(ShowCollision), @default.ShowCollision);
+        ShowCollisionNormalOverride = getBool(nameof(ShowCollisionNormalOverride), @default.ShowCollisionNormalOverride);
+        ShowFireOffsetLocation = getBool(nameof(ShowFireOffsetLocation), @default.ShowFireOffsetLocation);
+        ShowFireOffsetLine = getBool(nameof(ShowFireOffsetLine), @default.ShowFireOffsetLine);
+        ShowFireDirection = getBool(nameof(ShowFireDirection), @default.ShowFireDirection);
+        ShowGoal = getBool(nameof(ShowGoal), @default.ShowGoal);
+        ShowNoDodgeZone = getBool(nameof(ShowNoDodgeZone), @default.ShowNoDodgeZone);
+        ShowVolume = getBool(nameof(ShowVolume), @default.ShowVolume);
+        ShowRespawn = getBool(nameof(ShowRespawn), @default.ShowRespawn);
+        ShowItemSpawn = getBool(nameof(ShowItemSpawn), @default.ShowItemSpawn);
+        ShowNavNode = getBool(nameof(ShowNavNode), @default.ShowNavNode);
+        ShowBotPanicLine = getBool(nameof(ShowBotPanicLine), @default.ShowBotPanicLine);
+        ShowBotGroundLine = getBool(nameof(ShowBotGroundLine), @default.ShowBotGroundLine);
+        RadiusRespawn = getDouble(nameof(RadiusRespawn), @default.RadiusRespawn);
+        RadiusZombieSpawn = getDouble(nameof(RadiusZombieSpawn), @default.RadiusZombieSpawn);
+        RadiusNavNode = getDouble(nameof(RadiusNavNode), @default.RadiusNavNode);
+        RadiusHordePathPoint = getDouble(nameof(RadiusHordePathPoint), @default.RadiusHordePathPoint);
+        RadiusFireOffsetLocation = getDouble(nameof(RadiusFireOffsetLocation), @default.RadiusFireOffsetLocation);
+        LengthCollisionNormal = getDouble(nameof(LengthCollisionNormal), @default.LengthCollisionNormal);
+        LengthFireDirectionArrow = getDouble(nameof(LengthFireDirectionArrow), @default.LengthFireDirectionArrow);
+        OffsetNavLineArrowSide = getDouble(nameof(OffsetNavLineArrowSide), @default.OffsetNavLineArrowSide);
+        OffsetNavLineArrowBack = getDouble(nameof(OffsetNavLineArrowBack), @default.OffsetNavLineArrowBack);
+        OffsetHordePathArrowSide = getDouble(nameof(OffsetHordePathArrowSide), @default.OffsetHordePathArrowSide);
+        OffsetHordePathArrowBack = getDouble(nameof(OffsetHordePathArrowBack), @default.OffsetHordePathArrowBack);
+        OffsetFireDirectionArrowSide = getDouble(nameof(OffsetFireDirectionArrowSide), @default.OffsetFireDirectionArrowSide);
+        OffsetFireDirectionArrowBack = getDouble(nameof(OffsetFireDirectionArrowBack), @default.OffsetFireDirectionArrowBack);
+        ColorCameraBounds = getColor(nameof(ColorCameraBounds), @default.ColorCameraBounds);
+        ColorKillBounds = getColor(nameof(ColorKillBounds), @default.ColorKillBounds);
+        ColorSpawnBotBounds = getColor(nameof(ColorSpawnBotBounds), @default.ColorSpawnBotBounds);
+        ColorHardCollision = getColor(nameof(ColorHardCollision), @default.ColorHardCollision);
+        ColorSoftCollision = getColor(nameof(ColorSoftCollision), @default.ColorSoftCollision);
+        ColorNoSlideCollision = getColor(nameof(ColorNoSlideCollision), @default.ColorNoSlideCollision);
+        ColorGameModeHardCollision = getColor(nameof(ColorGameModeHardCollision), @default.ColorGameModeHardCollision);
+        ColorBouncyHardCollision = getColor(nameof(ColorBouncyHardCollision), @default.ColorBouncyHardCollision);
+        ColorBouncySoftCollision = getColor(nameof(ColorBouncySoftCollision), @default.ColorBouncySoftCollision);
+        ColorBouncyNoSlideCollision = getColor(nameof(ColorBouncyNoSlideCollision), @default.ColorBouncyNoSlideCollision);
+        ColorTriggerCollision = getColor(nameof(ColorTriggerCollision), @default.ColorTriggerCollision);
+        ColorStickyCollision = getColor(nameof(ColorStickyCollision), @default.ColorStickyCollision);
+        ColorItemIgnoreCollision = getColor(nameof(ColorItemIgnoreCollision), @default.ColorItemIgnoreCollision);
+        ColorPressurePlateCollision = getColor(nameof(ColorPressurePlateCollision), @default.ColorPressurePlateCollision);
+        ColorSoftPressurePlateCollision = getColor(nameof(ColorSoftPressurePlateCollision), @default.ColorSoftPressurePlateCollision);
+        ColorLavaCollision = getColor(nameof(ColorLavaCollision), @default.ColorLavaCollision);
+        ColorCollisionNormal = getColor(nameof(ColorCollisionNormal), @default.ColorCollisionNormal);
+        ColorFireOffset = getColor(nameof(ColorFireOffset), @default.ColorFireOffset);
+        ColorFireOffsetLine = getColor(nameof(ColorFireOffsetLine), @default.ColorFireOffsetLine);
+        ColorFireDirection = getColor(nameof(ColorFireDirection), @default.ColorFireDirection);
+        ColorRespawn = getColor(nameof(ColorRespawn), @default.ColorRespawn);
+        ColorInitialRespawn = getColor(nameof(ColorInitialRespawn), @default.ColorInitialRespawn);
+        ColorExpandedInitRespawn = getColor(nameof(ColorExpandedInitRespawn), @default.ColorExpandedInitRespawn);
+        ColorItemSpawn = getColor(nameof(ColorItemSpawn), @default.ColorItemSpawn);
+        ColorItemInitSpawn = getColor(nameof(ColorItemInitSpawn), @default.ColorItemInitSpawn);
+        ColorItemSet = getColor(nameof(ColorItemSet), @default.ColorItemSet);
+        ColorTeamItemInitSpawn = getColor(nameof(ColorTeamItemInitSpawn), @default.ColorTeamItemInitSpawn);
+        ColorCollisionTeam = getColorArray(nameof(ColorCollisionTeam), @default.ColorCollisionTeam, 5, 1);
+        ColorVolumeTeam = getColorArray(nameof(ColorVolumeTeam), @default.ColorVolumeTeam, 6);
+        ColorZombieSpawns = getColor(nameof(ColorZombieSpawns), @default.ColorZombieSpawns);
+        ColorNavNode = getColor(nameof(ColorNavNode), @default.ColorNavNode);
+        ColorNavNodeW = getColor(nameof(ColorNavNodeW), @default.ColorNavNodeW);
+        ColorNavNodeL = getColor(nameof(ColorNavNodeL), @default.ColorNavNodeL);
+        ColorNavNodeA = getColor(nameof(ColorNavNodeA), @default.ColorNavNodeA);
+        ColorNavNodeG = getColor(nameof(ColorNavNodeG), @default.ColorNavNodeG);
+        ColorNavNodeT = getColor(nameof(ColorNavNodeT), @default.ColorNavNodeT);
+        ColorNavNodeS = getColor(nameof(ColorNavNodeS), @default.ColorNavNodeS);
+        ColorNavPath = getColor(nameof(ColorNavPath), @default.ColorNavPath);
+        ColorBotPanicLine = getColor(nameof(ColorBotPanicLine), @default.ColorBotPanicLine);
+        ColorBotGroundLine = getColor(nameof(ColorBotGroundLine), @default.ColorBotGroundLine);
+        ColorHordePath = getColor(nameof(ColorHordePath), @default.ColorHordePath);
     }
 
     public void Serialize(XElement e)
     {
-        e.AddChild(nameof(RenderSpeed), RenderSpeed);
-        e.AddChild(nameof(ScoringType), ScoringType);
-        e.AddChild(nameof(Theme), Theme);
-        e.AddChild(nameof(Hotkey), Hotkey);
-        e.AddChild(nameof(AnimatedBackgrounds), AnimatedBackgrounds);
-        e.AddChild(nameof(NoSkulls), NoSkulls);
-        e.AddChild(nameof(ShowPickedPlatform), ShowPickedPlatform);
-        e.AddChild(nameof(PickedPlatform), PickedPlatform);
-        e.AddChild(nameof(BlueScore), BlueScore);
-        e.AddChild(nameof(RedScore), RedScore);
-        e.AddChild(nameof(ShowRingRopes), ShowRingRopes);
-        e.AddChild(nameof(ShowZombieSpawns), ShowZombieSpawns);
-        e.AddChild(nameof(ShowBombsketballTargets), ShowBombsketballTargets);
-        e.AddChild(nameof(UseBombsketballDigitSize), UseBombsketballDigitSize);
-        XElement showBombsketballBombTimersElement = new(nameof(ShowBombsketballBombTimers));
-        showBombsketballBombTimersElement.AddChild(INDEX + "0", ShowBombsketballBombTimers[0]);
-        showBombsketballBombTimersElement.AddChild(INDEX + "1", ShowBombsketballBombTimers[1]);
-        showBombsketballBombTimersElement.AddChild(INDEX + "2", ShowBombsketballBombTimers[2]);
-        e.Add(showBombsketballBombTimersElement);
-        XElement bombsketballBombTimerFramesElement = new(nameof(BombsketballBombTimerFrames));
-        bombsketballBombTimerFramesElement.AddChild(INDEX + "0", BombsketballBombTimerFrames[0]);
-        bombsketballBombTimerFramesElement.AddChild(INDEX + "1", BombsketballBombTimerFrames[1]);
-        bombsketballBombTimerFramesElement.AddChild(INDEX + "2", BombsketballBombTimerFrames[2]);
-        e.Add(bombsketballBombTimerFramesElement);
-        e.AddChild(nameof(ShowHordeDoors), ShowHordeDoors);
-        XElement damageHordeDoorsElement = new(nameof(DamageHordeDoors));
-        damageHordeDoorsElement.AddChild(INDEX + "0", DamageHordeDoors[0]);
-        damageHordeDoorsElement.AddChild(INDEX + "1", DamageHordeDoors[1]);
-        e.Add(damageHordeDoorsElement);
-        e.AddChild(nameof(HordePathType), HordePathType);
-        e.AddChild(nameof(HordePathIndex), HordePathIndex);
-        e.AddChild(nameof(HordeWave), HordeWave);
-        e.AddChild(nameof(HordeRandomSeed), HordeRandomSeed);
-        e.AddChild(nameof(ShowCameraBounds), ShowCameraBounds);
-        e.AddChild(nameof(ShowKillBounds), ShowKillBounds);
-        e.AddChild(nameof(ShowSpawnBotBounds), ShowSpawnBotBounds);
-        e.AddChild(nameof(ShowAssets), ShowAssets);
-        e.AddChild(nameof(ShowBackground), ShowBackground);
-        e.AddChild(nameof(ShowCollision), ShowCollision);
-        e.AddChild(nameof(ShowCollisionNormalOverride), ShowCollisionNormalOverride);
-        e.AddChild(nameof(ShowFireOffsetLocation), ShowFireOffsetLocation);
-        e.AddChild(nameof(ShowFireOffsetLine), ShowFireOffsetLine);
-        e.AddChild(nameof(ShowFireDirection), ShowFireDirection);
-        e.AddChild(nameof(ShowGoal), ShowGoal);
-        e.AddChild(nameof(ShowNoDodgeZone), ShowNoDodgeZone);
-        e.AddChild(nameof(ShowVolume), ShowVolume);
-        e.AddChild(nameof(ShowRespawn), ShowRespawn);
-        e.AddChild(nameof(ShowItemSpawn), ShowItemSpawn);
-        e.AddChild(nameof(ShowNavNode), ShowNavNode);
-        e.AddChild(nameof(RadiusRespawn), RadiusRespawn);
-        e.AddChild(nameof(RadiusZombieSpawn), RadiusZombieSpawn);
-        e.AddChild(nameof(RadiusNavNode), RadiusNavNode);
-        e.AddChild(nameof(RadiusHordePathPoint), RadiusHordePathPoint);
-        e.AddChild(nameof(RadiusFireOffsetLocation), RadiusFireOffsetLocation);
-        e.AddChild(nameof(LengthCollisionNormal), LengthCollisionNormal);
-        e.AddChild(nameof(LengthFireDirectionArrow), LengthFireDirectionArrow);
-        e.AddChild(nameof(OffsetNavLineArrowSide), OffsetNavLineArrowSide);
-        e.AddChild(nameof(OffsetNavLineArrowBack), OffsetNavLineArrowBack);
-        e.AddChild(nameof(OffsetHordePathArrowSide), OffsetHordePathArrowSide);
-        e.AddChild(nameof(OffsetHordePathArrowBack), OffsetHordePathArrowBack);
-        e.AddChild(nameof(OffsetFireDirectionArrowSide), OffsetFireDirectionArrowSide);
-        e.AddChild(nameof(OffsetFireDirectionArrowBack), OffsetFireDirectionArrowBack);
-        e.AddChild(nameof(ColorCameraBounds), "0x" + ColorCameraBounds.ToHex().ToString("X8"));
-        e.AddChild(nameof(ColorKillBounds), "0x" + ColorKillBounds.ToHex().ToString("X8"));
-        e.AddChild(nameof(ColorSpawnBotBounds), "0x" + ColorSpawnBotBounds.ToHex().ToString("X8"));
-        e.AddChild(nameof(ColorHardCollision), "0x" + ColorHardCollision.ToHex().ToString("X8"));
-        e.AddChild(nameof(ColorSoftCollision), "0x" + ColorSoftCollision.ToHex().ToString("X8"));
-        e.AddChild(nameof(ColorNoSlideCollision), "0x" + ColorNoSlideCollision.ToHex().ToString("X8"));
-        e.AddChild(nameof(ColorGameModeHardCollision), "0x" + ColorGameModeHardCollision.ToHex().ToString("X8"));
-        e.AddChild(nameof(ColorBouncyHardCollision), "0x" + ColorBouncyHardCollision.ToHex().ToString("X8"));
-        e.AddChild(nameof(ColorBouncySoftCollision), "0x" + ColorBouncySoftCollision.ToHex().ToString("X8"));
-        e.AddChild(nameof(ColorBouncyNoSlideCollision), "0x" + ColorBouncyNoSlideCollision.ToHex().ToString("X8"));
-        e.AddChild(nameof(ColorTriggerCollision), "0x" + ColorTriggerCollision.ToHex().ToString("X8"));
-        e.AddChild(nameof(ColorStickyCollision), "0x" + ColorStickyCollision.ToHex().ToString("X8"));
-        e.AddChild(nameof(ColorItemIgnoreCollision), "0x" + ColorItemIgnoreCollision.ToHex().ToString("X8"));
-        e.AddChild(nameof(ColorPressurePlateCollision), "0x" + ColorPressurePlateCollision.ToHex().ToString("X8"));
-        e.AddChild(nameof(ColorSoftPressurePlateCollision), "0x" + ColorSoftPressurePlateCollision.ToHex().ToString("X8"));
-        e.AddChild(nameof(ColorLavaCollision), "0x" + ColorLavaCollision.ToHex().ToString("X8"));
-        e.AddChild(nameof(ColorCollisionNormal), "0x" + ColorCollisionNormal.ToHex().ToString("X8"));
-        e.AddChild(nameof(ColorFireOffset), "0x" + ColorFireOffset.ToHex().ToString("X8"));
-        e.AddChild(nameof(ColorFireOffsetLine), "0x" + ColorFireOffsetLine.ToHex().ToString("X8"));
-        e.AddChild(nameof(ColorFireDirection), "0x" + ColorFireDirection.ToHex().ToString("X8"));
-        e.AddChild(nameof(ColorRespawn), "0x" + ColorRespawn.ToHex().ToString("X8"));
-        e.AddChild(nameof(ColorInitialRespawn), "0x" + ColorInitialRespawn.ToHex().ToString("X8"));
-        e.AddChild(nameof(ColorExpandedInitRespawn), "0x" + ColorExpandedInitRespawn.ToHex().ToString("X8"));
-        e.AddChild(nameof(ColorItemSpawn), "0x" + ColorItemSpawn.ToHex().ToString("X8"));
-        e.AddChild(nameof(ColorItemInitSpawn), "0x" + ColorItemInitSpawn.ToHex().ToString("X8"));
-        e.AddChild(nameof(ColorItemSet), "0x" + ColorItemSet.ToHex().ToString("X8"));
-        e.AddChild(nameof(ColorTeamItemInitSpawn), "0x" + ColorTeamItemInitSpawn.ToHex().ToString("X8"));
-        XElement colorCollisionTeamElement = new(nameof(ColorCollisionTeam));
-        colorCollisionTeamElement.AddChild(INDEX + "1", "0x" + ColorCollisionTeam[0].ToHex().ToString("X8"));
-        colorCollisionTeamElement.AddChild(INDEX + "2", "0x" + ColorCollisionTeam[1].ToHex().ToString("X8"));
-        colorCollisionTeamElement.AddChild(INDEX + "3", "0x" + ColorCollisionTeam[2].ToHex().ToString("X8"));
-        colorCollisionTeamElement.AddChild(INDEX + "4", "0x" + ColorCollisionTeam[3].ToHex().ToString("X8"));
-        colorCollisionTeamElement.AddChild(INDEX + "5", "0x" + ColorCollisionTeam[4].ToHex().ToString("X8"));
-        e.Add(colorCollisionTeamElement);
-        XElement colorVolumeTeamElement = new(nameof(ColorVolumeTeam));
-        colorVolumeTeamElement.AddChild(INDEX + "0", "0x" + ColorVolumeTeam[0].ToHex().ToString("X8"));
-        colorVolumeTeamElement.AddChild(INDEX + "1", "0x" + ColorVolumeTeam[1].ToHex().ToString("X8"));
-        colorVolumeTeamElement.AddChild(INDEX + "2", "0x" + ColorVolumeTeam[2].ToHex().ToString("X8"));
-        colorVolumeTeamElement.AddChild(INDEX + "3", "0x" + ColorVolumeTeam[3].ToHex().ToString("X8"));
-        colorVolumeTeamElement.AddChild(INDEX + "4", "0x" + ColorVolumeTeam[4].ToHex().ToString("X8"));
-        colorVolumeTeamElement.AddChild(INDEX + "5", "0x" + ColorVolumeTeam[5].ToHex().ToString("X8"));
-        e.Add(colorVolumeTeamElement);
-        e.AddChild(nameof(ColorZombieSpawns), "0x" + ColorZombieSpawns.ToHex().ToString("X8"));
-        e.AddChild(nameof(ColorNavNode), "0x" + ColorNavNode.ToHex().ToString("X8"));
-        e.AddChild(nameof(ColorNavNodeW), "0x" + ColorNavNodeW.ToHex().ToString("X8"));
-        e.AddChild(nameof(ColorNavNodeL), "0x" + ColorNavNodeL.ToHex().ToString("X8"));
-        e.AddChild(nameof(ColorNavNodeA), "0x" + ColorNavNodeA.ToHex().ToString("X8"));
-        e.AddChild(nameof(ColorNavNodeG), "0x" + ColorNavNodeG.ToHex().ToString("X8"));
-        e.AddChild(nameof(ColorNavNodeT), "0x" + ColorNavNodeT.ToHex().ToString("X8"));
-        e.AddChild(nameof(ColorNavNodeS), "0x" + ColorNavNodeS.ToHex().ToString("X8"));
-        e.AddChild(nameof(ColorNavPath), "0x" + ColorNavPath.ToHex().ToString("X8"));
-        e.AddChild(nameof(ColorHordePath), "0x" + ColorHordePath.ToHex().ToString("X8"));
+        void addValue(string name, object? value) => e.AddChild(name, value);
+        void addColor(string name, Color value) => addValue(name, "0x" + value.ToHex().ToString("X8"));
+        void addArray<T>(string name, T[] values, int count, int offset = 0)
+        {
+            XElement element = new(name);
+            for (int i = 0; i < count; ++i) element.AddChild($"{INDEX}{i + offset}", values[i]);
+            e.Add(element);
+        }
+        void addColorArray(string name, Color[] values, int count, int offset = 0) => addArray(name, [.. values.Select(c => "0x" + c.ToHex().ToString("X8"))], count, offset);
+
+        addValue(nameof(RenderSpeed), RenderSpeed);
+        addValue(nameof(ScoringType), ScoringType);
+        addValue(nameof(Theme), Theme);
+        addValue(nameof(Hotkey), Hotkey);
+        addValue(nameof(AnimatedBackgrounds), AnimatedBackgrounds);
+        addValue(nameof(NoSkulls), NoSkulls);
+        addValue(nameof(ShowPickedPlatform), ShowPickedPlatform);
+        addValue(nameof(PickedPlatform), PickedPlatform);
+        addValue(nameof(BlueScore), BlueScore);
+        addValue(nameof(RedScore), RedScore);
+        addValue(nameof(ShowRingRopes), ShowRingRopes);
+        addValue(nameof(ShowZombieSpawns), ShowZombieSpawns);
+        addValue(nameof(ShowBombsketballTargets), ShowBombsketballTargets);
+        addValue(nameof(UseBombsketballDigitSize), UseBombsketballDigitSize);
+        addArray(nameof(ShowBombsketballBombTimers), ShowBombsketballBombTimers, 3);
+        addArray(nameof(BombsketballBombTimerFrames), BombsketballBombTimerFrames, 3);
+        addValue(nameof(ShowHordeDoors), ShowHordeDoors);
+        addArray(nameof(DamageHordeDoors), DamageHordeDoors, 2);
+        addValue(nameof(HordePathType), HordePathType);
+        addValue(nameof(HordePathIndex), HordePathIndex);
+        addValue(nameof(HordeWave), HordeWave);
+        addValue(nameof(HordeRandomSeed), HordeRandomSeed);
+        addValue(nameof(ShowCameraBounds), ShowCameraBounds);
+        addValue(nameof(ShowKillBounds), ShowKillBounds);
+        addValue(nameof(ShowSpawnBotBounds), ShowSpawnBotBounds);
+        addValue(nameof(ShowAssets), ShowAssets);
+        addValue(nameof(ShowBackground), ShowBackground);
+        addValue(nameof(ShowCollision), ShowCollision);
+        addValue(nameof(ShowCollisionNormalOverride), ShowCollisionNormalOverride);
+        addValue(nameof(ShowFireOffsetLocation), ShowFireOffsetLocation);
+        addValue(nameof(ShowFireOffsetLine), ShowFireOffsetLine);
+        addValue(nameof(ShowFireDirection), ShowFireDirection);
+        addValue(nameof(ShowGoal), ShowGoal);
+        addValue(nameof(ShowNoDodgeZone), ShowNoDodgeZone);
+        addValue(nameof(ShowVolume), ShowVolume);
+        addValue(nameof(ShowRespawn), ShowRespawn);
+        addValue(nameof(ShowItemSpawn), ShowItemSpawn);
+        addValue(nameof(ShowNavNode), ShowNavNode);
+        addValue(nameof(ShowBotPanicLine), ShowBotPanicLine);
+        addValue(nameof(ShowBotGroundLine), ShowBotGroundLine);
+        addValue(nameof(RadiusRespawn), RadiusRespawn);
+        addValue(nameof(RadiusZombieSpawn), RadiusZombieSpawn);
+        addValue(nameof(RadiusNavNode), RadiusNavNode);
+        addValue(nameof(RadiusHordePathPoint), RadiusHordePathPoint);
+        addValue(nameof(RadiusFireOffsetLocation), RadiusFireOffsetLocation);
+        addValue(nameof(LengthCollisionNormal), LengthCollisionNormal);
+        addValue(nameof(LengthFireDirectionArrow), LengthFireDirectionArrow);
+        addValue(nameof(OffsetNavLineArrowSide), OffsetNavLineArrowSide);
+        addValue(nameof(OffsetNavLineArrowBack), OffsetNavLineArrowBack);
+        addValue(nameof(OffsetHordePathArrowSide), OffsetHordePathArrowSide);
+        addValue(nameof(OffsetHordePathArrowBack), OffsetHordePathArrowBack);
+        addValue(nameof(OffsetFireDirectionArrowSide), OffsetFireDirectionArrowSide);
+        addValue(nameof(OffsetFireDirectionArrowBack), OffsetFireDirectionArrowBack);
+        addColor(nameof(ColorCameraBounds), ColorCameraBounds);
+        addColor(nameof(ColorKillBounds), ColorKillBounds);
+        addColor(nameof(ColorSpawnBotBounds), ColorSpawnBotBounds);
+        addColor(nameof(ColorHardCollision), ColorHardCollision);
+        addColor(nameof(ColorSoftCollision), ColorSoftCollision);
+        addColor(nameof(ColorNoSlideCollision), ColorNoSlideCollision);
+        addColor(nameof(ColorGameModeHardCollision), ColorGameModeHardCollision);
+        addColor(nameof(ColorBouncyHardCollision), ColorBouncyHardCollision);
+        addColor(nameof(ColorBouncySoftCollision), ColorBouncySoftCollision);
+        addColor(nameof(ColorBouncyNoSlideCollision), ColorBouncyNoSlideCollision);
+        addColor(nameof(ColorTriggerCollision), ColorTriggerCollision);
+        addColor(nameof(ColorStickyCollision), ColorStickyCollision);
+        addColor(nameof(ColorItemIgnoreCollision), ColorItemIgnoreCollision);
+        addColor(nameof(ColorPressurePlateCollision), ColorPressurePlateCollision);
+        addColor(nameof(ColorSoftPressurePlateCollision), ColorSoftPressurePlateCollision);
+        addColor(nameof(ColorLavaCollision), ColorLavaCollision);
+        addColor(nameof(ColorCollisionNormal), ColorCollisionNormal);
+        addColor(nameof(ColorFireOffset), ColorFireOffset);
+        addColor(nameof(ColorFireOffsetLine), ColorFireOffsetLine);
+        addColor(nameof(ColorFireDirection), ColorFireDirection);
+        addColor(nameof(ColorRespawn), ColorRespawn);
+        addColor(nameof(ColorInitialRespawn), ColorInitialRespawn);
+        addColor(nameof(ColorExpandedInitRespawn), ColorExpandedInitRespawn);
+        addColor(nameof(ColorItemSpawn), ColorItemSpawn);
+        addColor(nameof(ColorItemInitSpawn), ColorItemInitSpawn);
+        addColor(nameof(ColorItemSet), ColorItemSet);
+        addColor(nameof(ColorTeamItemInitSpawn), ColorTeamItemInitSpawn);
+        addColorArray(nameof(ColorCollisionTeam), ColorCollisionTeam, 5, 1);
+        addColorArray(nameof(ColorVolumeTeam), ColorVolumeTeam, 5);
+        addColor(nameof(ColorZombieSpawns), ColorZombieSpawns);
+        addColor(nameof(ColorNavNode), ColorNavNode);
+        addColor(nameof(ColorNavNodeW), ColorNavNodeW);
+        addColor(nameof(ColorNavNodeL), ColorNavNodeL);
+        addColor(nameof(ColorNavNodeA), ColorNavNodeA);
+        addColor(nameof(ColorNavNodeG), ColorNavNodeG);
+        addColor(nameof(ColorNavNodeT), ColorNavNodeT);
+        addColor(nameof(ColorNavNodeS), ColorNavNodeS);
+        addColor(nameof(ColorNavPath), ColorNavPath);
+        addColor(nameof(ColorBotPanicLine), ColorBotPanicLine);
+        addColor(nameof(ColorBotGroundLine), ColorBotGroundLine);
+        addColor(nameof(ColorHordePath), ColorHordePath);
     }
 
     public static RenderConfig Default => new()
@@ -464,9 +451,11 @@ public class RenderConfig : IDeserializable, ISerializable
         ShowRespawn = true,
         ShowItemSpawn = true,
         ShowNavNode = false,
+        ShowBotPanicLine = false,
+        ShowBotGroundLine = false,
         RadiusRespawn = 30,
         RadiusZombieSpawn = 20,
-        RadiusNavNode = 5,
+        RadiusNavNode = 20,
         RadiusHordePathPoint = 15,
         RadiusFireOffsetLocation = 15,
         LengthCollisionNormal = 50,
@@ -530,6 +519,8 @@ public class RenderConfig : IDeserializable, ISerializable
         ColorNavNodeT = Color.FromHex(0x00007F90),
         ColorNavNodeS = Color.FromHex(0x7F000090),
         ColorNavPath = Color.FromHex(0x8060607F),
+        ColorBotPanicLine = Color.FromHex(0xFF5F5F8F),
+        ColorBotGroundLine = Color.FromHex(0x8F8F8FAF),
         ColorHordePath = Color.FromHex(0x93529960),
     };
 }

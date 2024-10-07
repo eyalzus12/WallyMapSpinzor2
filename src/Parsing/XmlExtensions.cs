@@ -19,6 +19,12 @@ public static class XmlExtensions
     public static double? GetDoubleAttributeOrNull(this XElement element, string attribute) => Utils.ParseDoubleOrNull(GetAttributeOrNull(element, attribute));
     public static float? GetFloatAttributeOrNull(this XElement element, string attribute) => Utils.ParseFloatOrNull(GetAttributeOrNull(element, attribute));
 
+    public static bool? GetBoolElementOrNull(this XElement element, string name) => Utils.ParseBoolOrNull(element.GetElementValue(name));
+    public static int? GetIntElementOrNull(this XElement element, string name) => Utils.ParseIntOrNull(element.GetElementValue(name));
+    public static uint? GetUIntElementOrNull(this XElement element, string name) => Utils.ParseUIntOrNull(element.GetElementValue(name));
+    public static double? GetDoubleElementOrNull(this XElement element, string name) => Utils.ParseDoubleOrNull(element.GetElementValue(name));
+    public static E? GetEnumElementOrNull<E>(this XElement element, string name) where E : struct, Enum => Utils.ParseEnumOrNull<E>(element.GetElementValue(name));
+
     public static void AddChild(this XElement element, string name, object? value)
     {
         element.Add(new XElement(name, value));

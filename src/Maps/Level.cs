@@ -64,14 +64,60 @@ public class Level : IDeserializable, ISerializable, IDrawable
 
     public void DrawOn(ICanvas canvas, Transform trans, RenderConfig config, RenderContext context, RenderState state)
     {
+        context.ExtraStartFrame = Type?.StartFrame;
         Desc.DrawOn(canvas, trans, config, context, state);
+        if (Type is null) return;
 
-        if (Type is null || !config.ShowKillBounds) return;
         double killX = Desc.CameraBounds.X - Type.LeftKill ?? 0;
         double killY = Desc.CameraBounds.Y - Type.TopKill ?? 0;
         double killW = Desc.CameraBounds.W + Type.RightKill + Type.LeftKill ?? 0;
         double killH = Desc.CameraBounds.H + Type.BottomKill + Type.TopKill ?? 0;
 
-        canvas.DrawRect(killX, killY, killW, killH, false, config.ColorKillBounds, trans, DrawPriorityEnum.DATA, this);
+        if (config.ShowKillBounds)
+        {
+            canvas.DrawRect(killX, killY, killW, killH, false, config.ColorKillBounds, trans, DrawPriorityEnum.DATA, this);
+        }
+
+        if (config.ShowBotPanicLine)
+        {
+            double finalPanicLine = Math.Max(
+                Type.AIPanicLine ?? 0,
+                Desc.NavNodes
+                    .Where(n => n.Type == NavNodeTypeEnum.W || n.Type == NavNodeTypeEnum.A)
+                    .Select(n => n.Y)
+                    .DefaultIfEmpty(double.NegativeInfinity)
+                    .Max()
+            );
+
+            canvas.DrawLine(killX, finalPanicLine, killX + killW, finalPanicLine, config.ColorBotPanicLine, Transform.IDENTITY, DrawPriorityEnum.NAVLINE, this);
+        }
+
+        if (config.ShowBotGroundLine)
+        {
+            double finalGroundLine = Type.AIGroundLine ?? 0;
+
+            Position len = new(0, 0), pos = new(0, 0);
+            Position? NULL = null;
+            foreach (NavNode n in Desc.NavNodes)
+            {
+                if (n.Type != NavNodeTypeEnum._ && n.Type != NavNodeTypeEnum.L) continue;
+                if (n.Y <= finalGroundLine - 150) continue;
+                len = len with { Y = 150 };
+                // TODO: need to integrate dynamic collisions?
+                // TODO: need to correctly handle Anchors
+                AbstractCollision? col = BrawlhallaMath.Raycast(Desc.Collisions, 0, n.X, n.Y, ref len, ref pos, null, ref NULL, ref NULL, CollisionTypeFlags.HARD | CollisionTypeFlags.SOFT, 0);
+
+                if (col is not null && col.ToY > finalGroundLine)
+                {
+                    finalGroundLine = col.ToY;
+                }
+                else
+                {
+                    finalGroundLine = n.Y;
+                }
+            }
+
+            canvas.DrawLine(killX, finalGroundLine, killX + killW, finalGroundLine, config.ColorBotGroundLine, Transform.IDENTITY, DrawPriorityEnum.NAVLINE, this);
+        }
     }
 }
