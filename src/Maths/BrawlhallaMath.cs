@@ -174,6 +174,145 @@ public static class BrawlhallaMath
         return x;
     }
 
+    // ported directly from brawlhalla.
+    // TODO: figure out what this does.
+    private static double RaycastHelper(double param1, double param2, double param3, double param4, double param5, double param6, ref Position param7)
+    {
+        double _loc8_ = -param6;
+        double _loc9_ = param5;
+        double _loc10_ = Math.Sqrt(_loc8_ * _loc8_ + _loc9_ * _loc9_);
+        double _loc11_;
+        if (_loc10_ != 0)
+        {
+            _loc11_ = -1 / _loc10_;
+            _loc8_ *= _loc11_;
+            _loc9_ *= _loc11_;
+        }
+        param7 = new(_loc8_, _loc9_);
+
+        _loc11_ = param1 - param3;
+        double _loc12_ = param2 - param4;
+        return _loc11_ * _loc8_ + _loc12_ * _loc9_;
+    }
+
+    // ported directly from brawlhalla.
+    // TODO: figure out what this does.
+    private static bool RaycastHelper2(double param1, double param2, double param3, double param4, double param5, double param6, double param7, double param8, ref Position? param9)
+    {
+        double _loc10_ = (param8 - param6) * (param3 - param1) - (param7 - param5) * (param4 - param2);
+        if (_loc10_ == 0)
+        {
+            return false;
+        }
+        double _loc11_ = 1 / _loc10_;
+        double _loc12_ = _loc11_ * ((param7 - param5) * (param2 - param6) - (param8 - param6) * (param1 - param5));
+        double _loc13_ = _loc11_ * ((param3 - param1) * (param2 - param6) - (param4 - param2) * (param1 - param5));
+        if (_loc12_ >= 0 && _loc12_ <= 1 && _loc13_ >= 0 && _loc13_ <= 1)
+        {
+            if (param9 is not null)
+                param9 = new(param1 + _loc12_ * (param3 - param1), param2 + _loc12_ * (param4 - param2));
+            return true;
+        }
+        return false;
+    }
+
+    // a hopefully-accurate port of brawlhalla's raycast function
+    // the game does some kind of quad tree impl to filter out collisions
+    // not implemented here
+    // also 3 minor checks are commented out because they're unused or annoying to implement
+    public static AbstractCollision? Raycast(
+        IEnumerable<AbstractCollision> collisions,
+        int team /* param1 */,
+        double fromX /*param2*/, double fromY /*param3*/,
+        ref Position len /*param4*/, ref Position pos /*param5*/,
+        AbstractCollision? exclude /*param6*/,
+        ref Position? param7, ref Position? param8,
+        CollisionTypeFlags mandateFlags /*param9*/,
+        uint param10, // seems to be two bits: low means allow detect soft from below, high means to exclude team collisions
+        /*int param11 = 0,*/
+        CollisionTypeFlags excludeFlags = 0 /*param12*/,
+        HashSet<AbstractCollision>? outList = null /*param13*/,
+        bool param14 = false
+    )
+    {
+        CollisionTypeFlags soft = CollisionTypeFlags.SOFT;
+
+        double lenX = len.X; //_loc15_
+        double lenY = len.Y; //_loc16_
+        if (lenX == 0 && lenY == 0) return null;
+        Position tempPos = new(0, 0);
+        double posX = fromX + len.X; //_loc20_
+        double posY = fromY + len.Y; //_loc21_
+        AbstractCollision? result = null; //_loc19_
+        foreach (AbstractCollision col /*_loc17_*/ in collisions)
+        {
+            if ((col.CollisionType & mandateFlags) == 0) continue;
+
+            // this is seemingly unused
+            //if(col.§_-s13§) continue;
+
+            // this is related to a deprecated "camera zone" thing from the swf map days
+            //if(param11 != -1 && col.§_-5u§ != param11) continue;
+
+            if (col.Team != 0 && col.Team == team) continue;
+            if ((col.CollisionType & excludeFlags) != 0) continue;
+            if ((param10 & 2) != 0 && col.Team != 0) continue;
+            if (col == exclude) continue;
+
+            // this seems to give priority to hard collisions over soft collisions when both are overlaping floors and the hard collision is a moving collision that is currently not moving
+            //if (result is not null && result.NormalY == -1 && (result.CollisionType & hard) != 0 && (col.CollisionType & soft) != 0 && col.NormalY == -1 && result.FromY == col.FromY && outList is null && col.§_-l1I§ == col.startX) continue;
+
+            double _loc18_ = RaycastHelper(fromX, fromY, col.FromX, col.FromY, col.ToX - col.FromX, col.ToY - col.FromY, ref tempPos);
+            if (_loc18_ >= 0 || (mandateFlags & soft) == 0 || (col.CollisionType & soft) == 0 || (param10 & 1) != 0)
+            {
+                if (RaycastHelper2(fromX, fromY, posX, posY, col.FromX, col.FromY, col.ToX, col.ToY, ref param7))
+                {
+                    result = col;
+                    if (param8 is not null) param8 = param8.Value with { X = _loc18_ };
+
+                    if (outList is null)
+                    {
+                        posX = tempPos.X;
+                        posY = tempPos.Y;
+                        lenX = posX - fromX;
+                        lenY = posY - fromY;
+                    }
+                    else
+                        outList.Add(col);
+                }
+            }
+        }
+
+        if (param14 && result is not null)
+        {
+            if (result.NormalY < 0 && len.Y < 0 && lenY > len.Y)
+            {
+                result = null;
+            }
+            else if (result.NormalY > 0 && len.Y > 0 && lenY < len.Y)
+            {
+                result = null;
+            }
+            else if (result.NormalX < 0 && len.X < 0 && lenX > len.X)
+            {
+                result = null;
+            }
+            else if (result.NormalX > 0 && len.X > 0 && lenX < len.X)
+            {
+                result = null;
+            }
+        }
+
+        if (result is not null)
+        {
+            pos = tempPos;
+            len = new(lenX, lenY);
+            return result;
+        }
+
+        return null;
+    }
+
     // horde random path generation
     public static IEnumerable<(double, double)> GenerateHordePath(
         BrawlhallaRandom rand, // random number generator

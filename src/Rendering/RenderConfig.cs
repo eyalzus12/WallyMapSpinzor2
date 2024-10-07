@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
@@ -102,6 +103,8 @@ public class RenderConfig : IDeserializable, ISerializable
     public required bool ShowNavNode { get; set; }
     //whether to show bot panic line
     public required bool ShowBotPanicLine { get; set; }
+    //whether to show bot ground line
+    public required bool ShowBotGroundLine { get; set; }
 
     //circle radius to use for respawns
     public required double RadiusRespawn { get; set; }
@@ -183,6 +186,7 @@ public class RenderConfig : IDeserializable, ISerializable
     public required Color ColorNavPath { get; set; }
 
     public required Color ColorBotPanicLine { get; set; }
+    public required Color ColorBotGroundLine { get; set; }
 
     public required Color ColorHordePath { get; set; }
 
@@ -190,9 +194,17 @@ public class RenderConfig : IDeserializable, ISerializable
     {
         bool getBool(string name, bool @default) => e.GetBoolElementOrNull(name) ?? @default;
         int getInt(string name, int @default) => e.GetIntElementOrNull(name) ?? @default;
+        uint getUInt(string name, uint @default) => e.GetUIntElementOrNull(name) ?? @default;
         double getDouble(string name, double @default) => e.GetDoubleElementOrNull(name) ?? @default;
         E getEnum<E>(string name, E @default) where E : struct, Enum => e.GetEnumElementOrNull<E>(name) ?? @default;
-        Color getColor(string name, Color @default) => Color.FromHex(Utils.ParseUIntOrNull(e.GetElementValue(name)) ?? @default.ToHex());
+        Color getColor(string name, Color @default) => Color.FromHex(getUInt(name, @default.ToHex()));
+
+        T[] getArray<T>(string name, T[] @default, Func<string?, T?> f, int count, int offset = 0) where T : struct => Enumerable.Range(0, count).Select(i => f(e.Element(name)?.GetElementValue($"{INDEX}{i + offset}")) ?? @default[i]).ToArray();
+        bool[] getBoolArray(string name, bool[] @default, int count, int offset = 0) => getArray(name, @default, Utils.ParseBoolOrNull, count, offset);
+        int[] getIntArray(string name, int[] @default, int count, int offset = 0) => getArray(name, @default, Utils.ParseIntOrNull, count, offset);
+        uint[] getUIntArray(string name, uint[] @default, int count, int offset = 0) => getArray(name, @default, Utils.ParseUIntOrNull, count, offset);
+        double[] getDoubleArray(string name, double[] @default, int count, int offset = 0) => getArray(name, @default, Utils.ParseDoubleOrNull, count, offset);
+        Color[] getColorArray(string name, Color[] @default, int count, int offset = 0) => [.. getUIntArray(name, [.. @default.Select(c => c.ToHex())], count, offset).Select(Color.FromHex)];
 
         RenderConfig @default = Default;
         RenderSpeed = getDouble(nameof(RenderSpeed), @default.RenderSpeed);
@@ -209,28 +221,14 @@ public class RenderConfig : IDeserializable, ISerializable
         ShowZombieSpawns = getBool(nameof(ShowZombieSpawns), @default.ShowZombieSpawns);
         ShowBombsketballTargets = getBool(nameof(ShowBombsketballTargets), @default.ShowBombsketballTargets);
         UseBombsketballDigitSize = getBool(nameof(UseBombsketballDigitSize), @default.UseBombsketballDigitSize);
-        ShowBombsketballBombTimers =
-        [
-            Utils.ParseBoolOrNull(e.Element(nameof(ShowBombsketballBombTimers))?.GetElementValue(INDEX + "0")) ?? @default.ShowBombsketballBombTimers[0],
-            Utils.ParseBoolOrNull(e.Element(nameof(ShowBombsketballBombTimers))?.GetElementValue(INDEX + "1")) ?? @default.ShowBombsketballBombTimers[1],
-            Utils.ParseBoolOrNull(e.Element(nameof(ShowBombsketballBombTimers))?.GetElementValue(INDEX + "2")) ?? @default.ShowBombsketballBombTimers[2],
-        ];
-        BombsketballBombTimerFrames =
-        [
-            Utils.ParseDoubleOrNull(e.Element(nameof(BombsketballBombTimerFrames))?.GetElementValue(INDEX + "0")) ?? @default.BombsketballBombTimerFrames[0],
-            Utils.ParseDoubleOrNull(e.Element(nameof(BombsketballBombTimerFrames))?.GetElementValue(INDEX + "1")) ?? @default.BombsketballBombTimerFrames[1],
-            Utils.ParseDoubleOrNull(e.Element(nameof(BombsketballBombTimerFrames))?.GetElementValue(INDEX + "2")) ?? @default.BombsketballBombTimerFrames[2],
-        ];
+        ShowBombsketballBombTimers = getBoolArray(nameof(ShowBombsketballBombTimers), @default.ShowBombsketballBombTimers, 3);
+        BombsketballBombTimerFrames = getDoubleArray(nameof(BombsketballBombTimerFrames), @default.BombsketballBombTimerFrames, 3);
         ShowHordeDoors = getBool(nameof(ShowHordeDoors), @default.ShowHordeDoors);
-        DamageHordeDoors =
-        [
-            Utils.ParseIntOrNull(e.Element(nameof(DamageHordeDoors))?.GetElementValue(INDEX + "0")) ?? @default.DamageHordeDoors[0],
-            Utils.ParseIntOrNull(e.Element(nameof(DamageHordeDoors))?.GetElementValue(INDEX + "1")) ?? @default.DamageHordeDoors[1],
-        ];
+        DamageHordeDoors = getIntArray(nameof(DamageHordeDoors), @default.DamageHordeDoors, 2);
         HordePathType = getEnum(nameof(HordePathType), @default.HordePathType);
         HordePathIndex = getInt(nameof(HordePathIndex), @default.HordePathIndex);
         HordeWave = getInt(nameof(HordeWave), @default.HordeWave);
-        HordeRandomSeed = Utils.ParseUIntOrNull(e.GetElementValue(nameof(HordeRandomSeed))) ?? @default.HordeRandomSeed;
+        HordeRandomSeed = getUInt(nameof(HordeRandomSeed), @default.HordeRandomSeed);
         ShowCameraBounds = getBool(nameof(ShowCameraBounds), @default.ShowCameraBounds);
         ShowKillBounds = getBool(nameof(ShowKillBounds), @default.ShowKillBounds);
         ShowSpawnBotBounds = getBool(nameof(ShowSpawnBotBounds), @default.ShowSpawnBotBounds);
@@ -248,6 +246,7 @@ public class RenderConfig : IDeserializable, ISerializable
         ShowItemSpawn = getBool(nameof(ShowItemSpawn), @default.ShowItemSpawn);
         ShowNavNode = getBool(nameof(ShowNavNode), @default.ShowNavNode);
         ShowBotPanicLine = getBool(nameof(ShowBotPanicLine), @default.ShowBotPanicLine);
+        ShowBotGroundLine = getBool(nameof(ShowBotGroundLine), @default.ShowBotGroundLine);
         RadiusRespawn = getDouble(nameof(RadiusRespawn), @default.RadiusRespawn);
         RadiusZombieSpawn = getDouble(nameof(RadiusZombieSpawn), @default.RadiusZombieSpawn);
         RadiusNavNode = getDouble(nameof(RadiusNavNode), @default.RadiusNavNode);
@@ -288,23 +287,8 @@ public class RenderConfig : IDeserializable, ISerializable
         ColorItemInitSpawn = getColor(nameof(ColorItemInitSpawn), @default.ColorItemInitSpawn);
         ColorItemSet = getColor(nameof(ColorItemSet), @default.ColorItemSet);
         ColorTeamItemInitSpawn = getColor(nameof(ColorTeamItemInitSpawn), @default.ColorTeamItemInitSpawn);
-        ColorCollisionTeam =
-        [
-            Color.FromHex(Utils.ParseUIntOrNull(e.Element(nameof(ColorCollisionTeam))?.GetElementValue(INDEX + "1")) ?? @default.ColorCollisionTeam[0].ToHex()),
-            Color.FromHex(Utils.ParseUIntOrNull(e.Element(nameof(ColorCollisionTeam))?.GetElementValue(INDEX + "2")) ?? @default.ColorCollisionTeam[1].ToHex()),
-            Color.FromHex(Utils.ParseUIntOrNull(e.Element(nameof(ColorCollisionTeam))?.GetElementValue(INDEX + "3")) ?? @default.ColorCollisionTeam[2].ToHex()),
-            Color.FromHex(Utils.ParseUIntOrNull(e.Element(nameof(ColorCollisionTeam))?.GetElementValue(INDEX + "4")) ?? @default.ColorCollisionTeam[3].ToHex()),
-            Color.FromHex(Utils.ParseUIntOrNull(e.Element(nameof(ColorCollisionTeam))?.GetElementValue(INDEX + "5")) ?? @default.ColorCollisionTeam[4].ToHex()),
-        ];
-        ColorVolumeTeam =
-        [
-            Color.FromHex(Utils.ParseUIntOrNull(e.Element(nameof(ColorVolumeTeam))?.GetElementValue(INDEX + "0")) ?? @default.ColorVolumeTeam[0].ToHex()),
-            Color.FromHex(Utils.ParseUIntOrNull(e.Element(nameof(ColorVolumeTeam))?.GetElementValue(INDEX + "1")) ?? @default.ColorVolumeTeam[1].ToHex()),
-            Color.FromHex(Utils.ParseUIntOrNull(e.Element(nameof(ColorVolumeTeam))?.GetElementValue(INDEX + "2")) ?? @default.ColorVolumeTeam[2].ToHex()),
-            Color.FromHex(Utils.ParseUIntOrNull(e.Element(nameof(ColorVolumeTeam))?.GetElementValue(INDEX + "3")) ?? @default.ColorVolumeTeam[3].ToHex()),
-            Color.FromHex(Utils.ParseUIntOrNull(e.Element(nameof(ColorVolumeTeam))?.GetElementValue(INDEX + "4")) ?? @default.ColorVolumeTeam[4].ToHex()),
-            Color.FromHex(Utils.ParseUIntOrNull(e.Element(nameof(ColorVolumeTeam))?.GetElementValue(INDEX + "5")) ?? @default.ColorVolumeTeam[5].ToHex()),
-        ];
+        ColorCollisionTeam = getColorArray(nameof(ColorCollisionTeam), @default.ColorCollisionTeam, 5, 1);
+        ColorVolumeTeam = getColorArray(nameof(ColorVolumeTeam), @default.ColorVolumeTeam, 6);
         ColorZombieSpawns = getColor(nameof(ColorZombieSpawns), @default.ColorZombieSpawns);
         ColorNavNode = getColor(nameof(ColorNavNode), @default.ColorNavNode);
         ColorNavNodeW = getColor(nameof(ColorNavNodeW), @default.ColorNavNodeW);
@@ -314,13 +298,22 @@ public class RenderConfig : IDeserializable, ISerializable
         ColorNavNodeT = getColor(nameof(ColorNavNodeT), @default.ColorNavNodeT);
         ColorNavNodeS = getColor(nameof(ColorNavNodeS), @default.ColorNavNodeS);
         ColorNavPath = getColor(nameof(ColorNavPath), @default.ColorNavPath);
+        ColorBotPanicLine = getColor(nameof(ColorBotPanicLine), @default.ColorBotPanicLine);
+        ColorBotGroundLine = getColor(nameof(ColorBotGroundLine), @default.ColorBotGroundLine);
         ColorHordePath = getColor(nameof(ColorHordePath), @default.ColorHordePath);
     }
 
     public void Serialize(XElement e)
     {
         void addValue(string name, object? value) => e.AddChild(name, value);
-        void addColor(string name, Color value) => e.AddChild(name, "0x" + value.ToHex().ToString("X8"));
+        void addColor(string name, Color value) => addValue(name, "0x" + value.ToHex().ToString("X8"));
+        void addArray<T>(string name, T[] values, int count, int offset = 0)
+        {
+            XElement element = new(name);
+            for (int i = 0; i < count; ++i) element.AddChild($"{INDEX}{i + offset}", values[i]);
+            e.Add(element);
+        }
+        void addColorArray(string name, Color[] values, int count, int offset = 0) => addArray(name, [.. values.Select(c => "0x" + c.ToHex().ToString("X8"))], count, offset);
 
         addValue(nameof(RenderSpeed), RenderSpeed);
         addValue(nameof(ScoringType), ScoringType);
@@ -336,21 +329,10 @@ public class RenderConfig : IDeserializable, ISerializable
         addValue(nameof(ShowZombieSpawns), ShowZombieSpawns);
         addValue(nameof(ShowBombsketballTargets), ShowBombsketballTargets);
         addValue(nameof(UseBombsketballDigitSize), UseBombsketballDigitSize);
-        XElement showBombsketballBombTimersElement = new(nameof(ShowBombsketballBombTimers));
-        showBombsketballBombTimersElement.AddChild(INDEX + "0", ShowBombsketballBombTimers[0]);
-        showBombsketballBombTimersElement.AddChild(INDEX + "1", ShowBombsketballBombTimers[1]);
-        showBombsketballBombTimersElement.AddChild(INDEX + "2", ShowBombsketballBombTimers[2]);
-        e.Add(showBombsketballBombTimersElement);
-        XElement bombsketballBombTimerFramesElement = new(nameof(BombsketballBombTimerFrames));
-        bombsketballBombTimerFramesElement.AddChild(INDEX + "0", BombsketballBombTimerFrames[0]);
-        bombsketballBombTimerFramesElement.AddChild(INDEX + "1", BombsketballBombTimerFrames[1]);
-        bombsketballBombTimerFramesElement.AddChild(INDEX + "2", BombsketballBombTimerFrames[2]);
-        e.Add(bombsketballBombTimerFramesElement);
-        e.AddChild(nameof(ShowHordeDoors), ShowHordeDoors);
-        XElement damageHordeDoorsElement = new(nameof(DamageHordeDoors));
-        damageHordeDoorsElement.AddChild(INDEX + "0", DamageHordeDoors[0]);
-        damageHordeDoorsElement.AddChild(INDEX + "1", DamageHordeDoors[1]);
-        e.Add(damageHordeDoorsElement);
+        addArray(nameof(ShowBombsketballBombTimers), ShowBombsketballBombTimers, 3);
+        addArray(nameof(BombsketballBombTimerFrames), BombsketballBombTimerFrames, 3);
+        addValue(nameof(ShowHordeDoors), ShowHordeDoors);
+        addArray(nameof(DamageHordeDoors), DamageHordeDoors, 2);
         addValue(nameof(HordePathType), HordePathType);
         addValue(nameof(HordePathIndex), HordePathIndex);
         addValue(nameof(HordeWave), HordeWave);
@@ -371,6 +353,8 @@ public class RenderConfig : IDeserializable, ISerializable
         addValue(nameof(ShowRespawn), ShowRespawn);
         addValue(nameof(ShowItemSpawn), ShowItemSpawn);
         addValue(nameof(ShowNavNode), ShowNavNode);
+        addValue(nameof(ShowBotPanicLine), ShowBotPanicLine);
+        addValue(nameof(ShowBotGroundLine), ShowBotGroundLine);
         addValue(nameof(RadiusRespawn), RadiusRespawn);
         addValue(nameof(RadiusZombieSpawn), RadiusZombieSpawn);
         addValue(nameof(RadiusNavNode), RadiusNavNode);
@@ -411,21 +395,8 @@ public class RenderConfig : IDeserializable, ISerializable
         addColor(nameof(ColorItemInitSpawn), ColorItemInitSpawn);
         addColor(nameof(ColorItemSet), ColorItemSet);
         addColor(nameof(ColorTeamItemInitSpawn), ColorTeamItemInitSpawn);
-        XElement colorCollisionTeamElement = new(nameof(ColorCollisionTeam));
-        colorCollisionTeamElement.AddChild(INDEX + "1", "0x" + ColorCollisionTeam[0].ToHex().ToString("X8"));
-        colorCollisionTeamElement.AddChild(INDEX + "2", "0x" + ColorCollisionTeam[1].ToHex().ToString("X8"));
-        colorCollisionTeamElement.AddChild(INDEX + "3", "0x" + ColorCollisionTeam[2].ToHex().ToString("X8"));
-        colorCollisionTeamElement.AddChild(INDEX + "4", "0x" + ColorCollisionTeam[3].ToHex().ToString("X8"));
-        colorCollisionTeamElement.AddChild(INDEX + "5", "0x" + ColorCollisionTeam[4].ToHex().ToString("X8"));
-        e.Add(colorCollisionTeamElement);
-        XElement colorVolumeTeamElement = new(nameof(ColorVolumeTeam));
-        colorVolumeTeamElement.AddChild(INDEX + "0", "0x" + ColorVolumeTeam[0].ToHex().ToString("X8"));
-        colorVolumeTeamElement.AddChild(INDEX + "1", "0x" + ColorVolumeTeam[1].ToHex().ToString("X8"));
-        colorVolumeTeamElement.AddChild(INDEX + "2", "0x" + ColorVolumeTeam[2].ToHex().ToString("X8"));
-        colorVolumeTeamElement.AddChild(INDEX + "3", "0x" + ColorVolumeTeam[3].ToHex().ToString("X8"));
-        colorVolumeTeamElement.AddChild(INDEX + "4", "0x" + ColorVolumeTeam[4].ToHex().ToString("X8"));
-        colorVolumeTeamElement.AddChild(INDEX + "5", "0x" + ColorVolumeTeam[5].ToHex().ToString("X8"));
-        e.Add(colorVolumeTeamElement);
+        addColorArray(nameof(ColorCollisionTeam), ColorCollisionTeam, 5, 1);
+        addColorArray(nameof(ColorVolumeTeam), ColorVolumeTeam, 5);
         addColor(nameof(ColorZombieSpawns), ColorZombieSpawns);
         addColor(nameof(ColorNavNode), ColorNavNode);
         addColor(nameof(ColorNavNodeW), ColorNavNodeW);
@@ -436,6 +407,7 @@ public class RenderConfig : IDeserializable, ISerializable
         addColor(nameof(ColorNavNodeS), ColorNavNodeS);
         addColor(nameof(ColorNavPath), ColorNavPath);
         addColor(nameof(ColorBotPanicLine), ColorBotPanicLine);
+        addColor(nameof(ColorBotGroundLine), ColorBotGroundLine);
         addColor(nameof(ColorHordePath), ColorHordePath);
     }
 
@@ -480,9 +452,10 @@ public class RenderConfig : IDeserializable, ISerializable
         ShowItemSpawn = true,
         ShowNavNode = false,
         ShowBotPanicLine = false,
+        ShowBotGroundLine = false,
         RadiusRespawn = 30,
         RadiusZombieSpawn = 20,
-        RadiusNavNode = 5,
+        RadiusNavNode = 20,
         RadiusHordePathPoint = 15,
         RadiusFireOffsetLocation = 15,
         LengthCollisionNormal = 50,
@@ -546,7 +519,8 @@ public class RenderConfig : IDeserializable, ISerializable
         ColorNavNodeT = Color.FromHex(0x00007F90),
         ColorNavNodeS = Color.FromHex(0x7F000090),
         ColorNavPath = Color.FromHex(0x8060607F),
-        ColorBotPanicLine = Color.FromHex(0xFFFFFF8F),
+        ColorBotPanicLine = Color.FromHex(0xFF5F5F8F),
+        ColorBotGroundLine = Color.FromHex(0x8F8F8FAF),
         ColorHordePath = Color.FromHex(0x93529960),
     };
 }

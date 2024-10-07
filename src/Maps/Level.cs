@@ -84,10 +84,39 @@ public class Level : IDeserializable, ISerializable, IDrawable
                 Desc.NavNodes
                     .Where(n => n.Type == NavNodeTypeEnum.W || n.Type == NavNodeTypeEnum.A)
                     .Select(n => n.Y)
+                    .DefaultIfEmpty(double.NegativeInfinity)
                     .Max()
             );
 
             canvas.DrawLine(killX, finalPanicLine, killX + killW, finalPanicLine, config.ColorBotPanicLine, Transform.IDENTITY, DrawPriorityEnum.NAVLINE, this);
+        }
+
+        if (config.ShowBotGroundLine)
+        {
+            double finalGroundLine = Type.AIGroundLine ?? 0;
+
+            Position len = new(0, 0), pos = new(0, 0);
+            Position? NULL = null;
+            foreach (NavNode n in Desc.NavNodes)
+            {
+                if (n.Type != NavNodeTypeEnum._ && n.Type != NavNodeTypeEnum.L) continue;
+                if (n.Y <= finalGroundLine - 150) continue;
+                len = len with { Y = 150 };
+                // TODO: need to integrate dynamic collisions?
+                // TODO: need to correctly handle Anchors
+                AbstractCollision? col = BrawlhallaMath.Raycast(Desc.Collisions, 0, n.X, n.Y, ref len, ref pos, null, ref NULL, ref NULL, CollisionTypeFlags.HARD | CollisionTypeFlags.SOFT, 0);
+
+                if (col is not null && col.ToY > finalGroundLine)
+                {
+                    finalGroundLine = col.ToY;
+                }
+                else
+                {
+                    finalGroundLine = n.Y;
+                }
+            }
+
+            canvas.DrawLine(killX, finalGroundLine, killX + killW, finalGroundLine, config.ColorBotGroundLine, Transform.IDENTITY, DrawPriorityEnum.NAVLINE, this);
         }
     }
 }
