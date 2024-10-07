@@ -6,15 +6,6 @@ namespace WallyMapSpinzor2;
 
 public class LevelType : IDeserializable, ISerializable
 {
-    public enum TeamColorEnum
-    {
-        Default, // this is used as a fallback
-        Red,
-        Blue,
-        Yellow,
-        Purple,
-    }
-
     private const string TEMPLATE_LEVEL_TYPE = "Template";
     private static readonly TeamColorEnum[] DEFAULT_TEAM_COLOR_ORDER = [TeamColorEnum.Red, TeamColorEnum.Blue, TeamColorEnum.Yellow, TeamColorEnum.Purple];
 
