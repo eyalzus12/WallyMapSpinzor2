@@ -64,6 +64,7 @@ public class Level : IDeserializable, ISerializable, IDrawable
 
     public void DrawOn(ICanvas canvas, Transform trans, RenderConfig config, RenderContext context, RenderState state)
     {
+        context.ExtraStartFrame = Type?.StartFrame;
         Desc.DrawOn(canvas, trans, config, context, state);
         if (Type is null) return;
 
