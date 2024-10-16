@@ -31,16 +31,15 @@ public class LevelType : IDeserializable, ISerializable
     public bool? SoftTopKill { get; set; }
     public bool? HardLeftKill { get; set; } //LeftKill needs to be equal or more than 200 for this to be true
     public bool? HardRightKill { get; set; } //RightKill needs to be equal or more than 200 for this to be true
+    public uint? MinNumOnlineGamesBeforeRandom { get; set; }
     public string? BGMusic { get; set; }
     public string? StreamerBGMusic { get; set; }
     public string? ThumbnailPNGFile { get; set; }
     public bool? AIStrictRecover { get; set; }
 
-    //used nowhere except in the template
-    //doesn't actually get serialized ingame
     public uint? MidgroundTint { get; set; }
-    public uint? MidgroundOffset { get; set; } // default to 0
-    public double? MidgroundFraction { get; set; }
+    public uint? MidgroundOffset { get; set; }
+    public double? MidgroundFraction { get; set; } // defaults to 0
 
     public uint? BotTint { get; set; }
     public uint? BotOffset { get; set; }
@@ -62,8 +61,8 @@ public class LevelType : IDeserializable, ISerializable
     public void Deserialize(XElement e)
     {
         LevelName = e.GetAttribute("LevelName");
-        DevOnly = e.GetBoolAttribute("DevOnly");
-        TestLevel = e.GetBoolAttribute("TestLevel");
+        DevOnly = e.GetBoolAttribute("DevOnly", false);
+        TestLevel = e.GetBoolAttribute("TestLevel", false);
 
         DisplayName = e.GetElementValue("DisplayName")!;
         LevelID = Utils.ParseIntOrNull(e.GetElementValue("LevelID")) ?? 0;
@@ -89,6 +88,7 @@ public class LevelType : IDeserializable, ISerializable
         SoftTopKill = Utils.ParseBoolOrNull(e.GetElementValue("SoftTopKill"));
         HardLeftKill = Utils.ParseBoolOrNull(e.GetElementValue("HardLeftKill"));
         HardRightKill = Utils.ParseBoolOrNull(e.GetElementValue("HardRightKill"));
+        MinNumOnlineGamesBeforeRandom = Utils.ParseUIntOrNull(e.GetElementValue("MinNumOnlineGamesBeforeRandom"));
         BGMusic = e.GetElementValue("BGMusic");
         StreamerBGMusic = e.GetElementValue("StreamerBGMusic");
         ThumbnailPNGFile = e.GetElementValue("ThumbnailPNGFile");
@@ -140,6 +140,7 @@ public class LevelType : IDeserializable, ISerializable
         if (HardRightKill is not null)
             e.AddChild("HardRightKill", HardRightKill.Value && RightKill >= 200);
 
+        e.AddIfNotNull("MinNumOnlineGamesBeforeRandom", MinNumOnlineGamesBeforeRandom);
         e.AddIfNotNull("BGMusic", BGMusic);
         e.AddIfNotNull("StreamerBGMusic", StreamerBGMusic);
         e.AddIfNotNull("FixedWidth", FixedWidth?.ToString()?.ToUpperInvariant());
