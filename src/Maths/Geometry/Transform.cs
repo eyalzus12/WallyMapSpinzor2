@@ -51,7 +51,7 @@ public readonly record struct Transform(double ScaleX, double SkewX, double Skew
         t.SkewY * f, t.ScaleY * f,
         t.TranslateX * f, t.TranslateY * f
     );
-    
+
     public static Transform CreateInverse(Transform t)
     {
         double invDet = 1.0f / t.Determinant;
