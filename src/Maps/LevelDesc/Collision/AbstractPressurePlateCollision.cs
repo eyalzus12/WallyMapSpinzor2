@@ -27,9 +27,8 @@ public abstract class AbstractPressurePlateCollision : AbstractCollision
         AssetName = e.GetAttribute("AssetName");
         Cooldown = e.GetIntAttribute("Cooldown", 3000);
         FaceLeft = e.GetBoolAttribute("FaceLeft", false);
-        FireOffsetX = [.. e.GetAttribute("FireOffsetX").Split(',').Select(double.Parse)];
-        FireOffsetY = [.. e.GetAttribute("FireOffsetY").Split(',').Select(double.Parse)];
-        if (FireOffsetY.Length == 0) FireOffsetY = [-10]; //the game defaults it to -10
+        FireOffsetX = e.HasAttribute("FireOffsetX") ? [.. e.GetAttribute("FireOffsetX").Split(',').Select(double.Parse)] : [];
+        FireOffsetY = e.HasAttribute("FireOffsetY") ? [.. e.GetAttribute("FireOffsetY").Split(',').Select(double.Parse)] : [-10];
         PlatID = e.GetAttributeOrNull("PlatID");
         TrapPowers = e.GetAttribute("TrapPowers").Split(',');
     }
@@ -43,8 +42,10 @@ public abstract class AbstractPressurePlateCollision : AbstractCollision
         e.SetAttributeValue("AssetName", AssetName);
         e.SetAttributeValue("Cooldown", Cooldown);
         e.SetAttributeValue("FaceLeft", FaceLeft.ToString().ToLowerInvariant());
-        e.SetAttributeValue("FireOffsetX", string.Join(',', FireOffsetX));
-        e.SetAttributeValue("FireOffsetY", string.Join(',', FireOffsetY));
+        if (FireOffsetX.Length != 0)
+            e.SetAttributeValue("FireOffsetX", string.Join(',', FireOffsetX));
+        if (FireOffsetY.Length != 0)
+            e.SetAttributeValue("FireOffsetY", string.Join(',', FireOffsetY));
         if (PlatID is not null)
             e.SetAttributeValue("PlatID", PlatID);
         e.SetAttributeValue("TrapPowers", string.Join(',', TrapPowers));
@@ -63,7 +64,8 @@ public abstract class AbstractPressurePlateCollision : AbstractCollision
         for (int i = 0; i < TrapPowers.Length; ++i)
         {
             double fireOffsetX = GetOffset(FireOffsetX, i);
-            double fireOffsetY = GetOffset(FireOffsetY, i);
+            // it's impossible ingame to create a pressure plate with an empty FireOffsetY array
+            double fireOffsetY = GetOffset(FireOffsetY.Length == 0 ? [-10] : FireOffsetY, i);
             if (config.ShowFireOffsetLocation)
                 canvas.DrawCircle(fireOffsetX, fireOffsetY, config.RadiusFireOffsetLocation, config.ColorFireOffset, trans, DrawPriorityEnum.FIRE_OFFSET, this);
             if (config.ShowFireOffsetLine)

@@ -1,5 +1,6 @@
 using System;
 using System.Globalization;
+using System.Xml;
 using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
@@ -7,18 +8,20 @@ namespace WallyMapSpinzor2;
 public static class XmlExtensions
 {
     public static bool HasAttribute(this XElement element, string attribute) => element.Attribute(attribute) is not null;
-    public static string GetAttribute(this XElement element, string attribute, string @default = "") => element.Attribute(attribute)?.Value ?? @default;
-    public static bool GetBoolAttribute(this XElement element, string attribute, bool @default = false) => element.GetAttribute(attribute, @default.ToString()).Equals("TRUE", StringComparison.InvariantCultureIgnoreCase);
-    public static int GetIntAttribute(this XElement element, string attribute, int @default = 0) => int.Parse(element.GetAttribute(attribute, @default.ToString()), CultureInfo.InvariantCulture);
-    public static double GetDoubleAttribute(this XElement element, string attribute, double @default = 0.0) => double.Parse(element.GetAttribute(attribute, @default.ToString()), CultureInfo.InvariantCulture);
-    public static float GetFloatAttribute(this XElement element, string attribute, float @default = 0.0f) => float.Parse(element.GetAttribute(attribute, @default.ToString()), CultureInfo.InvariantCulture);
 
+    // get attribute value. if invalid format - error. if doesn't exist - given default (and error if no default is given).
+    public static string GetAttribute(this XElement element, string attribute, string? @default = null) => element.Attribute(attribute)?.Value ?? @default ?? throw new XmlException($"element {element} is missing required attribute {attribute}");
+    public static bool GetBoolAttribute(this XElement element, string attribute, bool? @default = null) => element.GetAttribute(attribute, @default?.ToString()).Equals("TRUE", StringComparison.InvariantCultureIgnoreCase);
+    public static int GetIntAttribute(this XElement element, string attribute, int? @default = null) => int.Parse(element.GetAttribute(attribute, @default?.ToString()), CultureInfo.InvariantCulture);
+    public static double GetDoubleAttribute(this XElement element, string attribute, double? @default = null) => double.Parse(element.GetAttribute(attribute, @default?.ToString()), CultureInfo.InvariantCulture);
+
+    // get attribute value. if invalid format - error. if doesn't exist - null.
     public static string? GetAttributeOrNull(this XElement element, string attribute) => element.Attribute(attribute)?.Value;
     public static bool? GetBoolAttributeOrNull(this XElement element, string attribute) => Utils.ParseBoolOrNull(GetAttributeOrNull(element, attribute));
     public static int? GetIntAttributeOrNull(this XElement element, string attribute) => Utils.ParseIntOrNull(GetAttributeOrNull(element, attribute));
     public static double? GetDoubleAttributeOrNull(this XElement element, string attribute) => Utils.ParseDoubleOrNull(GetAttributeOrNull(element, attribute));
-    public static float? GetFloatAttributeOrNull(this XElement element, string attribute) => Utils.ParseFloatOrNull(GetAttributeOrNull(element, attribute));
 
+    // get element value. if invalid format - error. if doesn't exist - null.
     public static bool? GetBoolElementOrNull(this XElement element, string name) => Utils.ParseBoolOrNull(element.GetElementValue(name));
     public static int? GetIntElementOrNull(this XElement element, string name) => Utils.ParseIntOrNull(element.GetElementValue(name));
     public static uint? GetUIntElementOrNull(this XElement element, string name) => Utils.ParseUIntOrNull(element.GetElementValue(name));

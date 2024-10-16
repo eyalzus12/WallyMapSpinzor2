@@ -5,11 +5,13 @@ namespace WallyMapSpinzor2;
 
 public static class Utils
 {
+    // parse functions. if invalid format - error. if null - null.
     public static double? ParseDoubleOrNull(string? s) => (s is null) ? null : double.Parse(s, CultureInfo.InvariantCulture);
     public static float? ParseFloatOrNull(string? s) => (s is null) ? null : float.Parse(s, CultureInfo.InvariantCulture);
     public static bool? ParseBoolOrNull(string? s) => s?.Equals("TRUE", StringComparison.InvariantCultureIgnoreCase);
     public static int? ParseIntOrNull(string? s) => (s is null) ? null : int.Parse(s, CultureInfo.InvariantCulture);
     public static uint? ParseUIntOrNull(string? s) => (s is null) ? null : (s.StartsWith("0x") ? Convert.ToUInt32(s, 16) : uint.Parse(s, CultureInfo.InvariantCulture));
+    // enum parse functions. OrDefault: default if null or invalid. OrNull: default if invalid, null if null.
     public static E ParseEnumOrDefault<E>(string? s, E @default = default) where E : struct, Enum => Enum.TryParse(s, out E e) ? e : @default;
     public static E? ParseEnumOrNull<E>(string? s, E @default = default) where E : struct, Enum => s is null ? null : Enum.TryParse(s, out E e) ? e : @default;
 
