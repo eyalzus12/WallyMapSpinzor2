@@ -23,7 +23,7 @@ public abstract class AbstractPressurePlateCollision : AbstractCollision
         base.Deserialize(e);
         AnimOffsetX = e.GetDoubleAttribute("AnimOffsetX", 0);
         AnimOffsetY = e.GetDoubleAttribute("AnimOffsetY", 0);
-        AnimRotation = e.GetDoubleAttribute("AnimRotation");
+        AnimRotation = e.GetDoubleAttribute("AnimRotation", 0);
         AssetName = e.GetAttribute("AssetName");
         Cooldown = e.GetIntAttribute("Cooldown", 3000);
         FaceLeft = e.GetBoolAttribute("FaceLeft", false);
