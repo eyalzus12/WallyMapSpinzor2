@@ -21,8 +21,8 @@ public class NavNode : IDeserializable, ISerializable, IDrawable
         (NavID, Type) = ParseNavID(e.GetAttribute("NavID"));
         //the "not empty" is a guard against an empty path, where an empty string would be passed to ParseNavID
         Path = [.. e.GetAttribute("Path").Split(',').Where(s => s != "").Select(ParseNavID)];
-        X = e.GetDoubleAttribute("X");
-        Y = e.GetDoubleAttribute("Y");
+        X = e.GetDoubleAttribute("X", 0);
+        Y = e.GetDoubleAttribute("Y", 0);
     }
 
     public static (int, NavNodeTypeEnum) ParseNavID(string navId)
