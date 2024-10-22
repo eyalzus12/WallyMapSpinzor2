@@ -159,6 +159,8 @@ public abstract class AbstractCollision : IDeserializable, ISerializable, IDrawa
     {
         if (!config.ShowCollision) return;
 
+        Color lineColor = GetColor(config);
+
         (double, double)[] anchorCurve = CalculateCurve();
 
         for (int i = 0; i < anchorCurve.Length - 1; ++i)
@@ -167,14 +169,16 @@ public abstract class AbstractCollision : IDeserializable, ISerializable, IDrawa
             (double nextX, double nextY) = anchorCurve[i + 1];
             //draw current line
             if (Team == 0)
-                canvas.DrawLine(prevX, prevY, nextX, nextY, GetColor(config), trans, DrawPriorityEnum.DATA, this);
+                canvas.DrawLine(prevX, prevY, nextX, nextY, lineColor, trans, DrawPriorityEnum.DATA, this);
             else
             {
-                if (Team - 1 >= config.ColorCollisionTeam.Length)
-                    throw new ArgumentOutOfRangeException($"Collision has team {Team} which is larger than max available collision team color {config.ColorCollisionTeam.Length}");
+                Color teamColor = 1 <= Team && Team - 1 < config.ColorCollisionTeam.Length
+                    ? config.ColorCollisionTeam[Team - 1]
+                    : Color.FromHex(0xFFFFFF7F);
+
                 canvas.DrawLineMultiColor(
                         prevX, prevY, nextX, nextY,
-                        [config.ColorCollisionTeam[Team - 1], GetColor(config), config.ColorCollisionTeam[Team - 1]],
+                        [teamColor, lineColor, teamColor],
                         trans, DrawPriorityEnum.DATA,
                         this
                     );
