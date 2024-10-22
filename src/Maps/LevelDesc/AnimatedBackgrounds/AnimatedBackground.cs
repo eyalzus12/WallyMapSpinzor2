@@ -28,7 +28,7 @@ public class AnimatedBackground : IDeserializable, ISerializable, IDrawable
     {
         Midground = e.GetBoolAttribute("Midground", false);
 
-        Gfx = e.DeserializeChildOfType<Gfx>()!;
+        Gfx = e.DeserializeRequiredChildOfType<Gfx>();
 
         string[]? position = e.GetElementValue("Position")?.Split(',', 2);
         Position_X = Utils.ParseDoubleOrNull(position?[0]) ?? 0;

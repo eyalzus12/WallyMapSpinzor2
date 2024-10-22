@@ -44,8 +44,8 @@ public class LevelDesc : IDeserializable, ISerializable, IDrawable
         NumFrames = e.GetIntAttribute("NumFrames", 0);
         SlowMult = e.GetDoubleAttribute("SlowMult", 1);
 
-        CameraBounds = e.DeserializeChildOfType<CameraBounds>()!;
-        SpawnBotBounds = e.DeserializeChildOfType<SpawnBotBounds>()!;
+        CameraBounds = e.DeserializeRequiredChildOfType<CameraBounds>();
+        SpawnBotBounds = e.DeserializeRequiredChildOfType<SpawnBotBounds>();
         Backgrounds = e.DeserializeChildrenOfType<Background>();
         LevelSounds = e.DeserializeChildrenOfType<LevelSound>();
         TeamScoreboard = e.DeserializeChildOfType<TeamScoreboard>();

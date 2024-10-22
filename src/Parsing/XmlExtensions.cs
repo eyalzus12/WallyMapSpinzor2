@@ -1,6 +1,5 @@
 using System;
 using System.Globalization;
-using System.Xml;
 using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
@@ -10,7 +9,7 @@ public static class XmlExtensions
     public static bool HasAttribute(this XElement element, string attribute) => element.Attribute(attribute) is not null;
 
     // get attribute value. if invalid format - error. if doesn't exist - given default (and error if no default is given).
-    public static string GetAttribute(this XElement element, string attribute, string? @default = null) => element.Attribute(attribute)?.Value ?? @default ?? throw new XmlException($"element {element} is missing required attribute {attribute}");
+    public static string GetAttribute(this XElement element, string attribute, string? @default = null) => element.Attribute(attribute)?.Value ?? @default ?? throw new SerializationException($"element {element} is missing required attribute {attribute}");
     public static bool GetBoolAttribute(this XElement element, string attribute, bool? @default = null) => element.GetAttribute(attribute, @default?.ToString()).Equals("TRUE", StringComparison.InvariantCultureIgnoreCase);
     public static int GetIntAttribute(this XElement element, string attribute, int? @default = null) => int.Parse(element.GetAttribute(attribute, @default?.ToString()), CultureInfo.InvariantCulture);
     public static double GetDoubleAttribute(this XElement element, string attribute, double? @default = null) => double.Parse(element.GetAttribute(attribute, @default?.ToString()), CultureInfo.InvariantCulture);

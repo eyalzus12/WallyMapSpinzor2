@@ -18,6 +18,9 @@ public static class MapXmlExtensions
     public static T? DeserializeChildOfType<T>(this XElement e) where T : IDeserializable, new()
         => e.Elements(typeof(T).Name).Select(DeserializeTo<T>).FirstOrDefault();
 
+    public static T DeserializeRequiredChildOfType<T>(this XElement e) where T : IDeserializable, new()
+        => (e.Element(typeof(T).Name) ?? throw new SerializationException($"Element {e} is missing required child {typeof(T).Name}")).DeserializeTo<T>();
+
     public static AbstractCollision[] DeserializeCollisionChildren(this XElement e) =>
         [.. e.Elements().Select(DeserializeCollision).Where(c => c is not null)];
 

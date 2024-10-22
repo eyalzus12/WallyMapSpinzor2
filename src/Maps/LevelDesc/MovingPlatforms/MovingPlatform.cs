@@ -28,7 +28,7 @@ public class MovingPlatform : AbstractAsset
         //Animation is always supposed to exist
         //The game technically supports it not existing
         //In which case the moving platform doesn't exist
-        Animation = e.DeserializeChildOfType<Animation>()!;
+        Animation = e.DeserializeRequiredChildOfType<Animation>();
         Assets = e.DeserializeAssetChildren();
         foreach (AbstractAsset a in Assets)
             a.Parent = this;
