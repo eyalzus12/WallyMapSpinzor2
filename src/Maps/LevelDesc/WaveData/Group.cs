@@ -5,15 +5,15 @@ namespace WallyMapSpinzor2;
 
 public class Group : IDeserializable, ISerializable
 {
-    public int? Count { get; set; }
-    public int? Count3 { get; set; }
-    public int? Count4 { get; set; }
-    public int? Delay { get; set; }
-    public int? Delay3 { get; set; }
-    public int? Delay4 { get; set; }
-    public int? Stagger { get; set; }
-    public int? Stagger3 { get; set; }
-    public int? Stagger4 { get; set; }
+    public uint? Count { get; set; }
+    public uint? Count3 { get; set; }
+    public uint? Count4 { get; set; }
+    public uint? Delay { get; set; }
+    public uint? Delay3 { get; set; }
+    public uint? Delay4 { get; set; }
+    public uint? Stagger { get; set; }
+    public uint? Stagger3 { get; set; }
+    public uint? Stagger4 { get; set; }
     public DirEnum Dir { get; set; }
     public PathEnum Path { get; set; }
     public BehaviorEnum Behavior { get; set; }
@@ -22,15 +22,15 @@ public class Group : IDeserializable, ISerializable
 
     public void Deserialize(XElement e)
     {
-        Count = e.GetIntAttributeOrNull("Count");
-        Count3 = e.GetIntAttributeOrNull("Count3");
-        Count4 = e.GetIntAttributeOrNull("Count4");
-        Delay = e.GetIntAttributeOrNull("Delay");
-        Delay3 = e.GetIntAttributeOrNull("Delay3");
-        Delay4 = e.GetIntAttributeOrNull("Delay4");
-        Stagger = e.GetIntAttributeOrNull("Stagger");
-        Stagger3 = e.GetIntAttributeOrNull("Stagger3");
-        Stagger4 = e.GetIntAttributeOrNull("Stagger4");
+        Count = e.GetUIntAttributeOrNull("Count");
+        Count3 = e.GetUIntAttributeOrNull("Count3");
+        Count4 = e.GetUIntAttributeOrNull("Count4");
+        Delay = e.GetUIntAttributeOrNull("Delay");
+        Delay3 = e.GetUIntAttributeOrNull("Delay3");
+        Delay4 = e.GetUIntAttributeOrNull("Delay4");
+        Stagger = e.GetUIntAttributeOrNull("Stagger");
+        Stagger3 = e.GetUIntAttributeOrNull("Stagger3");
+        Stagger4 = e.GetUIntAttributeOrNull("Stagger4");
         Dir = MapUtils.ParseDir(e.GetAttributeOrNull("Dir"));
         Path = MapUtils.ParsePath(e.GetAttributeOrNull("Path"));
         Behavior = MapUtils.ParseBehavior(e.GetAttributeOrNull("Behavior"));
@@ -73,27 +73,27 @@ public class Group : IDeserializable, ISerializable
             e.SetAttributeValue("SharedPath", SharedPath.ToString().ToUpperInvariant());
     }
 
-    public int GetCount(int players) => players switch
+    public uint GetCount(uint players) => players switch
     {
-        >= 4 when Count4 is not null => (int)Count4,
-        >= 3 when Count3 is not null => (int)Count3,
-        _ when Count is not null => (int)Count,
+        >= 4 when Count4 is not null => Count4.Value,
+        >= 3 when Count3 is not null => Count3.Value,
+        _ when Count is not null => Count.Value,
         _ => 1
     };
 
-    public int GetDelay(int players) => players switch
+    public uint GetDelay(uint players) => players switch
     {
-        >= 4 when Delay4 is not null => 100 * (int)Math.Ceiling((int)Delay4 / 100.0),
-        >= 3 when Delay3 is not null => 100 * (int)Math.Ceiling((int)Delay3 / 100.0),
-        _ when Delay is not null => 100 * (int)Math.Ceiling((int)Delay / 100.0),
+        >= 4 when Delay4 is not null => 100 * (uint)Math.Ceiling(Delay4.Value / 100.0),
+        >= 3 when Delay3 is not null => 100 * (uint)Math.Ceiling(Delay3.Value / 100.0),
+        _ when Delay is not null => 100 * (uint)Math.Ceiling(Delay.Value / 100.0),
         _ => 0
     };
 
-    public int GetStagger(int players) => players switch
+    public uint GetStagger(uint players) => players switch
     {
-        >= 4 when Stagger4 is not null => 100 * (int)Math.Ceiling((int)Stagger4 / 100.0),
-        >= 3 when Stagger3 is not null => 100 * (int)Math.Ceiling((int)Stagger3 / 100.0),
-        _ when Stagger is not null => 100 * (int)Math.Ceiling((int)Stagger / 100.0),
+        >= 4 when Stagger4 is not null => 100 * (uint)Math.Ceiling(Stagger4.Value / 100.0),
+        >= 3 when Stagger3 is not null => 100 * (uint)Math.Ceiling(Stagger3.Value / 100.0),
+        _ when Stagger is not null => 100 * (uint)Math.Ceiling(Stagger.Value / 100.0),
         _ => 500
     };
 }

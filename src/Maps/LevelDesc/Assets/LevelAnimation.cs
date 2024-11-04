@@ -12,9 +12,9 @@ public class LevelAnimation : IDeserializable, ISerializable, IDrawable
     public string FileName { get; set; } = null!;
     public bool PlayForeground { get; set; }
     public bool PlayBackground { get; set; }
-    public int InitDelay { get; set; }
-    public int Interval { get; set; }
-    public int IntervalRand { get; set; }
+    public uint InitDelay { get; set; }
+    public uint Interval { get; set; }
+    public uint IntervalRand { get; set; }
     public double PositionX { get; set; }
     public double PositionY { get; set; }
     // radians
@@ -22,7 +22,7 @@ public class LevelAnimation : IDeserializable, ISerializable, IDrawable
     public double Scale { get; set; }
     public double RandX { get; set; }
     public double RandY { get; set; }
-    public int LoopIterations { get; set; }
+    public uint LoopIterations { get; set; }
     public string? PlatID { get; set; }
     public bool IgnoreOnBlurBG { get; set; }
 
@@ -34,16 +34,16 @@ public class LevelAnimation : IDeserializable, ISerializable, IDrawable
         FileName = e.GetAttribute("FileName");
         PlayForeground = e.GetBoolAttribute("PlayForeground", false);
         PlayBackground = e.GetBoolAttribute("PlayBackground", false);
-        InitDelay = e.GetIntAttribute("InitDelay", 0);
-        Interval = e.GetIntAttribute("Interval", 0);
-        IntervalRand = e.GetIntAttribute("IntervalRand", 0);
+        InitDelay = e.GetUIntAttribute("InitDelay", 0);
+        Interval = e.GetUIntAttribute("Interval", 0);
+        IntervalRand = e.GetUIntAttribute("IntervalRand", 0);
         PositionX = e.GetDoubleAttribute("PositionX");
         PositionY = e.GetDoubleAttribute("PositionY");
         Rotation = e.GetDoubleAttribute("Rotation", 0);
         Scale = e.GetDoubleAttribute("Scale", 0); // yes, this defaults to 0
         RandX = e.GetDoubleAttribute("RandX", 0);
         RandY = e.GetDoubleAttribute("RandY", 0);
-        LoopIterations = e.GetIntAttribute("LoopIterations", 0);
+        LoopIterations = e.GetUIntAttribute("LoopIterations", 0);
         PlatID = e.GetAttributeOrNull("PlatID");
         IgnoreOnBlurBG = e.GetBoolAttribute("IgnoreOnBlurBG", false);
     }
@@ -84,8 +84,8 @@ public class LevelAnimation : IDeserializable, ISerializable, IDrawable
             e.SetAttributeValue("IgnoreOnBlurBG", IgnoreOnBlurBG);
     }
 
-    private static TimeSpan FromTimestamp(int timestamp) => TimeSpan.FromSeconds(timestamp / 60.0 / 16.0);
-    private TimeSpan RollInterval(BrawlhallaRandom rand) => FromTimestamp((int)Math.Floor(rand.NextF() * (IntervalRand + 1)));
+    private static TimeSpan FromTimestamp(uint timestamp) => TimeSpan.FromSeconds(timestamp / 60.0 / 16.0);
+    private TimeSpan RollInterval(BrawlhallaRandom rand) => FromTimestamp((uint)Math.Floor(rand.NextF() * (IntervalRand + 1)));
 
     /*
     This is not a fully accurate simulation of the game, because the game is a piece of shit.
@@ -112,7 +112,7 @@ public class LevelAnimation : IDeserializable, ISerializable, IDrawable
         State state = state_[this];
         if (!state.Initialized)
         {
-            int initialOffset = InitDelay != 0 ? InitDelay : Interval;
+            uint initialOffset = InitDelay != 0 ? InitDelay : Interval;
             state.NextAnimationStartTime = FromTimestamp(initialOffset) + RollInterval(random);
             // if the user starts rolling back now, we need to pretend an animation used to play.
             // otherwise the "went before animation" logic won't trigger.

@@ -12,12 +12,14 @@ public static class XmlExtensions
     public static string GetAttribute(this XElement element, string attribute, string? @default = null) => element.Attribute(attribute)?.Value ?? @default ?? throw new SerializationException($"element {element} is missing required attribute {attribute}");
     public static bool GetBoolAttribute(this XElement element, string attribute, bool? @default = null) => element.GetAttribute(attribute, @default?.ToString()).Equals("TRUE", StringComparison.InvariantCultureIgnoreCase);
     public static int GetIntAttribute(this XElement element, string attribute, int? @default = null) => int.Parse(element.GetAttribute(attribute, @default?.ToString()), CultureInfo.InvariantCulture);
+    public static uint GetUIntAttribute(this XElement element, string attribute, int? @default = null) => uint.Parse(element.GetAttribute(attribute, @default?.ToString()), CultureInfo.InvariantCulture);
     public static double GetDoubleAttribute(this XElement element, string attribute, double? @default = null) => double.Parse(element.GetAttribute(attribute, @default?.ToString()), CultureInfo.InvariantCulture);
 
     // get attribute value. if invalid format - error. if doesn't exist - null.
     public static string? GetAttributeOrNull(this XElement element, string attribute) => element.Attribute(attribute)?.Value;
     public static bool? GetBoolAttributeOrNull(this XElement element, string attribute) => Utils.ParseBoolOrNull(GetAttributeOrNull(element, attribute));
     public static int? GetIntAttributeOrNull(this XElement element, string attribute) => Utils.ParseIntOrNull(GetAttributeOrNull(element, attribute));
+    public static uint? GetUIntAttributeOrNull(this XElement element, string attribute) => Utils.ParseUIntOrNull(GetAttributeOrNull(element, attribute));
     public static double? GetDoubleAttributeOrNull(this XElement element, string attribute) => Utils.ParseDoubleOrNull(GetAttributeOrNull(element, attribute));
 
     // get element value. if invalid format - error. if doesn't exist - null.

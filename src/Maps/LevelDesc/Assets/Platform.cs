@@ -23,8 +23,8 @@ public class Platform : AbstractAsset
 
     public bool NoSkulls => InstanceName == NO_SKULLS;
     public string? Hotkey => InstanceName.StartsWith(HOTKEY) ? InstanceName[(InstanceName.LastIndexOf('_') + 1)..] : null;
-    public int? Blue => InstanceName.StartsWith(BLUE) ? int.TryParse(InstanceName[BLUE.Length..], out int blue) ? blue : null : null;
-    public int? Red => InstanceName.StartsWith(RED) ? int.TryParse(InstanceName[RED.Length..], out int red) ? red : null : null;
+    public uint? Blue => InstanceName.StartsWith(BLUE) ? uint.TryParse(InstanceName[BLUE.Length..], out uint blue) ? blue : null : null;
+    public uint? Red => InstanceName.StartsWith(RED) ? uint.TryParse(InstanceName[RED.Length..], out uint red) ? red : null : null;
 
     public override void Deserialize(XElement e)
     {

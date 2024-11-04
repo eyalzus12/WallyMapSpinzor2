@@ -13,8 +13,8 @@ public class Animation : IDeserializable, ISerializable
     public double? CenterY { get; set; }
     public bool EaseIn { get; set; }
     public bool EaseOut { get; set; }
-    public int EasePower { get; set; }
-    public int StartFrame { get; set; }
+    public uint EasePower { get; set; }
+    public uint StartFrame { get; set; }
     public AbstractKeyFrame[] KeyFrames { get; set; } = null!;
 
     public bool HasCenter => CenterX is not null || CenterY is not null;
@@ -29,8 +29,8 @@ public class Animation : IDeserializable, ISerializable
         }
         EaseIn = e.GetBoolAttribute("EaseIn", false);
         EaseOut = e.GetBoolAttribute("EaseOut", false);
-        EasePower = e.GetIntAttribute("EasePower", 2);
-        StartFrame = e.GetIntAttribute("StartFrame", 0);
+        EasePower = e.GetUIntAttribute("EasePower", 2);
+        StartFrame = e.GetUIntAttribute("StartFrame", 0);
         KeyFrames = e.DeserializeKeyFrameChildren();
     }
 

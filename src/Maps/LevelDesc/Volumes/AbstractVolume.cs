@@ -8,8 +8,8 @@ public abstract class AbstractVolume : IDeserializable, ISerializable, IDrawable
     public int Y { get; set; }
     public int W { get; set; }
     public int H { get; set; }
-    public int Team { get; set; }
-    public int ID { get; set; }
+    public uint Team { get; set; }
+    public uint ID { get; set; }
 
     public virtual void Deserialize(XElement e)
     {
@@ -18,8 +18,8 @@ public abstract class AbstractVolume : IDeserializable, ISerializable, IDrawable
         Y = (int)e.GetDoubleAttribute("Y");
         W = (int)e.GetDoubleAttribute("W");
         H = (int)e.GetDoubleAttribute("H");
-        Team = e.GetIntAttribute("Team");
-        ID = e.GetIntAttribute("ID", 0);
+        Team = e.GetUIntAttribute("Team");
+        ID = e.GetUIntAttribute("ID", 0);
     }
 
     public virtual void Serialize(XElement e)

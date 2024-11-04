@@ -14,7 +14,7 @@ public class LevelType : IDeserializable, ISerializable
     public bool TestLevel { get; set; }
 
     public string DisplayName { get; set; } = null!;
-    public int LevelID { get; set; } //max 255
+    public uint LevelID { get; set; } //max 255
     public TeamColorEnum[] TeamColorOrder { get; set; } = DEFAULT_TEAM_COLOR_ORDER;
     public TeamColorEnum AvoidTeamColor { get; set; }
     public string? FileName { get; set; }
@@ -23,20 +23,21 @@ public class LevelType : IDeserializable, ISerializable
     public CrateColor? CrateColorB { get; set; }
 
     //only null for random LevelType
-    public int? LeftKill { get; set; }
-    public int? RightKill { get; set; }
-    public int? TopKill { get; set; }
-    public int? BottomKill { get; set; }
+    public uint? LeftKill { get; set; }
+    public uint? RightKill { get; set; }
+    public uint? TopKill { get; set; }
+    public uint? BottomKill { get; set; }
 
     public bool? SoftTopKill { get; set; }
-    public bool? HardLeftKill { get; set; } //LeftKill needs to be equal or more than 200 for this to be true
-    public bool? HardRightKill { get; set; } //RightKill needs to be equal or more than 200 for this to be true
+    public bool? HardLeftKill { get; set; } // LeftKill needs to be equal or more than 200 for this to be true
+    public bool? HardRightKill { get; set; } // RightKill needs to be equal or more than 200 for this to be true
     public uint? MinNumOnlineGamesBeforeRandom { get; set; }
     public string? BGMusic { get; set; }
     public string? StreamerBGMusic { get; set; }
     public string? ThumbnailPNGFile { get; set; }
     public bool? AIStrictRecover { get; set; }
 
+    // these 3 are unused
     public uint? MidgroundTint { get; set; }
     public uint? MidgroundOffset { get; set; }
     public double? MidgroundFraction { get; set; } // defaults to 0
@@ -48,7 +49,7 @@ public class LevelType : IDeserializable, ISerializable
     public bool? ShowPlatsDuringMove { get; set; }
     public bool? ShowLavaLevelDuringMove { get; set; }
     public bool? NegateOverlaps { get; set; }
-    public int? StartFrame { get; set; }
+    public uint? StartFrame { get; set; }
     public bool? IsClimbMap { get; set; }
     public bool? FixedCamera { get; set; }
     public bool? AllowItemSpawnOverlap { get; set; } // unused
@@ -56,7 +57,7 @@ public class LevelType : IDeserializable, ISerializable
     public bool? FixedWidth { get; set; }
     public double? AIPanicLine { get; set; }
     public double? AIGroundLine { get; set; }
-    public int? ShadowTint { get; set; }
+    public int? ShadowTint { get; set; } // yes, this is an int and not a uint
 
     public void Deserialize(XElement e)
     {
@@ -65,7 +66,7 @@ public class LevelType : IDeserializable, ISerializable
         TestLevel = e.GetBoolAttribute("TestLevel", false);
 
         DisplayName = e.GetElementValue("DisplayName")!;
-        LevelID = Utils.ParseIntOrNull(e.GetElementValue("LevelID")) ?? 0;
+        LevelID = Utils.ParseUIntOrNull(e.GetElementValue("LevelID")) ?? 0;
         TeamColorOrder =
         [
             .. e.GetElementValue("TeamColorOrder")?.Split(',')
@@ -81,10 +82,10 @@ public class LevelType : IDeserializable, ISerializable
         uint? colB = Utils.ParseUIntOrNull(e.GetElementValue("CrateColorB"));
         CrateColorB = colB is null ? null : CrateColor.FromHex(colB.Value);
 
-        LeftKill = Utils.ParseIntOrNull(e.GetElementValue("LeftKill"));
-        RightKill = Utils.ParseIntOrNull(e.GetElementValue("RightKill"));
-        TopKill = Utils.ParseIntOrNull(e.GetElementValue("TopKill"));
-        BottomKill = Utils.ParseIntOrNull(e.GetElementValue("BottomKill"));
+        LeftKill = Utils.ParseUIntOrNull(e.GetElementValue("LeftKill"));
+        RightKill = Utils.ParseUIntOrNull(e.GetElementValue("RightKill"));
+        TopKill = Utils.ParseUIntOrNull(e.GetElementValue("TopKill"));
+        BottomKill = Utils.ParseUIntOrNull(e.GetElementValue("BottomKill"));
         SoftTopKill = Utils.ParseBoolOrNull(e.GetElementValue("SoftTopKill"));
         HardLeftKill = Utils.ParseBoolOrNull(e.GetElementValue("HardLeftKill"));
         HardRightKill = Utils.ParseBoolOrNull(e.GetElementValue("HardRightKill"));
@@ -102,7 +103,7 @@ public class LevelType : IDeserializable, ISerializable
         ShowPlatsDuringMove = Utils.ParseBoolOrNull(e.GetElementValue("ShowPlatsDuringMove"));
         ShowLavaLevelDuringMove = Utils.ParseBoolOrNull(e.GetElementValue("ShowLavaLevelDuringMove"));
         NegateOverlaps = Utils.ParseBoolOrNull(e.GetElementValue("NegateOverlaps"));
-        StartFrame = Utils.ParseIntOrNull(e.GetElementValue("StartFrame"));
+        StartFrame = Utils.ParseUIntOrNull(e.GetElementValue("StartFrame"));
         IsClimbMap = Utils.ParseBoolOrNull(e.GetElementValue("IsClimbMap"));
         FixedCamera = Utils.ParseBoolOrNull(e.GetElementValue("FixedCamera"));
         AllowItemSpawnOverlap = Utils.ParseBoolOrNull(e.GetElementValue("AllowItemSpawnOverlap"));

@@ -7,10 +7,10 @@ namespace WallyMapSpinzor2;
 
 public class NavNode : IDeserializable, ISerializable, IDrawable
 {
-    public int NavID { get; set; }
+    public uint NavID { get; set; }
     public NavNodeTypeEnum Type { get; set; }
     // the given type in the path doesn't actually do anything
-    public (int, NavNodeTypeEnum)[] Path { get; set; } = null!;
+    public (uint, NavNodeTypeEnum)[] Path { get; set; } = null!;
     public double X { get; set; }
     public double Y { get; set; }
 
@@ -25,18 +25,18 @@ public class NavNode : IDeserializable, ISerializable, IDrawable
         Y = e.GetDoubleAttribute("Y", 0);
     }
 
-    public static (int, NavNodeTypeEnum) ParseNavID(string navId)
+    public static (uint, NavNodeTypeEnum) ParseNavID(string navId)
     {
         return '0' <= navId[0] && navId[0] <= '9'
-            ? (int.Parse(navId, CultureInfo.InvariantCulture), NavNodeTypeEnum._)
-            : (int.Parse(navId[1..], CultureInfo.InvariantCulture), Enum.TryParse(
+            ? (uint.Parse(navId, CultureInfo.InvariantCulture), NavNodeTypeEnum._)
+            : (uint.Parse(navId[1..], CultureInfo.InvariantCulture), Enum.TryParse(
                 navId[0].ToString(), out NavNodeTypeEnum type)
                     ? type
                     : NavNodeTypeEnum._
             );
     }
 
-    public static string NavIDToString(int id, NavNodeTypeEnum type)
+    public static string NavIDToString(uint id, NavNodeTypeEnum type)
     {
         return type == NavNodeTypeEnum._
             ? id.ToString()
@@ -74,7 +74,7 @@ public class NavNode : IDeserializable, ISerializable, IDrawable
         if (!config.ShowNavNode) return;
         (double x, double y) = trans * (X, Y);
         canvas.DrawCircle(x, y, config.RadiusNavNode, GetNavIDColor(Type, config), Transform.IDENTITY, DrawPriorityEnum.NAVNODE, this);
-        foreach ((int id, _) in Path)
+        foreach ((uint id, _) in Path)
         {
             if (context.NavIDDictionary.TryGetValue(id, out (double, double) pos))
             {

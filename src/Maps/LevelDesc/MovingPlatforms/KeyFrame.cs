@@ -11,7 +11,7 @@ public class KeyFrame : AbstractKeyFrame
     public double? CenterY { get; set; }
     public bool? EaseIn { get; set; }
     public bool? EaseOut { get; set; }
-    public int? EasePower { get; set; }
+    public uint? EasePower { get; set; }
     public double X { get; set; }
     public double Y { get; set; }
 
@@ -26,7 +26,7 @@ public class KeyFrame : AbstractKeyFrame
         CenterY = e.GetDoubleAttributeOrNull("CenterY");
         EaseIn = e.GetBoolAttributeOrNull("EaseIn");
         EaseOut = e.GetBoolAttributeOrNull("EaseOut");
-        EasePower = e.GetIntAttributeOrNull("EasePower");
+        EasePower = e.GetUIntAttributeOrNull("EasePower");
         X = e.GetDoubleAttribute("X", 0);
         Y = e.GetDoubleAttribute("Y", 0);
     }

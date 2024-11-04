@@ -9,7 +9,7 @@ public static class BrawlhallaMath
 {
     //i have no fucking idea how this works
     //brawlhalla uses this to compute the weight for lerping
-    public static double EaseWeight(double weight, bool easeIn, bool easeOut, int easePower)
+    public static double EaseWeight(double weight, bool easeIn, bool easeOut, uint easePower)
     {
         if (!easeIn && !easeOut) return weight;
 

@@ -4,21 +4,21 @@ namespace WallyMapSpinzor2;
 
 public class WaveData : IDeserializable, ISerializable, IDrawable
 {
-    public int ID { get; set; }
+    public uint ID { get; set; }
     public double? Speed { get; set; }
     public double? Speed3 { get; set; }
     public double? Speed4 { get; set; }
-    public int LoopIdx { get; set; }
+    public uint LoopIdx { get; set; }
     public CustomPath[] CustomPaths { get; set; } = null!;
     public Group[] Groups { get; set; } = null!;
 
     public void Deserialize(XElement e)
     {
-        ID = e.GetIntAttribute("ID", 0);
+        ID = e.GetUIntAttribute("ID", 0);
         Speed = e.GetDoubleAttributeOrNull("Speed");
         Speed3 = e.GetDoubleAttributeOrNull("Speed3");
         Speed4 = e.GetDoubleAttributeOrNull("Speed4");
-        LoopIdx = e.GetIntAttribute("LoopIdx", 0);
+        LoopIdx = e.GetUIntAttribute("LoopIdx", 0);
         CustomPaths = e.DeserializeChildrenOfType<CustomPath>();
         Groups = e.DeserializeChildrenOfType<Group>();
     }

@@ -238,10 +238,10 @@ public class LevelDesc : IDeserializable, ISerializable, IDrawable
                 {
                     if (!config.ShowBombsketballBombTimers[i])
                         continue;
-                    int? frameCount_ = canvas.GetAnimationFrameCount(gfx, "Ready");
+                    uint? frameCount_ = canvas.GetAnimationFrameCount(gfx, "Ready");
                     if (frameCount_ is not null)
                     {
-                        int frameCount = frameCount_.Value;
+                        uint frameCount = frameCount_.Value;
                         int frame = (int)Math.Floor(config.BombsketballBombTimerFrames[i] / frames[i] * frameCount);
                         canvas.DrawAnim(gfx, "Ready", frame,
                         trans * Transform.CreateTranslate(timerLocations[i].Item1, timerLocations[i].Item2 + yOff[i]),

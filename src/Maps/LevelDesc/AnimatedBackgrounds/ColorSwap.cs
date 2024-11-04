@@ -5,8 +5,8 @@ namespace WallyMapSpinzor2;
 
 public class ColorSwap : IDeserializable, ISerializable
 {
-    public int OldColor { get; set; }
-    public int NewColor { get; set; }
+    public uint OldColor { get; set; }
+    public uint NewColor { get; set; }
 
     public void Deserialize(XElement e)
     {
@@ -24,7 +24,7 @@ public class ColorSwap : IDeserializable, ISerializable
         }
         else
         {
-            OldColor = int.Parse(oldColor, CultureInfo.InvariantCulture);
+            OldColor = uint.Parse(oldColor, CultureInfo.InvariantCulture);
         }
 
         string newColor = parts[1];
@@ -34,7 +34,7 @@ public class ColorSwap : IDeserializable, ISerializable
         }
         else
         {
-            NewColor = int.Parse(newColor, CultureInfo.InvariantCulture);
+            NewColor = uint.Parse(newColor, CultureInfo.InvariantCulture);
         }
     }
 

@@ -20,7 +20,7 @@ public class AnimatedBackground : IDeserializable, ISerializable, IDrawable
 
     public double Rotation { get; set; }
 
-    public int FrameOffset { get; set; }
+    public uint FrameOffset { get; set; }
 
     public bool ForceDraw { get; set; }
 
@@ -44,7 +44,7 @@ public class AnimatedBackground : IDeserializable, ISerializable, IDrawable
 
         Rotation = Utils.ParseDoubleOrNull(e.GetElementValue("Rotation")) ?? 0;
 
-        FrameOffset = Utils.ParseIntOrNull(e.GetElementValue("FrameOffset")) ?? 0;
+        FrameOffset = Utils.ParseUIntOrNull(e.GetElementValue("FrameOffset")) ?? 0;
 
         ForceDraw = Utils.ParseBoolOrNull(e.GetElementValue("ForceDraw")) ?? false;
     }
@@ -77,12 +77,12 @@ public class AnimatedBackground : IDeserializable, ISerializable, IDrawable
     {
         if (!config.AnimatedBackgrounds && !ForceDraw)
             return;
-        int frame = LevelDesc.GET_ANIM_FRAME(config.Time);
+        int frame = (int)(LevelDesc.GET_ANIM_FRAME(config.Time) + FrameOffset);
 
         // Non-midground animated backgrounds are BACKGROUNDS, so they need to be transformed to match the background.
         DrawPriorityEnum priority = Midground ? DrawPriorityEnum.MIDGROUND : DrawPriorityEnum.BACKGROUND;
         Transform spriteTrans = (Midground ? Transform.IDENTITY : CalculateBackgroundTransform(context)) * SpriteTransform;
-        canvas.DrawAnim(Gfx, "Ready", frame + FrameOffset, trans * spriteTrans, priority, this);
+        canvas.DrawAnim(Gfx, "Ready", frame, trans * spriteTrans, priority, this);
     }
 
     private static Transform CalculateBackgroundTransform(RenderContext context)
