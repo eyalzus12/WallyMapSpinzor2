@@ -8,7 +8,7 @@ public class LevelTypes : IDeserializable, ISerializable
 {
     public LevelType[] Levels { get; set; } = null!;
 
-    public const int MAX_LEVEL_ID = 255;
+    public const uint MAX_LEVEL_ID = 255;
 
     public void Deserialize(XElement e)
     {
@@ -25,7 +25,7 @@ public class LevelTypes : IDeserializable, ISerializable
         int index = Array.FindIndex(Levels, l => l.LevelName == lt.LevelName);
         if (index == -1)
         {
-            int id = GetLargestLevelId() + 1;
+            uint id = GetLargestLevelId() + 1;
             if (id > MAX_LEVEL_ID)
             {
                 throw new ArgumentException($"Tried to add a leveltype with id bigger than {MAX_LEVEL_ID}");
@@ -40,5 +40,5 @@ public class LevelTypes : IDeserializable, ISerializable
         Levels[index] = lt;
     }
 
-    public int GetLargestLevelId() => Levels.Select(l => l.LevelID).DefaultIfEmpty(-1).Max();
+    public uint GetLargestLevelId() => Levels.Select(l => l.LevelID).DefaultIfEmpty(0u).Max();
 }
