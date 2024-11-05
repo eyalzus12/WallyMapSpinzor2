@@ -25,11 +25,19 @@ public class NavNode : IDeserializable, ISerializable, IDrawable
         Y = e.GetDoubleAttribute("Y", 0);
     }
 
+    // needed due to a mistake in NorseWinterFFA. emulates actionscript parseInt ignoring trailing garbage.
+    private static uint UIntParse(string str)
+    {
+        str = str.Trim();
+        int takeUntil = 0; while (takeUntil < str.Length && char.IsDigit(str[takeUntil])) takeUntil++;
+        return uint.Parse(str.AsSpan()[..takeUntil], CultureInfo.InvariantCulture);
+    }
+
     public static (uint, NavNodeTypeEnum) ParseNavID(string navId)
     {
         return '0' <= navId[0] && navId[0] <= '9'
-            ? (uint.Parse(navId, CultureInfo.InvariantCulture), NavNodeTypeEnum._)
-            : (uint.Parse(navId[1..], CultureInfo.InvariantCulture), Enum.TryParse(
+            ? (UIntParse(navId), NavNodeTypeEnum._)
+            : (UIntParse(navId[1..]), Enum.TryParse(
                 navId[0].ToString(), out NavNodeTypeEnum type)
                     ? type
                     : NavNodeTypeEnum._
