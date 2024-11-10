@@ -228,23 +228,23 @@ public static class BrawlhallaMath
         AbstractCollision? exclude /*param6*/,
         ref Position? param7, ref Position? param8,
         CollisionTypeFlags mandateFlags /*param9*/,
-        uint param10, // seems to be two bits: low means allow detect soft from below, high means to exclude team collisions
+        // 1 - allow detect soft from below. 2 - exclude team collisions. 4 - ?. 8 - ignore collisions from the wrong side.
+        uint raycastFlags, /* param10 */
         /*int param11 = 0,*/
         CollisionTypeFlags excludeFlags = 0 /*param12*/,
-        HashSet<AbstractCollision>? outList = null /*param13*/,
-        bool param14 = false
+        HashSet<AbstractCollision>? outList = null /*param13*/
     )
     {
         CollisionTypeFlags soft = CollisionTypeFlags.SOFT;
 
-        double lenX = len.X; //_loc15_
-        double lenY = len.Y; //_loc16_
+        double lenX = len.X; //_loc14_
+        double lenY = len.Y; //_loc15_
         if (lenX == 0 && lenY == 0) return null;
         Position tempPos = new(0, 0);
-        double posX = fromX + len.X; //_loc20_
-        double posY = fromY + len.Y; //_loc21_
-        AbstractCollision? result = null; //_loc19_
-        foreach (AbstractCollision col /*_loc17_*/ in collisions)
+        double posX = fromX + len.X; //_loc19_
+        double posY = fromY + len.Y; //_loc20_
+        AbstractCollision? result = null; //_loc18_
+        foreach (AbstractCollision col /*_loc16_*/ in collisions)
         {
             if ((col.CollisionType & mandateFlags) == 0) continue;
 
@@ -256,19 +256,43 @@ public static class BrawlhallaMath
 
             if (col.Team != 0 && col.Team == team) continue;
             if ((col.CollisionType & excludeFlags) != 0) continue;
-            if ((param10 & 2) != 0 && col.Team != 0) continue;
+            if ((raycastFlags & 2) != 0 && col.Team != 0) continue;
             if (col == exclude) continue;
 
             // this seems to give priority to hard collisions over soft collisions when both are overlaping floors and the hard collision is a moving collision that is currently not moving
             //if (result is not null && result.NormalY == -1 && (result.CollisionType & hard) != 0 && (col.CollisionType & soft) != 0 && col.NormalY == -1 && result.FromY == col.FromY && outList is null && col.§_-l1I§ == col.startX) continue;
 
-            double _loc18_ = RaycastHelper(fromX, fromY, col.FromX, col.FromY, col.ToX - col.FromX, col.ToY - col.FromY, ref tempPos);
-            if (_loc18_ >= 0 || (mandateFlags & soft) == 0 || (col.CollisionType & soft) == 0 || (param10 & 1) != 0)
+            if ((raycastFlags & (1 | 4 | 8)) == 0 && (col.NormalX != 0 || col.NormalY != 0))
+            {
+                if (col.FromX == col.ToX)
+                {
+                    if (len.X != 0 && (len.X > 0) == (col.NormalX > 0)) continue;
+                }
+                else if (col.FromY == col.ToY)
+                {
+                    if (len.Y != 0 && (len.Y > 0) == (col.NormalY > 0)) continue;
+                }
+                else if (len.X == 0)
+                {
+                    if ((len.Y > 0) == (col.NormalY > 0)) continue;
+                }
+                else if (len.Y == 0)
+                {
+                    if ((len.X > 0) == (col.NormalX > 0)) continue;
+                }
+                else if ((len.X > 0) == (col.NormalX > 0) && (len.Y > 0) == (col.NormalY > 0))
+                {
+                    continue;
+                }
+            }
+
+            double _loc17_ = RaycastHelper(fromX, fromY, col.FromX, col.FromY, col.ToX - col.FromX, col.ToY - col.FromY, ref tempPos);
+            if (_loc17_ >= 0 || (mandateFlags & soft) == 0 || (col.CollisionType & soft) == 0 || (raycastFlags & 1) != 0)
             {
                 if (RaycastHelper2(fromX, fromY, posX, posY, col.FromX, col.FromY, col.ToX, col.ToY, ref param7))
                 {
                     result = col;
-                    if (param8 is not null) param8 = param8.Value with { X = _loc18_ };
+                    if (param8 is not null) param8 = param8.Value with { X = _loc17_ };
 
                     if (outList is null)
                     {
@@ -283,7 +307,7 @@ public static class BrawlhallaMath
             }
         }
 
-        if (param14 && result is not null)
+        if ((raycastFlags & 4) != 0 && result is not null)
         {
             if (result.NormalY < 0 && len.Y < 0 && lenY > len.Y)
             {
