@@ -8,7 +8,7 @@ public class LevelTypes : IDeserializable, ISerializable
 {
     public LevelType[] Levels { get; set; } = null!;
 
-    public const uint MAX_LEVEL_ID = 255;
+    public const uint MAX_LEVEL_ID = 319;
 
     public void Deserialize(XElement e)
     {

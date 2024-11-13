@@ -17,12 +17,12 @@ public class LevelAnimation : IDeserializable, ISerializable, IDrawable
     public uint IntervalRand { get; set; }
     public double PositionX { get; set; }
     public double PositionY { get; set; }
-    // radians
-    public double Rotation { get; set; }
+    public double Rotation { get; set; } // radians
     public double Scale { get; set; }
     public double RandX { get; set; }
     public double RandY { get; set; }
     public uint LoopIterations { get; set; }
+    public int TotalLoops { get; set; } // 0 means infinite
     public string? PlatID { get; set; }
     public bool IgnoreOnBlurBG { get; set; }
 
@@ -44,6 +44,7 @@ public class LevelAnimation : IDeserializable, ISerializable, IDrawable
         RandX = e.GetDoubleAttribute("RandX", 0);
         RandY = e.GetDoubleAttribute("RandY", 0);
         LoopIterations = e.GetUIntAttribute("LoopIterations", 0);
+        TotalLoops = e.GetIntAttribute("TotalLoops", 0);
         PlatID = e.GetAttributeOrNull("PlatID");
         IgnoreOnBlurBG = e.GetBoolAttribute("IgnoreOnBlurBG", false);
     }
@@ -78,6 +79,8 @@ public class LevelAnimation : IDeserializable, ISerializable, IDrawable
             e.SetAttributeValue("RandY", RandY);
         if (LoopIterations != 0)
             e.SetAttributeValue("LoopIterations", LoopIterations);
+        if (TotalLoops != 0)
+            e.SetAttributeValue("TotalLoops", TotalLoops);
         if (PlatID is not null)
             e.SetAttributeValue("PlatID", PlatID);
         if (IgnoreOnBlurBG)

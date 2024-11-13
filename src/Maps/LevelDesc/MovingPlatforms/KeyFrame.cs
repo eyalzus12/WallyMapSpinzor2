@@ -14,6 +14,7 @@ public class KeyFrame : AbstractKeyFrame
     public uint? EasePower { get; set; }
     public double X { get; set; }
     public double Y { get; set; }
+    public bool RespawnOff { get; set; } // not made nullable since Animation doesn't have this prop
 
     public bool HasCenter => CenterX is not null || CenterY is not null;
 
@@ -29,6 +30,7 @@ public class KeyFrame : AbstractKeyFrame
         EasePower = e.GetUIntAttributeOrNull("EasePower");
         X = e.GetDoubleAttribute("X", 0);
         Y = e.GetDoubleAttribute("Y", 0);
+        RespawnOff = e.GetBoolAttribute("RespawnOff", false);
     }
 
     public override void Serialize(XElement e)
@@ -50,6 +52,8 @@ public class KeyFrame : AbstractKeyFrame
             e.SetAttributeValue("X", X);
         if (Y != 0)
             e.SetAttributeValue("Y", Y);
+        if (RespawnOff)
+            e.SetAttributeValue("RespawnOff", "True");
     }
 
     public override void GetImplicitKeyFrames(List<KeyFrame> output, int index, int startFrame)
