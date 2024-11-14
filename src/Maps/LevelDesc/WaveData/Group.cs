@@ -20,6 +20,8 @@ public class Group : IDeserializable, ISerializable
     public bool Shared { get; set; }
     public bool SharedPath { get; set; }
 
+    public WaveData? Parent { get; set; }
+
     public void Deserialize(XElement e)
     {
         Count = e.GetUIntAttributeOrNull("Count");

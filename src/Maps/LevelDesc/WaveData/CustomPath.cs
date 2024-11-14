@@ -6,9 +6,12 @@ public class CustomPath : IDeserializable, ISerializable, IDrawable
 {
     public Point[] Points { get; set; } = null!;
 
+    public WaveData? Parent { get; set; }
+
     public void Deserialize(XElement e)
     {
         Points = e.DeserializeChildrenOfType<Point>();
+        foreach (Point p in Points) p.Parent = this;
     }
 
     public void Serialize(XElement e)

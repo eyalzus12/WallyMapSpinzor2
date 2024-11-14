@@ -21,6 +21,9 @@ public class WaveData : IDeserializable, ISerializable, IDrawable
         LoopIdx = e.GetUIntAttribute("LoopIdx", 0);
         CustomPaths = e.DeserializeChildrenOfType<CustomPath>();
         Groups = e.DeserializeChildrenOfType<Group>();
+
+        foreach (CustomPath cp in CustomPaths) cp.Parent = this;
+        foreach (Group g in Groups) g.Parent = this;
     }
 
     public void Serialize(XElement e)

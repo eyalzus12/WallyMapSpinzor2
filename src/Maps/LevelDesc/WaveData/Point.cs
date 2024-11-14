@@ -7,6 +7,8 @@ public class Point : IDeserializable, ISerializable, IDrawable
     public double X { get; set; }
     public double Y { get; set; }
 
+    public CustomPath? Parent { get; set; }
+
     public void Deserialize(XElement e)
     {
         X = e.GetDoubleAttribute("X");
