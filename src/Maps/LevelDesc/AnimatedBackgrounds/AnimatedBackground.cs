@@ -24,6 +24,8 @@ public class AnimatedBackground : IDeserializable, ISerializable, IDrawable
 
     public bool ForceDraw { get; set; }
 
+    public uint Loops { get; set; } // 0 means infinite
+
     public void Deserialize(XElement e)
     {
         Midground = e.GetBoolAttribute("Midground", false);
@@ -42,11 +44,10 @@ public class AnimatedBackground : IDeserializable, ISerializable, IDrawable
         Scale_X = Utils.ParseDoubleOrNull(scale?[0]) ?? 1;
         Scale_Y = Utils.ParseDoubleOrNull(scale?[1]) ?? 1;
 
-        Rotation = Utils.ParseDoubleOrNull(e.GetElementValue("Rotation")) ?? 0;
-
-        FrameOffset = Utils.ParseIntOrNull(e.GetElementValue("FrameOffset")) ?? 0;
-
-        ForceDraw = Utils.ParseBoolOrNull(e.GetElementValue("ForceDraw")) ?? false;
+        Rotation = e.GetDoubleElementOrNull("Rotation") ?? 0;
+        FrameOffset = e.GetIntElementOrNull("FrameOffset") ?? 0;
+        ForceDraw = e.GetBoolElementOrNull("ForceDraw") ?? false;
+        Loops = e.GetUIntElementOrNull("Loops") ?? 0;
     }
 
     public void Serialize(XElement e)
@@ -71,6 +72,9 @@ public class AnimatedBackground : IDeserializable, ISerializable, IDrawable
 
         if (ForceDraw)
             e.Add(new XElement("ForceDraw", "True"));
+
+        if (Loops != 0)
+            e.Add(new XElement("Loops", Loops));
     }
 
     public void DrawOn(ICanvas canvas, Transform trans, RenderConfig config, RenderContext context, RenderState state)
@@ -82,7 +86,7 @@ public class AnimatedBackground : IDeserializable, ISerializable, IDrawable
         // Non-midground animated backgrounds are BACKGROUNDS, so they need to be transformed to match the background.
         DrawPriorityEnum priority = Midground ? DrawPriorityEnum.MIDGROUND : DrawPriorityEnum.BACKGROUND;
         Transform spriteTrans = (Midground ? Transform.IDENTITY : CalculateBackgroundTransform(context)) * SpriteTransform;
-        canvas.DrawAnim(Gfx, "Ready", frame, trans * spriteTrans, priority, this);
+        canvas.DrawAnim(Gfx, "Ready", frame, trans * spriteTrans, priority, this, loopLimit: Loops == 0 ? null : Loops);
     }
 
     private static Transform CalculateBackgroundTransform(RenderContext context)
