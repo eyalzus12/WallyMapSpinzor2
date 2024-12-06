@@ -73,7 +73,7 @@ public class LevelType : IDeserializable, ISerializable
                 .Select((s) => Utils.ParseEnumOrDefault<TeamColorEnum>(s))
                 ?? DEFAULT_TEAM_COLOR_ORDER
         ];
-        AvoidTeamColor = Utils.ParseEnumOrDefault<TeamColorEnum>(e.GetElementOrNull("AvoidTeamColor"));
+        AvoidTeamColor = e.GetEnumElementOrDefault<TeamColorEnum>("AvoidTeamColor");
         FileName = e.GetElementOrNull("FileName");
         AssetName = e.GetElementOrNull("AssetName");
 
