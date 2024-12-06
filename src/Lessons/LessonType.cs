@@ -34,6 +34,8 @@ public class LessonType : IDeserializable, ISerializable
     public LessonMessageTrigger[] MessageTriggers { get; set; } = [];
     public LessonWorldHotkey[] WorldHotkeys { get; set; } = [];
 
+    public LessonCombo Combo { get; set; } = null!;
+
     public void Deserialize(XElement e)
     {
         LessonName = e.GetAttribute("LessonName");
@@ -67,6 +69,8 @@ public class LessonType : IDeserializable, ISerializable
         Markers = e.DeserializeChildrenOfType<LessonMarker>("Marker");
         MessageTriggers = e.DeserializeChildrenOfType<LessonMessageTrigger>("MessageTrigger");
         WorldHotkeys = e.DeserializeChildrenOfType<LessonWorldHotkey>("WorldHotkey");
+
+        Combo = LessonName == TEMPLATE_LESSON_TYPE ? null! : e.DeserializeRequiredChildOfType<LessonCombo>("Combo");
     }
 
     public void Serialize(XElement e)
