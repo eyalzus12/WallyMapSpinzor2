@@ -192,14 +192,14 @@ public class RenderConfig : IDeserializable, ISerializable
 
     public void Deserialize(XElement e)
     {
-        bool getBool(string name, bool @default) => e.GetBoolElementOrNull(name) ?? @default;
-        int getInt(string name, int @default) => e.GetIntElementOrNull(name) ?? @default;
-        uint getUInt(string name, uint @default) => e.GetUIntElementOrNull(name) ?? @default;
-        double getDouble(string name, double @default) => e.GetDoubleElementOrNull(name) ?? @default;
-        E getEnum<E>(string name, E @default) where E : struct, Enum => e.GetEnumElementOrNull<E>(name) ?? @default;
-        Color getColor(string name, Color @default) => Color.FromHex(getUInt(name, @default.ToHex()));
+        bool getBool(string name, bool @default) => e.GetBoolElement(name, @default);
+        int getInt(string name, int @default) => e.GetIntElement(name, @default);
+        uint getUInt(string name, uint @default) => e.GetUIntElement(name, @default);
+        double getDouble(string name, double @default) => e.GetDoubleElement(name, @default);
+        E getEnum<E>(string name, E @default) where E : struct, Enum => e.GetEnumElement<E>(name, @default);
+        Color getColor(string name, Color @default) => e.GetColorElement(name, @default);
 
-        T[] getArray<T>(string name, T[] @default, Func<string?, T?> f, int count, int offset = 0) where T : struct => Enumerable.Range(0, count).Select(i => f(e.Element(name)?.GetElementValue($"{INDEX}{i + offset}")) ?? @default[i]).ToArray();
+        T[] getArray<T>(string name, T[] @default, Func<string?, T?> f, int count, int offset = 0) where T : struct => Enumerable.Range(0, count).Select(i => f(e.Element(name)?.GetElementOrNull($"{INDEX}{i + offset}")) ?? @default[i]).ToArray();
         bool[] getBoolArray(string name, bool[] @default, int count, int offset = 0) => getArray(name, @default, Utils.ParseBoolOrNull, count, offset);
         int[] getIntArray(string name, int[] @default, int count, int offset = 0) => getArray(name, @default, Utils.ParseIntOrNull, count, offset);
         uint[] getUIntArray(string name, uint[] @default, int count, int offset = 0) => getArray(name, @default, Utils.ParseUIntOrNull, count, offset);

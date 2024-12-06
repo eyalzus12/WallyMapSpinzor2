@@ -65,53 +65,53 @@ public class LevelType : IDeserializable, ISerializable
         DevOnly = e.GetBoolAttribute("DevOnly", false);
         TestLevel = e.GetBoolAttribute("TestLevel", false);
 
-        DisplayName = e.GetElementValue("DisplayName")!;
-        LevelID = Utils.ParseUIntOrNull(e.GetElementValue("LevelID")) ?? 0;
+        DisplayName = e.GetElement("DisplayName");
+        LevelID = e.GetUIntElement("LevelID", 0);
         TeamColorOrder =
         [
-            .. e.GetElementValue("TeamColorOrder")?.Split(',')
+            .. e.GetElementOrNull("TeamColorOrder")?.Split(',')
                 .Select((s) => Utils.ParseEnumOrDefault<TeamColorEnum>(s))
                 ?? DEFAULT_TEAM_COLOR_ORDER
         ];
-        AvoidTeamColor = Utils.ParseEnumOrDefault<TeamColorEnum>(e.GetElementValue("AvoidTeamColor"));
-        FileName = e.GetElementValue("FileName");
-        AssetName = e.GetElementValue("AssetName");
+        AvoidTeamColor = Utils.ParseEnumOrDefault<TeamColorEnum>(e.GetElementOrNull("AvoidTeamColor"));
+        FileName = e.GetElementOrNull("FileName");
+        AssetName = e.GetElementOrNull("AssetName");
 
-        uint? colA = Utils.ParseUIntOrNull(e.GetElementValue("CrateColorA"));
+        uint? colA = e.GetUIntElementOrNull("CrateColorA");
         CrateColorA = colA is null ? null : CrateColor.FromHex(colA.Value);
-        uint? colB = Utils.ParseUIntOrNull(e.GetElementValue("CrateColorB"));
+        uint? colB = e.GetUIntElementOrNull("CrateColorB");
         CrateColorB = colB is null ? null : CrateColor.FromHex(colB.Value);
 
-        LeftKill = Utils.ParseUIntOrNull(e.GetElementValue("LeftKill"));
-        RightKill = Utils.ParseUIntOrNull(e.GetElementValue("RightKill"));
-        TopKill = Utils.ParseUIntOrNull(e.GetElementValue("TopKill"));
-        BottomKill = Utils.ParseUIntOrNull(e.GetElementValue("BottomKill"));
-        SoftTopKill = Utils.ParseBoolOrNull(e.GetElementValue("SoftTopKill"));
-        HardLeftKill = Utils.ParseBoolOrNull(e.GetElementValue("HardLeftKill"));
-        HardRightKill = Utils.ParseBoolOrNull(e.GetElementValue("HardRightKill"));
-        MinNumOnlineGamesBeforeRandom = Utils.ParseUIntOrNull(e.GetElementValue("MinNumOnlineGamesBeforeRandom"));
-        BGMusic = e.GetElementValue("BGMusic");
-        StreamerBGMusic = e.GetElementValue("StreamerBGMusic");
-        ThumbnailPNGFile = e.GetElementValue("ThumbnailPNGFile");
-        AIStrictRecover = Utils.ParseBoolOrNull(e.GetElementValue("AIStrictRecover"));
-        MidgroundTint = Utils.ParseUIntOrNull(e.GetElementValue("MidgroundTint"));
-        MidgroundOffset = Utils.ParseUIntOrNull(e.GetElementValue("MidgroundOffset"));
-        MidgroundFraction = Utils.ParseDoubleOrNull(e.GetElementValue("MidgroundFraction"));
-        BotTint = Utils.ParseUIntOrNull(e.GetElementValue("BotTint"));
-        BotOffset = Utils.ParseUIntOrNull(e.GetElementValue("BotOffset"));
-        BotFraction = Utils.ParseDoubleOrNull(e.GetElementValue("BotFraction"));
-        ShowPlatsDuringMove = Utils.ParseBoolOrNull(e.GetElementValue("ShowPlatsDuringMove"));
-        ShowLavaLevelDuringMove = Utils.ParseBoolOrNull(e.GetElementValue("ShowLavaLevelDuringMove"));
-        NegateOverlaps = Utils.ParseBoolOrNull(e.GetElementValue("NegateOverlaps"));
-        StartFrame = Utils.ParseUIntOrNull(e.GetElementValue("StartFrame"));
-        IsClimbMap = Utils.ParseBoolOrNull(e.GetElementValue("IsClimbMap"));
-        FixedCamera = Utils.ParseBoolOrNull(e.GetElementValue("FixedCamera"));
-        AllowItemSpawnOverlap = Utils.ParseBoolOrNull(e.GetElementValue("AllowItemSpawnOverlap"));
-        ColorExclusionList = e.GetElementValue("ColorExclusionList")?.Split(',') ?? [];
-        FixedWidth = Utils.ParseBoolOrNull(e.GetElementValue("FixedWidth"));
-        AIPanicLine = Utils.ParseDoubleOrNull(e.GetElementValue("AIPanicLine"));
-        AIGroundLine = Utils.ParseDoubleOrNull(e.GetElementValue("AIGroundLine"));
-        ShadowTint = Utils.ParseIntOrNull(e.GetElementValue("ShadowTint"));
+        LeftKill = e.GetUIntElementOrNull("LeftKill");
+        RightKill = e.GetUIntElementOrNull("RightKill");
+        TopKill = e.GetUIntElementOrNull("TopKill");
+        BottomKill = e.GetUIntElementOrNull("BottomKill");
+        SoftTopKill = e.GetBoolElementOrNull("SoftTopKill");
+        HardLeftKill = e.GetBoolElementOrNull("HardLeftKill");
+        HardRightKill = e.GetBoolElementOrNull("HardRightKill");
+        MinNumOnlineGamesBeforeRandom = e.GetUIntElementOrNull("MinNumOnlineGamesBeforeRandom");
+        BGMusic = e.GetElementOrNull("BGMusic");
+        StreamerBGMusic = e.GetElementOrNull("StreamerBGMusic");
+        ThumbnailPNGFile = e.GetElementOrNull("ThumbnailPNGFile");
+        AIStrictRecover = e.GetBoolElementOrNull("AIStrictRecover");
+        MidgroundTint = e.GetUIntElementOrNull("MidgroundTint");
+        MidgroundOffset = e.GetUIntElementOrNull("MidgroundOffset");
+        MidgroundFraction = e.GetDoubleElementOrNull("MidgroundFraction");
+        BotTint = e.GetUIntElementOrNull("BotTint");
+        BotOffset = e.GetUIntElementOrNull("BotOffset");
+        BotFraction = e.GetDoubleElementOrNull("BotFraction");
+        ShowPlatsDuringMove = e.GetBoolElementOrNull("ShowPlatsDuringMove");
+        ShowLavaLevelDuringMove = e.GetBoolElementOrNull("ShowLavaLevelDuringMove");
+        NegateOverlaps = e.GetBoolElementOrNull("NegateOverlaps");
+        StartFrame = e.GetUIntElementOrNull("StartFrame");
+        IsClimbMap = e.GetBoolElementOrNull("IsClimbMap");
+        FixedCamera = e.GetBoolElementOrNull("FixedCamera");
+        AllowItemSpawnOverlap = e.GetBoolElementOrNull("AllowItemSpawnOverlap");
+        ColorExclusionList = e.GetElementOrNull("ColorExclusionList")?.Split(',') ?? [];
+        FixedWidth = e.GetBoolElementOrNull("FixedWidth");
+        AIPanicLine = e.GetDoubleElementOrNull("AIPanicLine");
+        AIGroundLine = e.GetDoubleElementOrNull("AIGroundLine");
+        ShadowTint = e.GetIntElementOrNull("ShadowTint");
     }
 
     public void Serialize(XElement e)

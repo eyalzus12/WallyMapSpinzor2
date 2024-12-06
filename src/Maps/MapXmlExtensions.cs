@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 
@@ -6,21 +5,6 @@ namespace WallyMapSpinzor2;
 
 public static class MapXmlExtensions
 {
-    public static T DeserializeTo<T>(this XElement e) where T : IDeserializable, new()
-    {
-        T t = new(); t.Deserialize(e); return t;
-    }
-
-    public static T[] DeserializeChildrenOfType<T>(this XElement e) where T : IDeserializable, new()
-        => [.. e.Elements(typeof(T).Name).Select(DeserializeTo<T>)];
-
-    //thanks to lazy evaluation, this won't go over everything
-    public static T? DeserializeChildOfType<T>(this XElement e) where T : IDeserializable, new()
-        => e.Elements(typeof(T).Name).Select(DeserializeTo<T>).FirstOrDefault();
-
-    public static T DeserializeRequiredChildOfType<T>(this XElement e) where T : IDeserializable, new()
-        => (e.Element(typeof(T).Name) ?? throw new SerializationException($"Element {e} is missing required child {typeof(T).Name}")).DeserializeTo<T>();
-
     public static AbstractCollision[] DeserializeCollisionChildren(this XElement e) =>
         [.. e.Elements().Select(DeserializeCollision).Where(c => c is not null)];
 
@@ -85,23 +69,4 @@ public static class MapXmlExtensions
         nameof(MovingPlatform) => e.DeserializeTo<MovingPlatform>(),
         _ => null
     };
-
-    public static XElement SerializeToXElement<T>(this T t) where T : ISerializable
-    {
-        XElement e = new(t.GetType().Name); t.Serialize(e); return e;
-    }
-
-    public static void AddSerialized<T>(this XElement e, T t) where T : ISerializable
-        => e.Add(t.SerializeToXElement());
-
-    public static void AddManySerialized<T>(this XElement e, IEnumerable<T> et) where T : ISerializable
-    {
-        foreach (T t in et)
-            e.AddSerialized(t);
-    }
-
-    public static void AddSerializedIfNotNull<T>(this XElement e, T? t) where T : ISerializable
-    {
-        if (t is not null) e.AddSerialized(t);
-    }
 }

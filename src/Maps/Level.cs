@@ -52,7 +52,7 @@ public class Level : IDeserializable, ISerializable, IDrawable
     {
         Desc = e.DeserializeChildOfType<LevelDesc>() ?? throw new ArgumentException("Given XML file does not contain a LevelDesc element. Invalid save format.");
         Type = e.DeserializeChildOfType<LevelType>();
-        Playlists = e.GetElementValue("Playlists")?.Split(",").ToHashSet() ?? throw new ArgumentException("Given XML file does not contain a Playlists element. Invalid save format.");
+        Playlists = e.GetElementOrNull("Playlists")?.Split(",").ToHashSet() ?? throw new ArgumentException("Given XML file does not contain a Playlists element. Invalid save format.");
     }
 
     public void Serialize(XElement e)

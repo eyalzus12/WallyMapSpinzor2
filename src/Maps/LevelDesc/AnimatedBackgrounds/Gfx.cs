@@ -62,21 +62,21 @@ public class Gfx : IDeserializable, ISerializable
 
     public void Deserialize(XElement e)
     {
-        AnimFile = e.GetElementValue("AnimFile") ?? "";
-        AnimClass = e.GetElementValue("AnimClass") ?? "a__Animation";
-        AnimScale = Utils.ParseDoubleOrNull(e.GetElementValue("AnimScale")) ?? 1;
-        MoveAnimSpeed = Utils.ParseDoubleOrNull(e.GetElementValue("MoveAnimSpeed")) ?? 1;
-        BaseAnim = e.GetElementValue("BaseAnim") ?? "Ready";
-        RunAnim = e.GetElementValue("RunAnim") ?? "Run";
-        FlipAnim = Utils.ParseBoolOrNull(e.GetElementValue("FlipAnim")) ?? false;
-        FireAndForget = Utils.ParseBoolOrNull(e.GetElementValue("FireAndForget")) ?? false;
-        RandomFrameStart = Utils.ParseBoolOrNull(e.GetElementValue("RandomFrameStart")) ?? false;
-        Desynch = Utils.ParseBoolOrNull(e.GetElementValue("Desynch")) ?? false;
-        IgnoreCachedWeapon = Utils.ParseBoolOrNull(e.GetElementValue("IgnoreCachedWeapon")) ?? false;
-        Tint = Utils.ParseUIntOrNull(e.GetElementValue("Tint")) ?? 0;
+        AnimFile = e.GetElement("AnimFile", "");
+        AnimClass = e.GetElement("AnimClass", "a__Animation");
+        AnimScale = e.GetDoubleElement("AnimScale", 1);
+        MoveAnimSpeed = e.GetDoubleElement("MoveAnimSpeed", 1);
+        BaseAnim = e.GetElement("BaseAnim", "Ready");
+        RunAnim = e.GetElement("RunAnim", "Run");
+        FlipAnim = e.GetBoolElement("FlipAnim", false);
+        FireAndForget = e.GetBoolElement("FireAndForget", false);
+        RandomFrameStart = e.GetBoolElement("RandomFrameStart", false);
+        Desynch = e.GetBoolElement("Desynch", false);
+        IgnoreCachedWeapon = e.GetBoolElement("IgnoreCachedWeapon", false);
+        Tint = e.GetUIntElement("Tint", 0);
 
         AsymmetrySwapFlags =
-            [.. e.GetElementValue("AsymmetrySwapFlags")?.Split(',')
+            [.. e.GetElementOrNull("AsymmetrySwapFlags")?.Split(',')
             .Select(Enum.Parse<AsymmetrySwapFlagEnum>) ?? []];
         CustomArts = [.. e.Elements()
             .Where(e => e.Name.LocalName.StartsWith("CustomArt"))

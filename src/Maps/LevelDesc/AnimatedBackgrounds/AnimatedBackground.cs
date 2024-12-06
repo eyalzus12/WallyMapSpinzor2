@@ -32,22 +32,22 @@ public class AnimatedBackground : IDeserializable, ISerializable, IDrawable
 
         Gfx = e.DeserializeRequiredChildOfType<Gfx>();
 
-        string[]? position = e.GetElementValue("Position")?.Split(',', 2);
+        string[]? position = e.GetElementOrNull("Position")?.Split(',', 2);
         Position_X = Utils.ParseDoubleOrNull(position?[0]) ?? 0;
         Position_Y = Utils.ParseDoubleOrNull(position?[1]) ?? 0;
 
-        string[]? skew = e.GetElementValue("Skew")?.Split(',', 2);
+        string[]? skew = e.GetElementOrNull("Skew")?.Split(',', 2);
         Skew_X = Utils.ParseDoubleOrNull(skew?[0]) ?? 0;
         Skew_Y = Utils.ParseDoubleOrNull(skew?[1]) ?? 0;
 
-        string[]? scale = e.GetElementValue("Scale")?.Split(',', 2);
+        string[]? scale = e.GetElementOrNull("Scale")?.Split(',', 2);
         Scale_X = Utils.ParseDoubleOrNull(scale?[0]) ?? 1;
         Scale_Y = Utils.ParseDoubleOrNull(scale?[1]) ?? 1;
 
-        Rotation = e.GetDoubleElementOrNull("Rotation") ?? 0;
-        FrameOffset = e.GetIntElementOrNull("FrameOffset") ?? 0;
-        ForceDraw = e.GetBoolElementOrNull("ForceDraw") ?? false;
-        Loops = e.GetUIntElementOrNull("Loops") ?? 0;
+        Rotation = e.GetDoubleElement("Rotation", 0);
+        FrameOffset = e.GetIntElement("FrameOffset", 0);
+        ForceDraw = e.GetBoolElement("ForceDraw", false);
+        Loops = e.GetUIntElement("Loops", 0);
     }
 
     public void Serialize(XElement e)

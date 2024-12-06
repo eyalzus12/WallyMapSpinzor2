@@ -17,10 +17,10 @@ public class LevelSetType : IDeserializable, ISerializable
     public void Deserialize(XElement e)
     {
         LevelSetName = e.GetAttribute("LevelSetName");
-        DisplayNameKey = e.GetElementValue("DisplayNameKey")!;
-        LevelSetID = Utils.ParseUIntOrNull(e.GetElementValue("LevelSetID")) ?? 0;
-        LevelTypes = e.GetElementValue("LevelTypes")?.Split(",") ?? [];
-        SkipOrderValidation = Utils.ParseBoolOrNull(e.GetElementValue("SkipOrderValidation"));
+        DisplayNameKey = e.GetElement("DisplayNameKey");
+        LevelSetID = e.GetUIntElement("LevelSetID", 0);
+        LevelTypes = e.GetElementOrNull("LevelTypes")?.Split(",") ?? [];
+        SkipOrderValidation = e.GetBoolElementOrNull("SkipOrderValidation");
     }
 
     public void Serialize(XElement e)

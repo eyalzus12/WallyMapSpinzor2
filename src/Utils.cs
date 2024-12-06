@@ -15,6 +15,8 @@ public static class Utils
     public static E ParseEnumOrDefault<E>(string? s, E @default = default) where E : struct, Enum => Enum.TryParse(s, out E e) ? e : @default;
     public static E? ParseEnumOrNull<E>(string? s, E @default = default) where E : struct, Enum => s is null ? null : Enum.TryParse(s, out E e) ? e : @default;
 
+    public static Color? FromHexOrNull(uint? hex) => (hex is null) ? null : Color.FromHex(hex.Value);
+
     public static void DrawArrow(this ICanvas canvas, double x1, double y1, double x2, double y2, double arrowSide, double arrowBack, Color color, Transform trans, DrawPriorityEnum priority, object? caller)
     {
         canvas.DrawLine(x1, y1, x2, y2, color, trans, priority, caller);
