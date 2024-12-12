@@ -69,18 +69,18 @@ public static class XmlExtensions
     public static T DeserializeRequiredChildOfType<T>(this XElement e, string? name = null) where T : IDeserializable, new()
         => (e.Element(name ?? typeof(T).Name) ?? throw new SerializationException($"Element {e} is missing required child {name ?? typeof(T).Name}")).DeserializeTo<T>();
 
-    public static XElement SerializeToXElement<T>(this T t) where T : ISerializable
+    public static XElement SerializeToXElement<T>(this T t, string? name = null) where T : ISerializable
     {
-        XElement e = new(t.GetType().Name); t.Serialize(e); return e;
+        XElement e = new(name ?? t.GetType().Name); t.Serialize(e); return e;
     }
 
-    public static void AddSerialized<T>(this XElement e, T t) where T : ISerializable
-        => e.Add(t.SerializeToXElement());
+    public static void AddSerialized<T>(this XElement e, T t, string? name = null) where T : ISerializable
+        => e.Add(t.SerializeToXElement(name));
 
-    public static void AddManySerialized<T>(this XElement e, IEnumerable<T> et) where T : ISerializable
+    public static void AddManySerialized<T>(this XElement e, IEnumerable<T> et, string? name = null) where T : ISerializable
     {
         foreach (T t in et)
-            e.AddSerialized(t);
+            e.AddSerialized(t, name);
     }
 
     public static void AddSerializedIfNotNull<T>(this XElement e, T? t) where T : ISerializable

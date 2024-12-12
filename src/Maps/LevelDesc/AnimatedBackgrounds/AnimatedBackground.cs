@@ -57,24 +57,24 @@ public class AnimatedBackground : IDeserializable, ISerializable, IDrawable
 
         e.AddSerialized(Gfx);
 
-        e.Add(new XElement("Position", $"{Position_X},{Position_Y}"));
+        e.AddChild("Position", $"{Position_X},{Position_Y}");
 
         if (Rotation == 0 || Skew_X != 0 || Skew_Y != 0)
-            e.Add(new XElement("Skew", $"{Skew_X},{Skew_Y}"));
+            e.AddChild("Skew", $"{Skew_X},{Skew_Y}");
 
-        e.Add(new XElement("Scale", $"{Scale_X},{Scale_Y}"));
+        e.AddChild("Scale", $"{Scale_X},{Scale_Y}");
 
         if (Rotation != 0)
-            e.Add(new XElement("Rotation", Rotation));
+            e.AddChild("Rotation", Rotation);
 
         if (FrameOffset != 0)
-            e.Add(new XElement("FrameOffset", FrameOffset));
+            e.AddChild("FrameOffset", FrameOffset);
 
         if (ForceDraw)
-            e.Add(new XElement("ForceDraw", "True"));
+            e.AddChild("ForceDraw", "True");
 
         if (Loops != 0)
-            e.Add(new XElement("Loops", Loops));
+            e.AddChild("Loops", Loops);
     }
 
     public void DrawOn(ICanvas canvas, Transform trans, RenderConfig config, RenderContext context, RenderState state)

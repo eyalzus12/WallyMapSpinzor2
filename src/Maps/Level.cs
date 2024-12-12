@@ -59,7 +59,7 @@ public class Level : IDeserializable, ISerializable, IDrawable
     {
         e.AddSerialized(Desc);
         if (Type is not null) e.AddSerialized(Type);
-        e.Add(new XElement("Playlists", string.Join(",", Playlists)));
+        e.AddChild("Playlists", string.Join(",", Playlists));
     }
 
     public void DrawOn(ICanvas canvas, Transform trans, RenderConfig config, RenderContext context, RenderState state)
