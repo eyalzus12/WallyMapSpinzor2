@@ -88,30 +88,30 @@ public class Gfx : IDeserializable, ISerializable
 
     public void Serialize(XElement e)
     {
-        e.Add(new XElement("AnimFile", AnimFile));
-        e.Add(new XElement("AnimClass", AnimClass));
+        e.AddChild("AnimFile", AnimFile);
+        e.AddChild("AnimClass", AnimClass);
         if (AnimScale != 1)
-            e.Add(new XElement("AnimScale", AnimScale));
+            e.AddChild("AnimScale", AnimScale);
         if (MoveAnimSpeed != 1)
-            e.Add(new XElement("MoveAnimSpeed", MoveAnimSpeed));
+            e.AddChild("MoveAnimSpeed", MoveAnimSpeed);
         if (BaseAnim != "Ready")
-            e.Add(new XElement("BaseAnim", BaseAnim));
+            e.AddChild("BaseAnim", BaseAnim);
         if (RunAnim != "Run")
-            e.Add(new XElement("RunAnim", RunAnim));
+            e.AddChild("RunAnim", RunAnim);
         if (FlipAnim)
-            e.Add(new XElement("FlipAnim", FlipAnim));
+            e.AddChild("FlipAnim", FlipAnim);
         if (FireAndForget)
-            e.Add(new XElement("FireAndForget", FireAndForget));
+            e.AddChild("FireAndForget", FireAndForget);
         if (RandomFrameStart)
-            e.Add(new XElement("RandomFrameStart", RandomFrameStart));
+            e.AddChild("RandomFrameStart", RandomFrameStart);
         if (Desynch)
-            e.Add(new XElement("Desynch", Desynch));
+            e.AddChild("Desynch", Desynch);
         if (IgnoreCachedWeapon)
-            e.Add(new XElement("IgnoreCachedWeapon", IgnoreCachedWeapon));
+            e.AddChild("IgnoreCachedWeapon", IgnoreCachedWeapon);
         if (Tint != 0)
-            e.Add(new XElement("Tint", Tint));
+            e.AddChild("Tint", Tint);
         if (AsymmetrySwapFlags.Length != 0)
-            e.Add(new XElement("AsymmetrySwapFlags", string.Join(',', AsymmetrySwapFlags)));
+            e.AddChild("AsymmetrySwapFlags", string.Join(',', AsymmetrySwapFlags));
         e.AddManySerialized(CustomArts);
         e.AddManySerialized(ColorSwaps);
     }
