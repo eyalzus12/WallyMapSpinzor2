@@ -31,6 +31,13 @@ public class LessonEntityType : IDeserializable, ISerializable
 
     public void Serialize(XElement e)
     {
-        throw new System.NotImplementedException();
+        e.SetAttributeValue("Role", Role);
+        e.AddChild("HeroType", HeroType);
+        e.AddChild("CostumeType", CostumeType);
+        e.AddChild("WeaponIndex", WeaponIndex);
+        e.AddChild("Position", $"{Position_X},{Position_Y}");
+        if (FacingLeft) e.AddChild("FacingLeft", "true");
+        if (StartingDamage != 0) e.AddChild("StartingDamage", StartingDamage);
+        if (BotReaction is not null) e.AddChild("BotReaction", BotReaction);
     }
 }

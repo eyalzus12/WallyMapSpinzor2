@@ -54,6 +54,10 @@ public class LessonMarker : IDeserializable, ISerializable
 
     public void Serialize(XElement e)
     {
-        throw new System.NotImplementedException();
+        e.SetAttributeValue("OrderID", OrderID);
+        e.SetAttributeValue("Type", Type);
+        e.AddChild("Position", $"{Position_X},{Position_Y}");
+        if (TriggerDuration != 0) e.AddChild("TriggerDuration", TriggerDuration);
+        e.AddChild("Dimensions", $"{Dimensions_W},{Dimensions_H}");
     }
 }

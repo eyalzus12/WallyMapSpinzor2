@@ -23,8 +23,7 @@ public class LessonType : IDeserializable, ISerializable
     // not in template. so placed at end arbitrarly
     public string[]? CustomDeathMessage { get; set; }
     public string? IntroCutscene { get; set; }
-    public int MessagePosition_X { get; set; }
-    public int MessagePosition_Y { get; set; }
+    public (int, int)? MessagePosition { get; set; }
     public uint NodePathLength { get; set; }
     public uint NodeSpread { get; set; }
 
@@ -55,12 +54,16 @@ public class LessonType : IDeserializable, ISerializable
 
         CustomDeathMessage = e.GetElementOrNull("CustomDeathMessage")?.Split(',');
         IntroCutscene = e.GetElementOrNull("IntroCutscene");
-        string[]? MessagePosition = e.GetElementOrNull("MessagePosition")?.Split(',');
-        if (MessagePosition is not null)
+        string[]? messagePosition = e.GetElementOrNull("MessagePosition")?.Split(',');
+        if (messagePosition is not null)
         {
-            MessagePosition_X = int.Parse(MessagePosition[0]);
-            MessagePosition_Y = int.Parse(MessagePosition[1]);
+            MessagePosition = (int.Parse(messagePosition[0]), int.Parse(messagePosition[1]));
         }
+        else
+        {
+            MessagePosition = null;
+        }
+
         NodePathLength = e.GetUIntElement("NodePathLength", 0);
         NodeSpread = e.GetUIntElement("NodeSpread", 0);
 
@@ -75,6 +78,38 @@ public class LessonType : IDeserializable, ISerializable
 
     public void Serialize(XElement e)
     {
-        throw new System.NotImplementedException();
+        e.SetAttributeValue("LessonName", LessonName);
+        e.AddChild("LessonID", LessonID);
+        e.AddIfNotNull("Prerequisite", Prerequisite);
+        e.AddIfNotNull("TitleKey", TitleKey);
+        e.AddIfNotNull("DescriptionKey", DescriptionKey);
+        e.AddIfNotNull("Category", Category);
+        e.AddIfNotNull("LevelType", LevelType);
+        if (TimeLimit != 0)
+            e.AddChild("TimeLimit", TimeLimit);
+        if (LessonName != TEMPLATE_LESSON_TYPE)
+            e.AddChild("WinCondition", WinCondition);
+        e.AddChild("GoldReward", GoldReward);
+        e.AddChild("ComboMode", ComboMode);
+        e.AddChild("Difficulty", Difficulty);
+        if (LessonName != TEMPLATE_LESSON_TYPE && Priority != 0)
+            e.AddChild("Priority", Priority);
+        e.AddIfNotNull("PromptStrings", PromptStrings);
+        if (CustomDeathMessage is not null)
+            e.AddChild("CustomDeathMessage", string.Join(',', CustomDeathMessage));
+        e.AddIfNotNull("IntroCutscene", IntroCutscene);
+        if (MessagePosition is not null)
+            e.AddChild("MessagePosition", $"{MessagePosition.Value.Item1},{MessagePosition.Value.Item2}");
+        if (NodePathLength != 0)
+            e.AddChild("NodePathLength", NodePathLength);
+        if (NodeSpread != 0)
+            e.AddChild("NodeSpread", NodeSpread);
+        e.AddManySerialized(Entities, "Entity");
+        e.AddManySerialized(Items, "Item");
+        e.AddManySerialized(Markers, "Marker");
+        e.AddManySerialized(MessageTriggers, "MessageTriggers");
+        e.AddManySerialized(WorldHotkeys, "WorldHotkey");
+        if (LessonName != TEMPLATE_LESSON_TYPE)
+            e.AddSerialized(Combo, "Combo");
     }
 }

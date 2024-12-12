@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Xml.Linq;
 
@@ -28,7 +29,8 @@ public abstract class ComboPart : IDeserializable, ISerializable
     // see each type for info
 
     public uint CmdOvr { get; set; }
-    public uint Data { get; set; } // if TwoPartData is true, upper 16 bits is second part
+    public ushort Data { get; set; }
+    public ushort Data2 { get; set; }
     public ComboPartEvalFlags Eval { get; set; }
     public uint Flags { get; set; }
     public string? Hint { get; set; }
@@ -41,12 +43,13 @@ public abstract class ComboPart : IDeserializable, ISerializable
         if (TwoPartData)
         {
             string[] data = e.GetAttribute("Data").Split('|');
-            Data = uint.Parse(data[0]);
-            if (data.Length > 1) Data |= uint.Parse(data[1]) << 16;
+            Data = ushort.Parse(data[0]);
+            Data2 = data.Length > 1 ? ushort.Parse(data[1]) : (ushort)0;
         }
         else
         {
-            Data = e.GetUIntAttribute("Data", 0);
+            Data = (ushort)e.GetUIntAttribute("Data", 0);
+            Data2 = 0;
         }
 
         Eval = e.GetAttributeOrNull("Eval")?.ToUpperInvariant().Split('|').Select((eval) => eval switch
@@ -68,7 +71,24 @@ public abstract class ComboPart : IDeserializable, ISerializable
 
     public void Serialize(XElement e)
     {
+        if (CmdOvr != 0) e.SetAttributeValue("CmdOvr", CmdOvr);
 
+        e.SetAttributeValue("Data", TwoPartData ? $"{Data}|{Data2}" : $"{Data}");
+
+        if (Eval != 0)
+        {
+            string evalString = string.Join('|', Enum.GetValues<ComboPartEvalFlags>()
+                .Where(m => (Eval & m) != 0)
+                .Select(m => Enum.GetName(m)!)
+            );
+            e.SetAttributeValue("Eval", evalString);
+        }
+
+        if (Flags != 0) e.SetAttributeValue("Flags", Flags);
+
+        if (Hint is not null) e.SetAttributeValue("Hint", Hint);
+
+        if (Time != 0) e.SetAttributeValue("Time", Time);
     }
 
     /*

@@ -32,6 +32,16 @@ public class LessonCombo : IDeserializable, ISerializable
 
     public void Serialize(XElement e)
     {
-        throw new System.NotImplementedException();
+        e.AddManySerialized(ComboParts);
+
+        e.AddChild("forgiveness", Forgiveness);
+        e.AddChild("showStun", ShowStun);
+        e.AddChild("resetBot", ResetBot);
+        if (ReplayEnd != 1000)
+            e.AddChild("replayEnd", ReplayEnd);
+        if (DemoRecording.Length > 0)
+            e.AddChild("demoRecording", string.Join(',', DemoRecording.Cast<ushort>()));
+        if (BotRecording.Length > 0)
+            e.AddChild("botRecording", string.Join(',', BotRecording.Cast<ushort>()));
     }
 }

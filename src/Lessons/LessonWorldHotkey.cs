@@ -28,6 +28,8 @@ public class LessonWorldHotkey : IDeserializable, ISerializable
 
     public void Serialize(XElement e)
     {
-        throw new System.NotImplementedException();
+        e.AddChild("Position", $"{Position_X},{Position_Y}");
+        if (Commands.Length > 0)
+            e.AddChild("Commands", string.Join(',', Commands));
     }
 }

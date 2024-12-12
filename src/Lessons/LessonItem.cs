@@ -27,6 +27,7 @@ public class LessonItem : IDeserializable, ISerializable
 
     public void Serialize(XElement e)
     {
-        throw new System.NotImplementedException();
+        e.SetAttributeValue("ItemType", ItemType);
+        e.AddChild("Position", $"{Position_X},{Position_Y}");
     }
 }

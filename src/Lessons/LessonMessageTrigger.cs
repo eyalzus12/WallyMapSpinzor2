@@ -48,6 +48,16 @@ public class LessonMessageTrigger : IDeserializable, ISerializable
 
     public void Serialize(XElement e)
     {
-        throw new System.NotImplementedException();
+        e.AddChild("Position", $"{Position_X},{Position_Y}");
+        e.AddChild("Width", Width);
+        e.AddChild("Height", Height);
+        e.AddChild("TimeBetweenTriggers", TimeBetweenTriggers);
+        e.AddChild("Timeout", Timeout);
+        e.AddChild("NumFailsTrigger", NumFailsTrigger);
+        e.AddChild("Waypoint", Waypoint);
+        e.AddIfNotNull("PowerDataFailedRatio", PowerDataFailedRatio);
+        e.AddChild("MessageKey", MessageKey);
+        e.AddIfNotNull("DevNote", DevNote);
+        e.AddIfNotNull("MessagePosition", MessagePosition);
     }
 }
