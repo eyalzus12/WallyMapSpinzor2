@@ -38,16 +38,18 @@ public abstract class AbstractAsset : ISerializable, IDeserializable, IDrawable
         if (Rotation != 0)
             e.SetAttributeValue("Rotation", Rotation);
 
-        if (ScaleX == ScaleY)
+        bool hasScaleX = AssetName is null || W is null;
+        bool hasScaleY = AssetName is null || H is null;
+        if (hasScaleX && hasScaleY && ScaleX == ScaleY)
         {
             if (ScaleX != 1)
                 e.SetAttributeValue("Scale", ScaleX);
         }
         else
         {
-            if (ScaleX != 1)
+            if (hasScaleX && ScaleX != 1)
                 e.SetAttributeValue("ScaleX", ScaleX);
-            if (ScaleY != 1)
+            if (hasScaleY && ScaleY != 1)
                 e.SetAttributeValue("ScaleY", ScaleY);
         }
 

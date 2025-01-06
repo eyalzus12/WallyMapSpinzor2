@@ -51,7 +51,7 @@ public class Animation : IDeserializable, ISerializable
             e.SetAttributeValue("EaseIn", EaseIn.ToString().ToLowerInvariant());
         if (EaseOut)
             e.SetAttributeValue("EaseOut", EaseOut.ToString().ToLowerInvariant());
-        if (EasePower != 2)
+        if (EasePower != 2 && (EaseIn || EaseOut))
             e.SetAttributeValue("EasePower", EasePower.ToString());
         if (StartFrame != 0)
             e.SetAttributeValue("StartFrame", StartFrame.ToString());
