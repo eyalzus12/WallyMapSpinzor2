@@ -16,7 +16,7 @@ public interface ICanvas
     //draw a texture
     public void DrawTexture(string path, double x, double y, Transform trans, DrawPriorityEnum priority, object? caller);
     //draw an animation
-    public void DrawAnim(Gfx gfx, string animName, int frame, Transform trans, DrawPriorityEnum priority, object? caller, uint? loopLimit = null);
+    public void DrawAnim(Gfx gfx, string animName, long frame, Transform trans, DrawPriorityEnum priority, object? caller, uint? loopLimit = null);
     //get the number of frames in an animation. returns null if animation hasn't loaded yet.
     public uint? GetAnimationFrameCount(Gfx gfx, string animName);
     //draw a texture, resizing it to fit inside a rectangle

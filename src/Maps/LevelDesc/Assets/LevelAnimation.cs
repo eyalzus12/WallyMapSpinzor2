@@ -190,7 +190,7 @@ public class LevelAnimation : IDeserializable, ISerializable, IDrawable
             // LevelAnimation is not affected by keyframe Rotation
             platTrans = Transform.CreateTranslate(platTrans.TranslateX, platTrans.TranslateY);
 
-            int frame = LevelDesc.GET_ANIM_FRAME(config.Time - state.AnimationStartTime);
+            long frame = LevelDesc.GET_ANIM_FRAME(config.Time - state.AnimationStartTime);
             canvas.DrawAnim(state.Gfx, "Ready", frame, trans * state.Trans * platTrans, state.Layer, this, loopLimit: LoopIterations != 0 ? LoopIterations + 1 : 1);
         }
 

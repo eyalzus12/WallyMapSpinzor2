@@ -57,9 +57,9 @@ public class WaveData : IDeserializable, ISerializable, IDrawable
 
     public double GetSpeed(int players) => players switch
     {
-        >= 4 when Speed4 is not null => (double)Speed4,
-        >= 3 when Speed3 is not null => (double)Speed3,
-        _ when Speed is not null => (double)Speed,
+        >= 4 when Speed4 is not null => Speed4.Value,
+        >= 3 when Speed3 is not null => Speed3.Value,
+        _ when Speed is not null => Speed.Value,
         _ => 8
     };
 }

@@ -81,7 +81,7 @@ public class AnimatedBackground : IDeserializable, ISerializable, IDrawable
     {
         if (!config.AnimatedBackgrounds && !ForceDraw)
             return;
-        int frame = LevelDesc.GET_ANIM_FRAME(config.Time) + FrameOffset;
+        long frame = LevelDesc.GET_ANIM_FRAME(config.Time) + FrameOffset;
 
         // Non-midground animated backgrounds are BACKGROUNDS, so they need to be transformed to match the background.
         DrawPriorityEnum priority = Midground ? DrawPriorityEnum.MIDGROUND : DrawPriorityEnum.BACKGROUND;

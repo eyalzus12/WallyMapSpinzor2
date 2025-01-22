@@ -8,7 +8,7 @@ namespace WallyMapSpinzor2;
 public class LevelDesc : IDeserializable, ISerializable, IDrawable
 {
     public const double ANIMATION_FPS = 24;
-    public static int GET_ANIM_FRAME(TimeSpan time) => (int)(ANIMATION_FPS * time.TotalSeconds);
+    public static long GET_ANIM_FRAME(TimeSpan time) => (long)(ANIMATION_FPS * time.TotalSeconds);
 
     private static readonly (int, int)[] ZOMBIE_SPAWNS = [(230, 390), (180, 900), (-1160, 900), (-1990, 390)];
 
