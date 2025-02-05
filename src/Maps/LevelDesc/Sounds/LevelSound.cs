@@ -9,6 +9,7 @@ public class LevelSound : IDeserializable, ISerializable
     public uint Delay { get; set; }
     public int OnlineDelayDiff { get; set; }
     public int TotalLoops { get; set; } // 0 means infinite
+    public bool IgnoreOnBlurBG { get; set; }
 
     public void Deserialize(XElement e)
     {
@@ -17,6 +18,7 @@ public class LevelSound : IDeserializable, ISerializable
         Delay = e.GetUIntAttribute("Delay", 0);
         OnlineDelayDiff = e.GetIntAttribute("OnlineDelayDiff", 0);
         TotalLoops = e.GetIntAttribute("TotalLoops", 0);
+        IgnoreOnBlurBG = e.GetBoolAttribute("IgnoreOnBlurBG", false);
     }
 
     public void Serialize(XElement e)
@@ -28,5 +30,7 @@ public class LevelSound : IDeserializable, ISerializable
             e.SetAttributeValue("OnlineDelayDiff", OnlineDelayDiff);
         if (TotalLoops != 0)
             e.SetAttributeValue("TotalLoops", TotalLoops);
+        if (IgnoreOnBlurBG)
+            e.SetAttributeValue("IgnoreOnBlurBG", IgnoreOnBlurBG);
     }
 }

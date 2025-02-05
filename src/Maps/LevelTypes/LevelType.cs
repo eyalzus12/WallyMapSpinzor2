@@ -55,6 +55,7 @@ public class LevelType : IDeserializable, ISerializable
     public bool? AllowItemSpawnOverlap { get; set; } // unused
     public string[] ColorExclusionList { get; set; } = [];
     public bool? FixedWidth { get; set; }
+    public int FixedWidthYOffset { get; set; }
     public double? AIPanicLine { get; set; }
     public double? AIGroundLine { get; set; }
     public int? ShadowTint { get; set; } // yes, this is an int and not a uint
@@ -109,6 +110,7 @@ public class LevelType : IDeserializable, ISerializable
         AllowItemSpawnOverlap = e.GetBoolElementOrNull("AllowItemSpawnOverlap");
         ColorExclusionList = e.GetElementOrNull("ColorExclusionList")?.Split(',') ?? [];
         FixedWidth = e.GetBoolElementOrNull("FixedWidth");
+        FixedWidthYOffset = e.GetIntElement("FixedWidthYOffset", 0);
         AIPanicLine = e.GetDoubleElementOrNull("AIPanicLine");
         AIGroundLine = e.GetDoubleElementOrNull("AIGroundLine");
         ShadowTint = e.GetIntElementOrNull("ShadowTint");
@@ -145,6 +147,8 @@ public class LevelType : IDeserializable, ISerializable
         e.AddIfNotNull("BGMusic", BGMusic);
         e.AddIfNotNull("StreamerBGMusic", StreamerBGMusic);
         e.AddIfNotNull("FixedWidth", FixedWidth?.ToString()?.ToUpperInvariant());
+        if (FixedWidthYOffset != 0)
+            e.Add("FixedWidthYOffset", FixedWidthYOffset);
         e.AddIfNotNull("ThumbnailPNGFile", ThumbnailPNGFile);
         e.AddIfNotNull("AIStrictRecover", AIStrictRecover?.ToString()?.ToUpperInvariant());
 
