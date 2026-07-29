@@ -83,8 +83,8 @@ public static class XmlExtensions
             e.AddSerialized(t, name);
     }
 
-    public static void AddSerializedIfNotNull<T>(this XElement e, T? t) where T : ISerializable
+    public static void AddSerializedIfNotNull<T>(this XElement e, T? t, string? name = null) where T : ISerializable
     {
-        if (t is not null) e.AddSerialized(t);
+        if (t is not null) e.AddSerialized(t, name);
     }
 }

@@ -27,6 +27,7 @@ public sealed class LevelDesc : IDeserializable<LevelDesc>, ISerializable, IDraw
     public LevelAnimation[] LevelAnimations { get; set; } = null!;
     public AbstractVolume[] Volumes { get; set; } = null!;
     public AbstractCollision[] Collisions { get; set; } = null!;
+    public LevelMud? Mud { get; set; }
     public DynamicCollision[] DynamicCollisions { get; set; } = null!;
     public Respawn[] Respawns { get; set; } = null!;
     public DynamicRespawn[] DynamicRespawns { get; set; } = null!;
@@ -55,6 +56,7 @@ public sealed class LevelDesc : IDeserializable<LevelDesc>, ISerializable, IDraw
         LevelAnimations = e.DeserializeChildrenOfType<LevelAnimation>();
         Volumes = e.DeserializeVolumeChildren();
         Collisions = e.DeserializeCollisionChildren();
+        Mud = e.DeserializeTo<LevelMud>();
         DynamicCollisions = e.DeserializeChildrenOfType<DynamicCollision>();
         Respawns = e.DeserializeChildrenOfType<Respawn>();
         DynamicRespawns = e.DeserializeChildrenOfType<DynamicRespawn>();
@@ -86,6 +88,7 @@ public sealed class LevelDesc : IDeserializable<LevelDesc>, ISerializable, IDraw
         e.AddManySerialized(LevelAnimations);
         e.AddManySerialized(Volumes);
         e.AddManySerialized(Collisions);
+        e.AddSerializedIfNotNull(Mud, "MudCollision");
         e.AddManySerialized(DynamicCollisions);
         e.AddManySerialized(Respawns);
         e.AddManySerialized(DynamicRespawns);
@@ -142,6 +145,7 @@ public sealed class LevelDesc : IDeserializable<LevelDesc>, ISerializable, IDraw
             c.DrawOn(canvas, trans, config, context, state);
         foreach (DynamicCollision dc in DynamicCollisions)
             dc.DrawOn(canvas, trans, config, context, state);
+        Mud?.DrawOn(canvas, trans, config, context, state);
         foreach (Respawn r in Respawns)
             r.DrawOn(canvas, trans, config, context, state);
         foreach (DynamicRespawn dr in DynamicRespawns)

@@ -87,6 +87,8 @@ public sealed class RenderConfig : IDeserializable<RenderConfig>, ISerializable
     public required bool ShowFireOffsetLocation { get; set; }
     public required bool ShowFireOffsetLine { get; set; }
     public required bool ShowFireDirection { get; set; }
+    // whether to show the mud line
+    public required bool ShowMudLine { get; set; }
     //whether to show goals
     public required bool ShowGoal { get; set; }
     //whether to show no dodge zones
@@ -151,7 +153,8 @@ public sealed class RenderConfig : IDeserializable<RenderConfig>, ISerializable
     public required Color ColorPressurePlateCollision { get; set; }
     public required Color ColorSoftPressurePlateCollision { get; set; }
     public required Color ColorLavaCollision { get; set; }
-    public required Color ColorMudCollision { get; set; }
+    public required Color ColorMudLine { get; set; }
+    public required Color ColorMudKillLine { get; set; }
 
     public required Color ColorCollisionNormal { get; set; }
     public required Color ColorFireOffset { get; set; }
@@ -226,6 +229,7 @@ public sealed class RenderConfig : IDeserializable<RenderConfig>, ISerializable
         ShowFireOffsetLocation = other.ShowFireOffsetLocation;
         ShowFireOffsetLine = other.ShowFireOffsetLine;
         ShowFireDirection = other.ShowFireDirection;
+        ShowMudLine = other.ShowMudLine;
         ShowGoal = other.ShowGoal;
         ShowNoDodgeZone = other.ShowNoDodgeZone;
         ShowVolume = other.ShowVolume;
@@ -263,7 +267,8 @@ public sealed class RenderConfig : IDeserializable<RenderConfig>, ISerializable
         ColorPressurePlateCollision = other.ColorPressurePlateCollision;
         ColorSoftPressurePlateCollision = other.ColorSoftPressurePlateCollision;
         ColorLavaCollision = other.ColorLavaCollision;
-        ColorMudCollision = other.ColorMudCollision;
+        ColorMudLine = other.ColorMudLine;
+        ColorMudKillLine = other.ColorMudKillLine;
         ColorCollisionNormal = other.ColorCollisionNormal;
         ColorFireOffset = other.ColorFireOffset;
         ColorFireOffsetLine = other.ColorFireOffsetLine;
@@ -340,6 +345,7 @@ public sealed class RenderConfig : IDeserializable<RenderConfig>, ISerializable
         ShowFireOffsetLocation = getBool(nameof(ShowFireOffsetLocation), @default.ShowFireOffsetLocation);
         ShowFireOffsetLine = getBool(nameof(ShowFireOffsetLine), @default.ShowFireOffsetLine);
         ShowFireDirection = getBool(nameof(ShowFireDirection), @default.ShowFireDirection);
+        ShowMudLine = getBool(nameof(ShowMudLine), @default.ShowMudLine);
         ShowGoal = getBool(nameof(ShowGoal), @default.ShowGoal);
         ShowNoDodgeZone = getBool(nameof(ShowNoDodgeZone), @default.ShowNoDodgeZone);
         ShowVolume = getBool(nameof(ShowVolume), @default.ShowVolume);
@@ -377,7 +383,8 @@ public sealed class RenderConfig : IDeserializable<RenderConfig>, ISerializable
         ColorPressurePlateCollision = getColor(nameof(ColorPressurePlateCollision), @default.ColorPressurePlateCollision);
         ColorSoftPressurePlateCollision = getColor(nameof(ColorSoftPressurePlateCollision), @default.ColorSoftPressurePlateCollision);
         ColorLavaCollision = getColor(nameof(ColorLavaCollision), @default.ColorLavaCollision);
-        ColorMudCollision = getColor(nameof(ColorMudCollision), @default.ColorMudCollision);
+        ColorMudLine = getColor(nameof(ColorMudLine), @default.ColorMudLine);
+        ColorMudKillLine = getColor(nameof(ColorMudKillLine), @default.ColorMudKillLine);
         ColorCollisionNormal = getColor(nameof(ColorCollisionNormal), @default.ColorCollisionNormal);
         ColorFireOffset = getColor(nameof(ColorFireOffset), @default.ColorFireOffset);
         ColorFireOffsetLine = getColor(nameof(ColorFireOffsetLine), @default.ColorFireOffsetLine);
@@ -449,6 +456,7 @@ public sealed class RenderConfig : IDeserializable<RenderConfig>, ISerializable
         addValue(nameof(ShowFireOffsetLocation), ShowFireOffsetLocation);
         addValue(nameof(ShowFireOffsetLine), ShowFireOffsetLine);
         addValue(nameof(ShowFireDirection), ShowFireDirection);
+        addValue(nameof(ShowMudLine), ShowMudLine);
         addValue(nameof(ShowGoal), ShowGoal);
         addValue(nameof(ShowNoDodgeZone), ShowNoDodgeZone);
         addValue(nameof(ShowVolume), ShowVolume);
@@ -486,7 +494,8 @@ public sealed class RenderConfig : IDeserializable<RenderConfig>, ISerializable
         addColor(nameof(ColorPressurePlateCollision), ColorPressurePlateCollision);
         addColor(nameof(ColorSoftPressurePlateCollision), ColorSoftPressurePlateCollision);
         addColor(nameof(ColorLavaCollision), ColorLavaCollision);
-        addColor(nameof(ColorMudCollision), ColorMudCollision);
+        addColor(nameof(ColorMudLine), ColorMudLine);
+        addColor(nameof(ColorMudKillLine), ColorMudKillLine);
         addColor(nameof(ColorCollisionNormal), ColorCollisionNormal);
         addColor(nameof(ColorFireOffset), ColorFireOffset);
         addColor(nameof(ColorFireOffsetLine), ColorFireOffsetLine);
@@ -547,6 +556,7 @@ public sealed class RenderConfig : IDeserializable<RenderConfig>, ISerializable
         ShowFireOffsetLocation = false,
         ShowFireOffsetLine = false,
         ShowFireDirection = false,
+        ShowMudLine = false,
         ShowGoal = true,
         ShowNoDodgeZone = true,
         ShowVolume = true,
@@ -584,7 +594,8 @@ public sealed class RenderConfig : IDeserializable<RenderConfig>, ISerializable
         ColorPressurePlateCollision = Color.FromHex(0xCC6619FF),
         ColorSoftPressurePlateCollision = Color.FromHex(0x7F1900FF),
         ColorLavaCollision = Color.FromHex(0xFF8000FF),
-        ColorMudCollision = Color.FromHex(0x70543EFF),
+        ColorMudLine = Color.FromHex(0x70543EFF),
+        ColorMudKillLine = Color.FromHex(0xCFB9A8),
         ColorCollisionNormal = Color.FromHex(0xFFFFFF7F),
         ColorFireOffset = Color.FromHex(0x7000AA70),
         ColorFireOffsetLine = Color.FromHex(0xBB7000D0),

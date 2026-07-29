@@ -22,9 +22,17 @@ public abstract class AbstractAsset : ISerializable, IDrawable
     {
         AssetName = e.GetAttributeOrNull("AssetName");
         Rotation = e.GetDoubleAttribute("Rotation", 0);
-        double scale = e.GetDoubleAttribute("Scale", 1);
-        ScaleX = e.GetDoubleAttribute("ScaleX", scale);
-        ScaleY = e.GetDoubleAttribute("ScaleY", scale);
+        if (e.HasAttribute("Scale"))
+        {
+            double scale = e.GetDoubleAttribute("Scale", 1);
+            ScaleX = scale;
+            ScaleY = scale;
+        }
+        else
+        {
+            ScaleX = e.GetDoubleAttribute("ScaleX", 1);
+            ScaleY = e.GetDoubleAttribute("ScaleY", 1);
+        }
         W = e.GetDoubleAttributeOrNull("W");
         H = e.GetDoubleAttributeOrNull("H");
         X = e.GetDoubleAttribute("X", 0);
@@ -64,6 +72,8 @@ public abstract class AbstractAsset : ISerializable, IDrawable
             e.SetAttributeValue("Y", Y);
     }
 
+    public virtual DrawPriorityEnum DrawPriority => DrawPriorityEnum.MIDGROUND;
+
     public virtual void DrawOn(ICanvas canvas, Transform trans, RenderConfig config, RenderContext context, RenderState state)
     {
         if (!config.ShowAssets)
@@ -76,7 +86,7 @@ public abstract class AbstractAsset : ISerializable, IDrawable
             throw new InvalidOperationException("Attempting to draw an asset, but the render context is missing the AssetDir.");
 
         string path = Path.Combine(context.AssetDir, AssetName);
-        canvas.DrawTextureRect(path, 0, 0, W, H, trans * Transform, DrawPriorityEnum.MIDGROUND, this);
+        canvas.DrawTextureRect(path, 0, 0, W, H, trans * Transform, DrawPriority, this);
     }
 
     public Transform Transform =>
