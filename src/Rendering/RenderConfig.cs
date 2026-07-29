@@ -556,7 +556,7 @@ public sealed class RenderConfig : IDeserializable<RenderConfig>, ISerializable
         ShowFireOffsetLocation = false,
         ShowFireOffsetLine = false,
         ShowFireDirection = false,
-        ShowMudLine = false,
+        ShowMudLine = true,
         ShowGoal = true,
         ShowNoDodgeZone = true,
         ShowVolume = true,
