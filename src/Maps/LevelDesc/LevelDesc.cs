@@ -88,7 +88,8 @@ public sealed class LevelDesc : IDeserializable<LevelDesc>, ISerializable, IDraw
         e.AddManySerialized(LevelAnimations);
         e.AddManySerialized(Volumes);
         e.AddManySerialized(Collisions);
-        e.AddSerializedIfNotNull(Mud, "MudCollision");
+        if (Mud is not null && Mud.IsValid)
+            e.AddSerialized(Mud, "MudCollision");
         e.AddManySerialized(DynamicCollisions);
         e.AddManySerialized(Respawns);
         e.AddManySerialized(DynamicRespawns);
