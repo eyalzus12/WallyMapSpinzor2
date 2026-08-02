@@ -56,7 +56,7 @@ public sealed class LevelDesc : IDeserializable<LevelDesc>, ISerializable, IDraw
         LevelAnimations = e.DeserializeChildrenOfType<LevelAnimation>();
         Volumes = e.DeserializeVolumeChildren();
         Collisions = e.DeserializeCollisionChildren();
-        Mud = e.DeserializeTo<LevelMud>();
+        Mud = e.DeserializeChildOfType<LevelMud>();
         DynamicCollisions = e.DeserializeChildrenOfType<DynamicCollision>();
         Respawns = e.DeserializeChildrenOfType<Respawn>();
         DynamicRespawns = e.DeserializeChildrenOfType<DynamicRespawn>();
